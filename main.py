@@ -17,6 +17,7 @@ os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0, NAVIGUATION_BAR_HEIGHT)
 
 
 def main():
+    #test modif
     init_graphic(SCREEN["width"], SCREEN["height"] - NAVIGUATION_BAR_HEIGHT, "Binary Clicker")
     
     
