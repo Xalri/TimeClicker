@@ -2,7 +2,6 @@ import pygame
 from pygame._sdl2 import Window
 from data import *
 
-#comentaire
 screen = pygame.display.set_mode((720, 480), pygame.RESIZABLE)
 
 Window.from_display_module().maximize()
