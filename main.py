@@ -1,23 +1,53 @@
-import pygame
+import pygame as pg
 from pygame._sdl2 import Window
 from data import *
+from Buttons import Button
+import time
+from Logger import Logger
 
-#commentaire
-screen = pygame.display.set_mode((720, 480), pygame.RESIZABLE)
+LOGGER = Logger()
+pg.init()
+clock=pg.time.Clock()
 
+#initialize window
+screen = pg.display.set_mode((720, 480), pg.RESIZABLE)
 Window.from_display_module().maximize()
-
-pygame.display.set_caption('Time Clicker')
-
+pg.display.set_caption('Time Clicker')
 screen.fill(BACKGROUND_COLOR)
+pg.display.flip()
 
-pygame.display.flip()
-
-running = True
-
-while running:
+def log(text="No message provided"):
+    print(f"{time.strftime('%H:%M:%S')}: {text}")
     
-    for event in pygame.event.get():
-    
-        if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-            running = False
+def main():
+
+    clicker = Button((10, 10, 150, 50), log)
+
+    timeUnits = 0
+
+    LOGGER.INFO(timeUnits)
+
+
+    running = True
+
+
+    while running:
+        
+        clock.tick(60)
+        
+        for event in pg.event.get():
+        
+            if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
+                running = False
+                
+            clicker.get_event(event)
+
+                
+        clicker.render(screen)
+                
+                
+        
+        pg.display.update()
+
+if __name__ == "__main__":
+    main()
