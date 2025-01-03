@@ -9,6 +9,7 @@ LOGGER = Logger()
 pg.init()
 clock=pg.time.Clock()
 
+
 #initialize window
 screen = pg.display.set_mode((720, 480), pg.RESIZABLE)
 Window.from_display_module().maximize()
