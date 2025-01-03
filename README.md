@@ -17,7 +17,7 @@ Install Time Clicker with pip
 ## Run
 
 
-Start the server
+Start the game
 
 ```bash
   python3 TimeClicker.py
