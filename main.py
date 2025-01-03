@@ -10,6 +10,8 @@ pg.init()
 clock=pg.time.Clock()
 
 
+
+
 #initialize window
 screen = pg.display.set_mode((720, 480), pg.RESIZABLE)
 Window.from_display_module().maximize()
@@ -17,21 +19,25 @@ pg.display.set_caption('Time Clicker')
 screen.fill(BACKGROUND_COLOR)
 pg.display.flip()
 
-def log(text="No message provided"):
-    print(f"{time.strftime('%H:%M:%S')}: {text}")
-    
+
+
 def main():
 
-    clicker = Button((10, 10, 150, 50), log)
+    global timeUnits
 
-    timeUnits = 0
+    def addTimeUnits(number=1):
+        global timeUnits
+        timeUnits += number
+        LOGGER.INFO(timeUnits)
+        
+
+    clicker = Button((10, 10, 150, 50), addTimeUnits)
+
 
     LOGGER.INFO(timeUnits)
 
 
     running = True
-
-
     while running:
         
         clock.tick(60)
