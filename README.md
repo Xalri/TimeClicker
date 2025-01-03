@@ -35,9 +35,9 @@ Start the server
 
 For support:
 - email xalri@xalri.ovh
-- add xalri on [discord](https://discord.com)
-- add rex14_0 on [discord](https://discord.com)
-- add akisuk0 on [discord](https://discord.com)
+- add **xalri** on [discord](https://discord.com)
+- add **rex14_0** on [discord](https://discord.com)
+- add **akisuk0** on [discord](https://discord.com)
 
 
 ## Used By
