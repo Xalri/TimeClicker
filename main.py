@@ -37,6 +37,7 @@ def main():
     LOGGER.INFO(timeUnits)
 
 
+    # BOUCLE DU JEU
     running = True
     while running:
         
@@ -49,12 +50,16 @@ def main():
                 
             clicker.get_event(event)
 
+            
+
+        screen.fill(BACKGROUND_COLOR)
                 
         clicker.render(screen)
                 
                 
         
         pg.display.update()
+
 
 if __name__ == "__main__":
     main()
