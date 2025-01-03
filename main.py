@@ -19,7 +19,7 @@ pg.display.set_caption('Time Clicker')
 screen.fill(BACKGROUND_COLOR)
 pg.display.flip()
 
-
+timeUnits = 0
 
 def main():
 
