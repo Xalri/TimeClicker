@@ -2,9 +2,6 @@ import pygame
 
 pygame.font.init()
 
-TIMELINE_FONT: pygame.font = pygame.font.Font('src/fonts/LetterGothicStd-Bold.ttf', 124)
-NUMBER_FONT: pygame.font = pygame.font.Font('src/fonts/LetterGothicStd-Bold.ttf', 52)
-TEXT_FONT: pygame.font = pygame.font.Font('src/fonts/FranklinGothicHeavyRegular.ttf', 33)
 
 
 
@@ -24,9 +21,14 @@ ORANGE = (255, 127, 0)
 MAGENTA = (255, 0, 255)
 PINK = (255, 192, 203)
 BROWN = (88, 41, 0)
-GRAY = (128, 128, 128)
+GREY = (128, 128, 128)
 TURQUOISE = (64, 224, 208)
 SILVER = (192, 192, 192)
 GOLD = (218, 165, 32)
+# Custom
+LIGHT_GREY = (90, 97, 107)
+DARK_GREY = (53, 53, 53)
+LIGHT_DARK = (28, 28, 28)
+YELLOW_GREEN = (223, 241, 103)
 
-BACKGROUND_COLOR = BROWN
+BACKGROUND_COLOR = LIGHT_GREY
