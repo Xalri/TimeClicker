@@ -34,7 +34,7 @@ class Logger:
 
     def get_timestamp(self):
         from datetime import datetime
-        return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        return datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
 
 
 def main():

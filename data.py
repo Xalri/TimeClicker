@@ -1,3 +1,14 @@
+import pygame
+
+pygame.font.init()
+
+TIMELINE_FONT: pygame.font = pygame.font.Font('src/fonts/LetterGothicStd-Bold.ttf', 124)
+NUMBER_FONT: pygame.font = pygame.font.Font('src/fonts/LetterGothicStd-Bold.ttf', 52)
+TEXT_FONT: pygame.font = pygame.font.Font('src/fonts/FranklinGothicHeavyRegular.ttf', 33)
+
+
+
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 # Basics
