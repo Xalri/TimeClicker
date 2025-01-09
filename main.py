@@ -5,7 +5,7 @@ from Buttons import Button
 import time
 from Logger import Logger
 import buildings
-from utils import adapt_size_height, adapt_size_width
+from utils import adapt_size_height, adapt_size_width, load_image, get_number_font, get_text_font, get_timeline_font
 
 # initializing
 LOGGER: Logger = Logger()
@@ -30,43 +30,74 @@ pg.display.flip()
 
 
 def crop_value(value: float):
+    if value == 0.0:
+        return 0
     if value >= 10:
         return int(value)
     return round(value, 3)
 
+    
+# def format_timeUnits(timeUnits: float):
+#     timeUnits = crop_value(timeUnits)
+#     timeUnits =  ".".join([str(timeUnits)[::-1][i:i+3] for i in range(0, len(str(timeUnits)), 3)])[::-1]
+#     if int(timeUnits.replace(".", "")) >= 10 and len(timeUnits.replace(".", "")) < 9:
+#         timeUnits = "".join([" " for _ in range(9 - len(timeUnits.replace(".", "")))]) + timeUnits
+#     return timeUnits
 
-
+def format_timeUnits(timeUnits: float):
+    timeUnits = crop_value(timeUnits)
+    if timeUnits < 1000:
+        return "".join([" " for _ in range(11 - len(str(timeUnits)))]) + str(timeUnits)
+    for unit, factor in zip(['k', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', 'Ud',  'Dd', 'Td'], [10**i for i in range(3, (14 * 3)+1, 3)]):
+        if timeUnits < factor * 1000:
+            timeUnits = f"{timeUnits / factor:.1f}{unit}".rstrip('.0')
+            return "".join([" " for _ in range(9 - len(timeUnits.replace(".", "").replace(unit, "")))]) + timeUnits
+    return f"{timeUnits:.0f}"
 
 
 
 def main():
     # define game values
-    timeUnits: float = 0
-    tps: float =10000
+    timeUnits: float = 1
+    tps: float = 0
+    
+    clicker_amount: float = 1
     timeline: int = 0
+    
     current_frame: int = 0
-    framerate: int =32
+    framerate: int =10
     w, h = pg.display.get_surface().get_size()
+    
+    
 
     LOGGER.INFO(timeUnits)
-
+    
+    def increment_timeUnits(amount):
+        nonlocal timeUnits, clicker_amount
+        timeUnits += amount    
+        
 
 
 
     running: bool = True
     while running:
         
+        # clicker = Button((adapt_size_width(717.5, w), adapt_size_height(307.5, h), adapt_size_width(375, w), adapt_size_width(375, w)), BLUE, lambda: increment_timeUnits(clicker_amount), 300)
         
         
         
         TIMELINE_FONT: pygame.font = pygame.font.Font('src/fonts/LetterGothicStd-Bold.ttf', int(adapt_size_height(124, h)))
-        NUMBER_FONT: pygame.font = pygame.font.Font('src/fonts/LetterGothicStd-Bold.ttf', 52)
+        NUMBER_FONT: pygame.font = pygame.font.Font('src/fonts/LetterGothicStd-Bold.ttf', int(adapt_size_height(65, h)))
         TEXT_FONT: pygame.font = pygame.font.Font('src/fonts/FranklinGothicHeavyRegular.ttf', 33)
         
         
         
         
-        timeline_text: pg.Surface = TIMELINE_FONT.render(f"{crop_value(timeUnits)}", True, YELLOW_GREEN)
+        timeUnits_text: pg.Surface = get_number_font(65, h).render(f"{format_timeUnits(timeUnits)}", True, RED)
+        tps_text: pg.Surface = get_number_font(50, h).render(f"{format_timeUnits(tps)}", True, RED)
+        
+        clicker_button: Button = Button((adapt_size_width(715, w), adapt_size_height(304, h), adapt_size_width(403, w), adapt_size_height(400, h)), BLUE, lambda: increment_timeUnits(clicker_amount), 250, True)
+        
 
 
         
@@ -76,38 +107,66 @@ def main():
         clock.tick_busy_loop(framerate)
         current_frame: int = (current_frame + 1) % framerate
         
-        
         timeUnits += tps/framerate
         
-        # LOGGER.INFO(timeUnits)
+
+
         
         for event in pg.event.get():
         
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 running = False
-                
+            
+            clicker_button.get_event(event)
+
+
 
             
 
         screen.fill(BACKGROUND_COLOR)
+        
+        
+        timeline_image: pg.surface = load_image('src/img/timeline.png', w, h)
+        screen.blit(timeline_image, (adapt_size_width(45, w), adapt_size_height(45, h)))
+        
+        upgrade_image: pg.surface = load_image('src/img/upgrade.png', w, h)
+        screen.blit(upgrade_image, (adapt_size_width(45, w), adapt_size_height(245, h)))
+        
+        temporal_matrix_image: pg.surface = load_image('src/img/temporal matrix.png', w, h)
+        screen.blit(temporal_matrix_image, (adapt_size_width(605, w), adapt_size_height(45, h)))
+        
+        human_skill_and_boost: pg.surface = load_image('src/img/human_skill+boost.png', w, h)
+        screen.blit(human_skill_and_boost, (adapt_size_width(1265, w), adapt_size_height(45, h)))
+        
+        shop_image: pg.surface = load_image('src/img/shop.png', w, h)
+        screen.blit(shop_image, (adapt_size_width(1475, w), adapt_size_height(45, h)))
+        
+        red_cable_image: pg.surface = load_image('src/img/red_cable_on.png', w, h)
+        screen.blit(red_cable_image, (adapt_size_width(1285, w), adapt_size_height(860, h)))
+        
+        blue_cable_image: pg.surface = load_image('src/img/blue_cable_on.png', w, h)
+        screen.blit(blue_cable_image, (adapt_size_width(1285, w), adapt_size_height(935, h)))
                 
         
         
         # fill screen with shapes
-        pg.draw.rect(screen, DARK_GREY, (adapt_size_width(45, w), adapt_size_height(45, h), adapt_size_width(500, w), adapt_size_height(180, h)), border_radius=20)
-        pg.draw.rect(screen, DARK_GREY, (adapt_size_width(45, w), adapt_size_height(245, h), adapt_size_width(500, w), adapt_size_height(790, h)), border_radius=20)
-        pg.draw.rect(screen, DARK_GREY, (adapt_size_width(605, w), adapt_size_height(45, h), adapt_size_width(600, w), adapt_size_height(990, h)), border_radius=20)
-        pg.draw.rect(screen, DARK_GREY, (adapt_size_width(1475, w), adapt_size_height(45, h), adapt_size_width(400, w), adapt_size_height(800, h)), border_radius=20)
+        # pg.draw.rect(screen, DARK_GREY, (adapt_size_width(45, w), adapt_size_height(45, h), adapt_size_width(500, w), adapt_size_height(180, h)), border_radius=20)
+        # pg.draw.rect(screen, DARK_GREY, (adapt_size_width(45, w), adapt_size_height(245, h), adapt_size_width(500, w), adapt_size_height(790, h)), border_radius=20)
+        # pg.draw.rect(screen, DARK_GREY, (adapt_size_width(605, w), adapt_size_height(45, h), adapt_size_width(600, w), adapt_size_height(990, h)), border_radius=20)
+        # pg.draw.rect(screen, DARK_GREY, (adapt_size_width(1475, w), adapt_size_height(45, h), adapt_size_width(400, w), adapt_size_height(800, h)), border_radius=20)
         
-        pg.draw.rect(screen, LIGHT_DARK, (adapt_size_width(75, w), adapt_size_height(75, h), adapt_size_width(440, w), adapt_size_height(120, h)))
-        pg.draw.rect(screen, LIGHT_DARK, (adapt_size_width(75, w), adapt_size_height(275, h), adapt_size_width(440, w), adapt_size_height(730, h)))
-        pg.draw.rect(screen, LIGHT_DARK, (adapt_size_width(635, w), adapt_size_height(75, h), adapt_size_width(540, w), adapt_size_height(930, h)))
-        pg.draw.rect(screen, LIGHT_DARK, (adapt_size_width(1505, w), adapt_size_height(75, h), adapt_size_width(340, w), adapt_size_height(740, h)))
+        # pg.draw.rect(screen, LIGHT_DARK, (adapt_size_width(75, w), adapt_size_height(75, h), adapt_size_width(440, w), adapt_size_height(120, h)))
+        # pg.draw.rect(screen, LIGHT_DARK, (adapt_size_width(75, w), adapt_size_height(275, h), adapt_size_width(440, w), adapt_size_height(730, h)))
+        # pg.draw.rect(screen, LIGHT_DARK, (adapt_size_width(635, w), adapt_size_height(75, h), adapt_size_width(540, w), adapt_size_height(930, h)))
+        # pg.draw.rect(screen, LIGHT_DARK, (adapt_size_width(1505, w), adapt_size_height(75, h), adapt_size_width(340, w), adapt_size_height(740, h)))
         
         
         
         # draw text
-        screen.blit(timeline_text, (adapt_size_width(95, w), adapt_size_height(90, h)))
+        screen.blit(timeUnits_text, (adapt_size_width(700, w), adapt_size_height(840, h)))
+        screen.blit(tps_text, (adapt_size_width(700, w), adapt_size_height(177, h)))
+        
+        clicker_button.render(screen)
 
                 
                 
