@@ -5,6 +5,7 @@ from Buttons import Button
 import time
 from Logger import Logger
 import buildings
+import upgrades
 from utils import adapt_size_height, adapt_size_width, load_image, get_number_font, get_text_font, get_timeline_font
 
 # initializing
