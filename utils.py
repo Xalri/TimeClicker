@@ -21,9 +21,9 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path).replace("\\", "/")
 
 def get_timeline_font(size, height):
-    return pygame.font.Font(f"{resource_path("src")}/fonts/LetterGothicStd-Bold.ttf", int(adapt_size_height(size, height)))
+    return pygame.font.Font(resource_path("src") + "/fonts/LetterGothicStd-Bold.ttf", int(adapt_size_height(size, height)))
 def get_number_font(size, height):
-    return pygame.font.Font(f"{resource_path("src")}/fonts/LetterGothicStd-Bold.ttf", int(adapt_size_height(size, height)))
+    return pygame.font.Font(resource_path("src") + "/fonts/LetterGothicStd-Bold.ttf", int(adapt_size_height(size, height)))
 def get_text_font(size, height):
-    return pygame.font.Font(f"{resource_path("src")}/fonts/FranklinGothicHeavyRegular.ttf", int(adapt_size_height(size, height)))
+    return pygame.font.Font(resource_path("src") + "/fonts/FranklinGothicHeavyRegular.ttf", int(adapt_size_height(size, height)))
 
