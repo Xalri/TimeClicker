@@ -143,8 +143,8 @@ def main():
         # timeline_text: pg.Surface = get_timeline_font(124, h).render(f"{timeline}", True, YELLOW_GREEN)
         
         clicker_button: Button = Button(
-            (adapt_size_width(715, w), adapt_size_height(304, h), adapt_size_width(403, w), adapt_size_height(400, h))
-            , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.65, 10, True)
+            (adapt_size_width(715, w), adapt_size_height(304, h), adapt_size_width(403, w), adapt_size_height(400, h)), (w, h)
+            , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 1, 0, True)
         
 
 
