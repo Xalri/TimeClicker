@@ -55,6 +55,8 @@ clock:  pg.time.Clock = pg.time.Clock()
 
 #initialize window
 screen: pg.Surface = pg.display.set_mode((720, 480), pg.RESIZABLE)
+icon: pg.Surface = pg.image.load(os.path.join(src_dir, "icon.ico"))
+pygame.display.set_icon(icon)
 Window.from_display_module().maximize()
 pg.display.set_caption('Time Clicker')
 screen.fill(BACKGROUND_COLOR)
@@ -144,7 +146,7 @@ def main():
         
         clicker_button: Button = Button(
             (adapt_size_width(705, w), adapt_size_height(304, h), adapt_size_width(403, w), adapt_size_height(400, h)), (w, h)
-            , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 1, 0, True)
+            , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.4, 10, True)
         
 
 
