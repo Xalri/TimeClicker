@@ -1,7 +1,8 @@
 import pygame as pg
+from utils import load_image
 
 class Button:
-    def __init__(self, rect, screen_size, background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, ):
+    def __init__(self, rect, screen_size: (int, int), background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, ):
         """
         Initialize the button.
         
@@ -28,7 +29,7 @@ class Button:
                 self.original_image.set_colorkey((0, 0, 0))  # Make the black background invisible
                 pg.draw.rect(self.original_image, background, (0, 0, self.rect.width, self.rect.height), border_radius=border_radius)
         elif isinstance(background, str):  # Image path
-            bg_image = pg.image.load(background).convert_alpha()
+            bg_image = load_image(background, screen_size[0], screen_size[1])
 
             # Scale the image while preserving aspect ratio
             if isinstance(image_scale, (int, float)) and image_scale > 0:
