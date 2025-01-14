@@ -54,8 +54,8 @@ clock:  pg.time.Clock = pg.time.Clock()
 
 
 #initialize window
-screen: pg.Surface = pg.display.set_mode((720, 480), pg.RESIZABLE)
-icon: pg.Surface = pg.image.load(os.path.join(src_dir, "icon.ico"))
+screen: pg.Surface = pg.display.set_mode((1024, 576), pg.RESIZABLE)
+icon: pg.Surface = pg.image.load(os.path.join(src_dir, "icon.png"))
 pygame.display.set_icon(icon)
 Window.from_display_module().maximize()
 pg.display.set_caption('Time Clicker')
@@ -110,7 +110,6 @@ def main():
     
     current_frame: int = 0
     framerate: int =10
-    w, h = pg.display.get_surface().get_size()
     
     
 
@@ -127,6 +126,8 @@ def main():
     running: bool = True
     while running:
         
+        w, h = pg.display.get_surface().get_size()
+
         # clicker = Button((adapt_size_width(717.5, w), adapt_size_height(307.5, h), adapt_size_width(375, w), adapt_size_width(375, w)), BLUE, lambda: increment_timeUnits(clicker_amount), 300)
         
         
