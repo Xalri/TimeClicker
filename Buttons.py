@@ -1,7 +1,7 @@
 import pygame as pg
 
 class Button:
-    def __init__(self, rect, background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False):
+    def __init__(self, rect, screen_size, background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, ):
         """
         Initialize the button.
         
