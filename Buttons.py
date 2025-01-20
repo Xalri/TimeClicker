@@ -1,11 +1,23 @@
 import pygame as pg
 from utils import load_image
 
+
 class Button:
-    def __init__(self, rect, screen_size: (int, int), background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, ):
+    def __init__(
+        self,
+        rect,
+        screen_size: (int, int),
+        background=(255, 0, 0),
+        command=lambda: print("clicked"),
+        border_radius=0,
+        transparent=False,
+        image_scale=1,
+        image_rotation=0,
+        bump_on_click=False,
+    ):
         """
         Initialize the button.
-        
+
         :param rect: The rectangle specifying the button's position and size.
         :param background: The button background, either an RGB tuple or a path to an image.
         :param command: The function to execute when the button is clicked.
@@ -18,7 +30,9 @@ class Button:
         self.rect = pg.Rect(rect)
         self.command = command
         self.bump_on_click = bump_on_click
-        self.original_image = pg.Surface(self.rect.size, pg.SRCALPHA)  # Support alpha channel
+        self.original_image = pg.Surface(
+            self.rect.size, pg.SRCALPHA
+        )  # Support alpha channel
 
         # Handle background as color or image
         if isinstance(background, tuple):  # RGB tuple
@@ -26,8 +40,15 @@ class Button:
                 self.original_image.fill((0, 0, 0, 0))  # Fully transparent
             else:
                 self.original_image.fill((0, 0, 0))  # Opaque background for masking
-                self.original_image.set_colorkey((0, 0, 0))  # Make the black background invisible
-                pg.draw.rect(self.original_image, background, (0, 0, self.rect.width, self.rect.height), border_radius=border_radius)
+                self.original_image.set_colorkey(
+                    (0, 0, 0)
+                )  # Make the black background invisible
+                pg.draw.rect(
+                    self.original_image,
+                    background,
+                    (0, 0, self.rect.width, self.rect.height),
+                    border_radius=border_radius,
+                )
         elif isinstance(background, str):  # Image path
             bg_image = load_image(background, screen_size[0], screen_size[1])
 
@@ -50,13 +71,20 @@ class Button:
             image_y = (self.rect.height - rotated_image.get_height()) // 2
             self.original_image.blit(rotated_image, (image_x, image_y))
         else:
-            raise ValueError("The background must be an RGB tuple or a path to an image.")
+            raise ValueError(
+                "The background must be an RGB tuple or a path to an image."
+            )
 
         self.image = self.original_image.copy()
 
         # Create the mask for click detection
         mask_surface = pg.Surface(self.rect.size, pg.SRCALPHA)
-        pg.draw.rect(mask_surface, (255, 255, 255), (0, 0, self.rect.width, self.rect.height), border_radius=border_radius)
+        pg.draw.rect(
+            mask_surface,
+            (255, 255, 255),
+            (0, 0, self.rect.width, self.rect.height),
+            border_radius=border_radius,
+        )
         self.mask = pg.mask.from_surface(mask_surface)
 
     def render(self, screen):
@@ -67,7 +95,9 @@ class Button:
         """Handle events for the button."""
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
             rel_x, rel_y = event.pos[0] - self.rect.x, event.pos[1] - self.rect.y
-            if 0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height:  # Bounds check
+            if (
+                0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height
+            ):  # Bounds check
                 if self.mask.get_at((rel_x, rel_y)):
                     if self.bump_on_click:
                         self._bump_effect()
@@ -77,7 +107,9 @@ class Button:
         """Create a bump effect by temporarily scaling the button."""
         enlarged_width = int(self.rect.width * 1.1)  # 10% larger
         enlarged_height = int(self.rect.height * 1.1)
-        bumped_image = pg.transform.scale(self.original_image, (enlarged_width, enlarged_height))
+        bumped_image = pg.transform.scale(
+            self.original_image, (enlarged_width, enlarged_height)
+        )
 
         # Center the bumped image on the original rect
         offset_x = (enlarged_width - self.rect.width) // 2
