@@ -1,2 +1,0 @@
-git pull => récupérer ce qu'ont fais les autres
-git comm "MESSAGE" => envoyer ce que t'as fais
