@@ -42,7 +42,7 @@ pg.display.set_caption('Time Clicker')
 
 def main():
     # define game values
-    # save_data(appdata_path, 1000)
+    save_data(appdata_path, 0)
     timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits = get_data(appdata_path)
     max_timeUnits = int(float(max_timeUnits))
     LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
@@ -90,7 +90,7 @@ def main():
 
     if buildings[0]["name"] not in bought_buildings["short_list"]:
         bought_buildings["short_list"].append(buildings[0]["name"])
-        bought_buildings["long_list"].append({"name": buildings[0]["name"], "amount": 1})
+        bought_buildings["long_list"].append({"name": buildings[0]["name"], "amount": 5})
     pprint(bought_buildings)
 
 
@@ -140,13 +140,13 @@ def main():
         for i in range(len(buildings)):
             build = buildings[i]
             previous_build = buildings[i-1] if i > 0 else None
-            if i != 0:
-                print(f"{build['name']} | {max_timeUnits > build['cost'](1)/2 } | {previous_build['name'] in bought_buildings['short_list']} | {next((b['amount'] for b in bought_buildings['long_list'] if b['name'] == previous_build['name']), None)}")
             if build["name"] in bought_buildings["short_list"] or i == 0:
                 if not build in available_buildings: available_buildings.append(build)
-                
             elif max_timeUnits > build["cost"](1)/2     and     previous_build["name"] in bought_buildings["short_list"]     and     (next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == previous_build["name"]), None) >= 5):
                 if not build in available_buildings: available_buildings.append(build)
+                
+                
+        
         
         LOGGER.DEBUG(f"Available buildings:")
         pprint([build["name"] for build in available_buildings])
@@ -198,7 +198,11 @@ def main():
         screen.blit(blue_cable_image, (adapt_size_width(1285, w), adapt_size_height(935, h)))
                 
         
-        
+        tps = 0
+        for build in available_buildings:
+            
+            tps += build["tps_boost"]*next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
+            
         
         
         
