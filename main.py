@@ -199,9 +199,12 @@ def main():
                 
         
         tps = 0
-        for build in available_buildings:
+        for i in range(len(available_buildings)):
+            build=available_buildings[i]
             
             tps += build["tps_boost"]*next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
+            img = load_image("src/img/buildings" + build["name"] + ".png", w, h)
+            screen.blit(img, (adapt_size_width(45, w), adapt_size_height(45 + 45*i, h)))
             
         
         
