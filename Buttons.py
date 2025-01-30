@@ -2,7 +2,7 @@ import pygame as pg
 from utils import load_image
 
 class Button:
-    def __init__(self, rect, screen_size: (int, int), background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, ):
+    def __init__(self, rect, screen_size: tuple[int, int], background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, ):
         """
         Initialize the button.
         
@@ -19,6 +19,8 @@ class Button:
         self.command = command
         self.bump_on_click = bump_on_click
         self.original_image = pg.Surface(self.rect.size, pg.SRCALPHA)  # Support alpha channel
+        self.bump_event = pg.USEREVENT + 1  # Timer event for bump reset
+
 
         # Handle background as color or image
         if isinstance(background, tuple):  # RGB tuple
@@ -72,6 +74,10 @@ class Button:
                     if self.bump_on_click:
                         self._bump_effect()
                     self.command()
+                    
+        # Handle bump reset event
+        if event.type == pg.USEREVENT + 1:
+            self.reset_bump()
 
     def _bump_effect(self):
         """Create a bump effect by temporarily scaling the button."""
@@ -86,7 +92,7 @@ class Button:
         self.image.blit(bumped_image, (-offset_x, -offset_y))
 
         # Restore the original image after a short delay
-        pg.time.set_timer(pg.USEREVENT + 1, 100)  # 100ms delay
+        pg.time.set_timer(self.bump_event, 100)  # 100ms delay
 
     def reset_bump(self):
         """Reset the bump effect back to the original image."""

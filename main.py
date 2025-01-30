@@ -4,114 +4,57 @@ from data import *
 from Buttons import Button
 import time
 from Logger import Logger
-# import buildings
-from utils import adapt_size_height, adapt_size_width, load_image, get_number_font, get_text_font, get_timeline_font, resource_path
+from buildings import buildings
+from utils import adapt_size_height, adapt_size_width, load_image, get_number_font, get_text_font, get_timeline_font, resource_path, save_data, get_data, crop_value, format_timeUnits, format_time_no_convertion
 import os
-from base64 import b64decode, b64encode
+from pprint import pprint
 
-# Get the path to the AppData/Local directory
-appdata_path = os.path.join(os.getenv('LOCALAPPDATA'), 'TimeClicker')
-src_dir = resource_path("src")
-
-# Check if the directory exists, if not, create it
-if not os.path.exists(appdata_path):
-    os.makedirs(appdata_path)
-    
-    
-def save_data(timeUnits, tps, timeline, clicker_amount, buildings):            
-    with open(os.path.join(appdata_path, 'data'), 'w') as f:
-        data = f"{timeUnits}\n{tps}\n{timeline}\n{clicker_amount}\n{buildings}"
-        data = b64encode(data.encode())
-        data = data.decode().replace("=", "").replace("=", "")
-        data = data[::-1]
-        f.write(data)
-
-
-def get_data():
-    if not os.path.exists(os.path.join(appdata_path, 'data')):
-        save_data(0, 0, 0, 1, "buildings")
-    with open(os.path.join(appdata_path, 'data'), 'r') as f:
-        data = f.read()
-        data = data[::-1]
-        data = data + "=="
-        data = b64decode(data.encode()).decode()
-        data = data.split('\n')
-        timeUnits = float(data[0])
-        tps = float(data[1])
-        timeline = float(data[2])
-        clicker_amount = int(data[3])
-        buildings = data[4]
-        return timeUnits, tps, timeline, clicker_amount, buildings
-        
-
-# initializing
 LOGGER: Logger = Logger()
 pg.init()
 pg.font.init()
 clock:  pg.time.Clock = pg.time.Clock()
 
 
+appdata_path = os.path.join(os.getenv('LOCALAPPDATA'), 'TimeClicker')
+src_dir = resource_path("src")
+
+os.makedirs(appdata_path, exist_ok=True)
+    
+    
+        
 
 
-#initialize window
 screen: pg.Surface = pg.display.set_mode((1024, 576), pg.RESIZABLE)
 icon: pg.Surface = pg.image.load(os.path.join(src_dir, "icon.png"))
 pygame.display.set_icon(icon)
 Window.from_display_module().maximize()
 pg.display.set_caption('Time Clicker')
-screen.fill(BACKGROUND_COLOR)
-pg.display.flip()
-
-
-# LOGGER.INFO('Screen width: {} Screen height: {}'.format(w, h))
 
 
 
 
 
-def crop_value(value: float):
-    if value == 0.0:
-        return 0
-    if value >= 10:
-        return int(value)
-    return round(value, 3)
 
-    
-# def format_timeUnits(timeUnits: float):
-#     timeUnits = crop_value(timeUnits)
-#     timeUnits =  ".".join([str(timeUnits)[::-1][i:i+3] for i in range(0, len(str(timeUnits)), 3)])[::-1]
-#     if int(timeUnits.replace(".", "")) >= 10 and len(timeUnits.replace(".", "")) < 9:
-#         timeUnits = "".join([" " for _ in range(9 - len(timeUnits.replace(".", "")))]) + timeUnits
-#     return timeUnits
 
-def format_timeUnits(timeUnits: float, n):
-    timeUnits = crop_value(timeUnits)
-    if timeUnits < 1000:
-        return "".join([" " for _ in range(n+2 - len(str(timeUnits)))]) + str(timeUnits)
-    for unit, factor in zip(['k', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', 'Ud',  'Dd', 'Td'], [10**i for i in range(3, (14 * 3)+1, 3)]):
-        if timeUnits < factor * 1000:
-            timeUnits = f"{timeUnits / factor:.1f}{unit}".rstrip('.0')
-            return "".join([" " for _ in range(n - len(timeUnits.replace(".", "").replace(unit, "")))]) + timeUnits
-    return f"{timeUnits:.0f}"
-
-def format_time_no_convertion(value: int, n: int):
-    return "".join([" " for _ in range(n+2 - len(str(value)))]) + str(value)    
+ 
 
 
 
 def main():
     # define game values
-    timeUnits, tps, timeline, clicker_amount, buildings = get_data()
-    # timeUnits: float = 1
-    # tps: float = 0
-    
-    # clicker_amount: float = 1
-    # timeline: int = 0
+    # save_data(appdata_path, 1000)
+    timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits = get_data(appdata_path)
+    max_timeUnits = int(float(max_timeUnits))
+    LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
     
     current_frame: int = 0
     framerate: int =10
     
     w = h = "n"
+    
+    era: int = 1
+    
+    available_buildings: list = []
     
     
 
@@ -131,11 +74,11 @@ def main():
     timeline_text: pg.Surface = get_timeline_font(124, he).render(f"{format_time_no_convertion(timeline,3)}", True, YELLOW_GREEN)
     # timeline_text: pg.Surface = get_timeline_font(124, he).render(f"{timeline}", True, YELLOW_GREEN)
     
-    # clicker_button: Button = Button(
-    #     (adapt_size_width(705, wi), adapt_size_height(304, he), adapt_size_width(403, wi), adapt_size_height(400, he)), (wi, he)
-    #     , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.4, 10, True)
+    clicker_button: Button = Button(
+        (adapt_size_width(705, wi), adapt_size_height(304, he), adapt_size_width(403, wi), adapt_size_height(400, he)), (wi, he)
+        , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.4, 10, True)
     
-    clicker_button: Button = Button((adapt_size_width(705, wi), adapt_size_height(304, he), adapt_size_width(403, wi), adapt_size_height(400, he)), (wi, he), BLUE)    
+    # clicker_button: Button = Button((adapt_size_width(705, wi, True), adapt_size_height(304, he, True), adapt_size_width(403, wi, True), adapt_size_height(400, he, True)), (wi, he))    
     
     timeline_image: pg.surface = load_image(f"{src_dir}/img/timeline.png", wi, he)
     upgrade_image: pg.surface = load_image(f"{src_dir}/img/upgrade.png", wi, he)
@@ -145,7 +88,10 @@ def main():
     red_cable_image: pg.surface = load_image(f"{src_dir}/img/red_cable_on.png", wi, he)
     blue_cable_image: pg.surface = load_image(f"{src_dir}/img/blue_cable_on.png", wi, he)
 
-        
+    if buildings[0]["name"] not in bought_buildings["short_list"]:
+        bought_buildings["short_list"].append(buildings[0]["name"])
+        bought_buildings["long_list"].append({"name": buildings[0]["name"], "amount": 1})
+    pprint(bought_buildings)
 
 
 
@@ -167,15 +113,13 @@ def main():
         if w != pg.display.get_surface().get_width() or h != pg.display.get_surface().get_height():
             LOGGER.DEBUG("Updating screen size")
             w, h = pg.display.get_surface().get_size()
-            timeUnits_text: pg.Surface = get_number_font(65, h).render(f"{format_timeUnits(timeUnits, 9)}", True, RED)
-            tps_text: pg.Surface = get_number_font(50, h).render(f"{format_timeUnits(tps, 9)}", True, RED)
             
             timeline_text: pg.Surface = get_timeline_font(124, h).render(f"{format_time_no_convertion(timeline,3)}", True, YELLOW_GREEN)
             # timeline_text: pg.Surface = get_timeline_font(124, h).render(f"{timeline}", True, YELLOW_GREEN)
             
-            # clicker_button: Button = Button(
-            #     (adapt_size_width(705, w), adapt_size_height(304, h), adapt_size_width(403, w), adapt_size_height(400, h)), (w, h)
-            #     , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.4, 10, True)
+            clicker_button: Button = Button(
+                (adapt_size_width(705, w, True), adapt_size_height(304, h, True), adapt_size_width(403, w, True), adapt_size_height(400, h, True)), (w, h)
+                , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.4, 10, True)
             
             
             timeline_image: pg.surface = load_image(f"{src_dir}/img/timeline.png", w, h)
@@ -185,10 +129,33 @@ def main():
             shop_image: pg.surface = load_image(f"{src_dir}/img/shop.png", w, h)
             red_cable_image: pg.surface = load_image(f"{src_dir}/img/red_cable_on.png", w, h)
             blue_cable_image: pg.surface = load_image(f"{src_dir}/img/blue_cable_on.png", w, h)
-
+        
+        timeUnits_text: pg.Surface = get_number_font(65, h).render(f"{format_timeUnits(timeUnits, 9)}", True, RED)
+        tps_text: pg.Surface = get_number_font(50, h).render(f"{format_timeUnits(tps, 9)}", True, RED)
+        
+        
         
 
-
+        
+        for i in range(len(buildings)):
+            build = buildings[i]
+            previous_build = buildings[i-1] if i > 0 else None
+            if i != 0:
+                print(f"{build['name']} | {max_timeUnits > build['cost'](1)/2 } | {previous_build['name'] in bought_buildings['short_list']} | {next((b['amount'] for b in bought_buildings['long_list'] if b['name'] == previous_build['name']), None)}")
+            if build["name"] in bought_buildings["short_list"] or i == 0:
+                if not build in available_buildings: available_buildings.append(build)
+                
+            elif max_timeUnits > build["cost"](1)/2     and     previous_build["name"] in bought_buildings["short_list"]     and     (next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == previous_build["name"]), None) >= 5):
+                if not build in available_buildings: available_buildings.append(build)
+        
+        LOGGER.DEBUG(f"Available buildings:")
+        pprint([build["name"] for build in available_buildings])
+        
+        
+        
+        
+        
+        
         
         
         
@@ -198,21 +165,26 @@ def main():
         
         timeUnits += tps/framerate
         
-
+        max_timeUnits = max(max_timeUnits, timeUnits)
+        
 
         
         for event in pg.event.get():
         
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 print("exiting...")
-                save_data(timeUnits, tps, timeline, clicker_amount, buildings)
+                save_data(appdata_path, timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits)
                 running = False
             
-            # clicker_button.get_event(event)
+            clicker_button.get_event(event)
 
 
 
             
+
+
+
+
 
         screen.fill(BACKGROUND_COLOR)
         
@@ -231,17 +203,21 @@ def main():
         
         
         # draw text
-        screen.blit(timeUnits_text, (adapt_size_width(700, w), adapt_size_height(840, h)))
-        screen.blit(tps_text, (adapt_size_width(700, w), adapt_size_height(177, h)))
+        screen.blit(timeUnits_text, (adapt_size_width(700, w), adapt_size_height(835, h)))
+        screen.blit(tps_text, (adapt_size_width(715, w), adapt_size_height(190, h)))
         screen.blit(timeline_text, (adapt_size_width(90, w), adapt_size_height(87, h)))
         
-        # clicker_button.render(screen)
+        clicker_button.render(screen)
 
                 
-                
+        
+        
         
         pg.display.update()
         pg.display.flip()
+        elapsed_time = clock.get_time() / 1000.0  # Get elapsed time in seconds
+        loop_number = int(elapsed_time // (1 / framerate))
+        print("-" * 50 + f" loop {loop_number} tick {current_frame}/{framerate}")
 
 
 if __name__ == "__main__":
