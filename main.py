@@ -140,7 +140,7 @@ def main():
         for i in range(len(buildings)):
             build = buildings[i]
             previous_build = buildings[i-1] if i > 0 else None
-            if build["name"] in bought_buildings["short_list"] or i == 0 or i==1:
+            if build["name"] in bought_buildings["short_list"] or i < 7:
                 if not build in available_buildings: available_buildings.append(build)
             elif max_timeUnits > build["cost"](1)/2     and     previous_build["name"] in bought_buildings["short_list"]     and     (next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == previous_build["name"]), None) >= 5):
                 if not build in available_buildings: available_buildings.append(build)
@@ -167,6 +167,16 @@ def main():
         
         max_timeUnits = max(max_timeUnits, timeUnits)
         
+        
+        buildings_buttons: list = []
+        tps : int= 0
+        for i in range(len(available_buildings)):
+            build=available_buildings[i]
+            
+            tps += build["tps_boost"]*next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
+            img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
+            buildings_buttons.append(Button( (adapt_size_width(1525, w), adapt_size_height(85 + 40*i, w), adapt_size_width(300, w), adapt_size_height(85, w)) , (w, h), background="src/img/buildings/" + build["name"].lower() + ".png", border_radius=20, command=lambda: print(f"clicked buildings {build["name"]}"), ))
+            # screen.blit(img, (adapt_size_width(1525, w), adapt_size_height(85 + 105*i, h)))
 
         
         for event in pg.event.get():
@@ -177,6 +187,8 @@ def main():
                 running = False
             
             clicker_button.get_event(event)
+            for build_button in buildings_buttons:
+                build_button.get_event(event)
 
 
 
@@ -198,12 +210,19 @@ def main():
         screen.blit(blue_cable_image, (adapt_size_width(1285, w), adapt_size_height(935, h)))
                 
         
-        tps = 0
-        for i in range(len(available_buildings)):
-            build=available_buildings[i]
             
-            tps += build["tps_boost"]*next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
-            img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
+        
+        
+        
+        # draw text
+        screen.blit(timeUnits_text, (adapt_size_width(700, w), adapt_size_height(835, h)))
+        screen.blit(tps_text, (adapt_size_width(715, w), adapt_size_height(190, h)))
+        screen.blit(timeline_text, (adapt_size_width(90, w), adapt_size_height(87, h)))
+        
+        clicker_button.render(screen)
+        for i in range(len(buildings_buttons)):
+            build_button = buildings_buttons[i]
+            
             match era:
                 case 1:
                     base = load_image("src/img/buildings/base_1.png", w, h)
@@ -215,18 +234,11 @@ def main():
                     base = load_image("src/img/buildings/base_4.png", w, h)
                 case 5:
                     base = load_image("src/img/buildings/base_5.png", w, h)
-            screen.blit(base, (adapt_size_width(1525, w), adapt_size_height(85 + 100*i, h)))
-            screen.blit(img, (adapt_size_width(1550, w), adapt_size_height(80 + 100*i, h)))
+            print(base)
+            screen.blit(base, (adapt_size_width(1525, w), adapt_size_height(85 + 105*i, h)))
             
-        
-        
-        
-        # draw text
-        screen.blit(timeUnits_text, (adapt_size_width(700, w), adapt_size_height(835, h)))
-        screen.blit(tps_text, (adapt_size_width(715, w), adapt_size_height(190, h)))
-        screen.blit(timeline_text, (adapt_size_width(90, w), adapt_size_height(87, h)))
-        
-        clicker_button.render(screen)
+            build_button.render(screen)
+
 
                 
         
@@ -239,7 +251,5 @@ def main():
         print("-" * 50 + f" loop {loop_number} tick {current_frame}/{framerate}")
 
 
-    if __name__ == "__main__":
-        main()
-except Exception as e:
-    print(e)
+if __name__ == "__main__":
+    main()
