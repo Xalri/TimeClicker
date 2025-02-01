@@ -2,6 +2,7 @@ import pygame
 import sys
 import os
 from base64 import b64decode, b64encode
+from buildings import buildings
 
 
 def adapt_size_height(size, height, debug=False):
@@ -97,8 +98,8 @@ def crop_value(value: float):
     if value == 0.0:
         return 0
     if value >= 10:
-        return int(value)
-    return round(value, 3)
+        return int(round(value))
+    return round(value, 1)
 
 
 
@@ -114,3 +115,39 @@ def format_timeUnits(timeUnits: float, n):
 
 def format_time_no_convertion(value: int, n: int):
     return "".join([" " for _ in range(n+2 - len(str(value)))]) + str(value)   
+
+
+def can_buy_buildings(bought_buildings, building_name, amount, timeUnits):
+    building = next((b for b in buildings if b["name"] == building_name), None)
+    if building is None:
+        return False  # Building doesn't exist
+
+    current_amount = next((b["amount"] for b in bought_buildings["long_list"] if b["name"] == building_name), 0)
+    cost = round(building["cost"](current_amount + amount) - building["cost"](current_amount))
+
+    return timeUnits >= cost  # Return True if the player can afford it
+
+
+def buy_buildings(bought_buildings, building_name, amount, timeUnits):
+    print(building_name)
+    building = next((b for b in buildings if b["name"] == building_name), None)
+    print(building)
+    if building is None:
+        return bought_buildings
+    current_amount = next((b["amount"] for b in bought_buildings["long_list"] if b["name"] == building_name), 0)
+    print(current_amount)
+    cost = round(building["cost"](current_amount+amount)-building["cost"](current_amount))
+    print(cost)
+
+    if timeUnits >= cost:
+        if not building_name in bought_buildings["short_list"]:
+            bought_buildings["short_list"].append(building_name)
+            bought_buildings["long_list"].append({"name": building_name, "amount": amount})
+        else:
+            for b in bought_buildings["long_list"]:
+                if b["name"] == building_name:
+                    b["amount"] += amount
+                    break
+        timeUnits -= cost
+    return bought_buildings, timeUnits
+

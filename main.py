@@ -5,9 +5,10 @@ from Buttons import Button
 import time
 from Logger import Logger
 from buildings import buildings
-from utils import adapt_size_height, adapt_size_width, load_image, get_number_font, get_text_font, get_timeline_font, resource_path, save_data, get_data, crop_value, format_timeUnits, format_time_no_convertion
+from utils import adapt_size_height, adapt_size_width, load_image, get_number_font, get_text_font, get_timeline_font, resource_path, save_data, get_data, crop_value, format_timeUnits, format_time_no_convertion, buy_buildings, can_buy_buildings
 import os
 from pprint import pprint
+import inspect
 
 LOGGER: Logger = Logger()
 pg.init()
@@ -19,9 +20,9 @@ appdata_path = os.path.join(os.getenv('LOCALAPPDATA'), 'TimeClicker')
 src_dir = resource_path("src")
 
 os.makedirs(appdata_path, exist_ok=True)
-    
-    
-        
+
+
+
 
 
 screen: pg.Surface = pg.display.set_mode((1024, 576), pg.RESIZABLE)
@@ -36,13 +37,15 @@ pg.display.set_caption('Time Clicker')
 
 
 
- 
+
+
+
 
 
 
 def main():
     # define game values
-    save_data(appdata_path, 0)
+    # save_data(appdata_path, 0)
     timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits = get_data(appdata_path)
     max_timeUnits = int(float(max_timeUnits))
     LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
@@ -55,7 +58,15 @@ def main():
     era: int = 1
     
     available_buildings: list = []
-    
+    # {
+    #     "short_list": ["campfire", "farming", "painting", "hunting"], 
+    #     "long_list": [
+    #         {"name": "campfire", "amount": 5}, 
+    #         {"name": "farming", "amount": 5}, 
+    #         {"name": "painting", "amount": 5}, 
+    #         {"name": "hunting", "amount": 5}
+    #     ]
+    # }
     
 
     LOGGER.INFO(timeUnits)
@@ -63,6 +74,10 @@ def main():
     def increment_timeUnits(amount):
         nonlocal timeUnits, clicker_amount
         timeUnits += amount    
+
+    def buy_building_wrapper(b):
+        nonlocal bought_buildings, timeUnits
+        bought_buildings, timeUnits = buy_buildings(bought_buildings, b, 1, timeUnits)
         
         
         
@@ -140,16 +155,16 @@ def main():
         for i in range(len(buildings)):
             build = buildings[i]
             previous_build = buildings[i-1] if i > 0 else None
-            if build["name"] in bought_buildings["short_list"] or i < 7:
+            if build["name"] in bought_buildings["short_list"] or i ==0:
                 if not build in available_buildings: available_buildings.append(build)
-            elif max_timeUnits > build["cost"](1)/2     and     previous_build["name"] in bought_buildings["short_list"]     and     (next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == previous_build["name"]), None) >= 5):
+            elif previous_build["name"] in bought_buildings["short_list"]     and     (next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == previous_build["name"]), None) >= 1):
                 if not build in available_buildings: available_buildings.append(build)
                 
                 
         
         
-        LOGGER.DEBUG(f"Available buildings:")
-        pprint([build["name"] for build in available_buildings])
+        # LOGGER.DEBUG(f"Available buildings:")
+        # pprint([build["name"] for build in available_buildings])
         
         
         
@@ -172,13 +187,20 @@ def main():
         tps : int= 0
         for i in range(len(available_buildings)):
             build=available_buildings[i]
+            build_name = build["name"]
+            # print(build["name"])
             
             tps += build["tps_boost"]*next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
             img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
-            buildings_buttons.append(Button( (adapt_size_width(1525, w), adapt_size_height(85 + 40*i, w), adapt_size_width(300, w), adapt_size_height(85, w)) , (w, h), background="src/img/buildings/" + build["name"].lower() + ".png", border_radius=20, command=lambda: print(f"clicked buildings {build["name"]}"), ))
+            buildings_buttons.append(Button( (adapt_size_width(1525, w), adapt_size_height(20 + 55*i, w), adapt_size_width(300, w), adapt_size_height(85, w)) , (w, h), background="src/img/buildings/" + build_name.lower() + ".png", border_radius=20, command=lambda b=build_name: buy_building_wrapper(b), identifier=build["name"]))
             # screen.blit(img, (adapt_size_width(1525, w), adapt_size_height(85 + 105*i, h)))
 
-        
+
+
+
+
+
+
         for event in pg.event.get():
         
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
@@ -222,6 +244,15 @@ def main():
         clicker_button.render(screen)
         for i in range(len(buildings_buttons)):
             build_button = buildings_buttons[i]
+            print(build_button.identifier)
+            build = next((b for b in bought_buildings["long_list"] if b["name"] == build_button.identifier), None)
+            if build is None:
+                amount = 0
+                cost = next((b["cost"](1) for b in buildings if b["name"] == build_button.identifier), None)
+            else:
+                amount = build["amount"]
+                cost = next((b["cost"](amount + 1)-b["cost"](amount) for b in buildings if b["name"] == build_button.identifier), None)
+            
             
             match era:
                 case 1:
@@ -234,10 +265,18 @@ def main():
                     base = load_image("src/img/buildings/base_4.png", w, h)
                 case 5:
                     base = load_image("src/img/buildings/base_5.png", w, h)
-            print(base)
-            screen.blit(base, (adapt_size_width(1525, w), adapt_size_height(85 + 105*i, h)))
-            
-            build_button.render(screen)
+            # print(base)
+            if not can_buy_buildings(bought_buildings, build_button.identifier, 1, timeUnits):
+                base.fill((100,100,100), special_flags=pg.BLEND_MULT)
+                screen.blit(base, (adapt_size_width(1525, w), adapt_size_height(85 + 105*i, h)))
+                build_button.render(screen, darker=True)
+                screen.blit(get_text_font(25, h).render(f"{round(cost)}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(120 + 105*i, h)))
+            else:
+                screen.blit(base, (adapt_size_width(1525, w), adapt_size_height(85 + 105*i, h)))
+                build_button.render(screen)
+                screen.blit(get_text_font(25, h).render(f"{round(cost)}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(120 + 105*i, h)))
+
+            print("ok")
 
 
                 

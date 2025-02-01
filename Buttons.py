@@ -3,7 +3,7 @@ from utils import load_image
 
 
 class Button:
-    def __init__(self, rect, screen_size: tuple[int, int], background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, ):
+    def __init__(self, rect, screen_size: tuple[int, int], background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, identifier=None):
         """
         Initialize the button.
 
@@ -21,6 +21,7 @@ class Button:
         self.bump_on_click = bump_on_click
         self.original_image = pg.Surface(self.rect.size, pg.SRCALPHA)  # Support alpha channel
         self.bump_event = pg.USEREVENT + 1  # Timer event for bump reset
+        self.identifier = identifier
 
 
         # Handle background as color or image
@@ -76,9 +77,14 @@ class Button:
         )
         self.mask = pg.mask.from_surface(mask_surface)
 
-    def render(self, screen):
+    def render(self, screen, darker=False):
         """Render the button onto the screen."""
-        screen.blit(self.image, self.rect)
+        if darker:
+            image = self.image
+            image.fill((100,100,100), special_flags=pg.BLEND_MULT)
+        else:
+            image = self.image
+        screen.blit(image, self.rect)
 
     def get_event(self, event):
         """Handle events for the button."""
