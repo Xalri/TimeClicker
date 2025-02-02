@@ -22,6 +22,7 @@ class Button:
         self.original_image = pg.Surface(self.rect.size, pg.SRCALPHA)  # Support alpha channel
         self.bump_event = pg.USEREVENT + 1  # Timer event for bump reset
         self.identifier = identifier
+        self.hovering = False
 
 
         # Handle background as color or image
@@ -90,17 +91,33 @@ class Button:
         """Handle events for the button."""
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
             rel_x, rel_y = event.pos[0] - self.rect.x, event.pos[1] - self.rect.y
-            if (
-                0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height
-            ):  # Bounds check
+            if 0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height:
                 if self.mask.get_at((rel_x, rel_y)):
                     if self.bump_on_click:
                         self._bump_effect()
                     self.command()
-                    
-        # Handle bump reset event
+
         if event.type == pg.USEREVENT + 1:
             self.reset_bump()
+
+        if event.type == pg.MOUSEMOTION:
+            self.update_hover_state(event.pos)
+
+    def update_hover_state(self, mouse_pos):
+        """Update hover state and set the cursor accordingly."""
+        rel_x, rel_y = mouse_pos[0] - self.rect.x, mouse_pos[1] - self.rect.y
+        hovering = 0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height and self.mask.get_at((rel_x, rel_y))
+
+        if hovering:
+            if not self.hovering:  # Prevent redundant calls
+                pg.mouse.set_cursor(pg.SYSTEM_CURSOR_HAND)
+                self.hovering = True
+        else:
+            if self.hovering:
+                pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
+                self.hovering = False
+
+
 
     def _bump_effect(self):
         """Create a bump effect by temporarily scaling the button."""

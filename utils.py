@@ -1,8 +1,10 @@
+from pprint import pprint
 import pygame
 import sys
 import os
 from base64 import b64decode, b64encode
 from buildings import buildings
+from datetime import datetime
 
 
 def adapt_size_height(size, height, debug=False):
@@ -77,17 +79,26 @@ def get_data(appdata_path):
         clicker_amount = int(data[3])
         buildings = eval(data[4]) # {'short_list': [], 'long_list': []}
         temp = data[5]
-        return timeUnits, tps, timeline, clicker_amount, buildings, temp
+        last_saved = data[6]
+        return timeUnits, tps, timeline, clicker_amount, buildings, temp, last_saved
     
-def save_data(appdata_path, timeUnits=0, tps=0, timeline=0, clicker_amount=1, buildings={"short_list": [], "long_list": []}, max_timeUnits=0):    
-            
+def save_data(appdata_path, timeUnits=0, tps=0, timeline=0, clicker_amount=1, buildings={"short_list": [], "long_list": []}, max_timeUnits=0, last_saved_time=datetime.now().strftime(" %Y-%m-%d %H:%M:%S")):    
     if max_timeUnits == 0:
         max_timeUnits = timeUnits
-    print("path is: " + str(os.path.join(appdata_path, 'data')))
+
+    print(f"Saving data to: {os.path.join(appdata_path, 'data')}")
+    print(f"Time Units: {timeUnits}")
+    print(f"TPS: {tps}")
+    print(f"Timeline: {timeline}")
+    print(f"Clicker Amount: {clicker_amount}")
+    pprint(f"Buildings: {buildings}")
+    print(f"Max Time Units: {max_timeUnits}")
+    print(f"Last Saved Time: {last_saved_time}")
+
     with open(os.path.join(appdata_path, 'data'), 'w') as f:
-        data = f"{timeUnits}\n{tps}\n{timeline}\n{clicker_amount}\n{buildings}\n{max_timeUnits}"
+        data = f"{timeUnits}\n{tps}\n{timeline}\n{clicker_amount}\n{buildings}\n{max_timeUnits}\n{last_saved_time}"
         data = b64encode(data.encode())
-        print("saving data: " + str(data))
+        print("Encoded data: " + str(data))
         data = data.decode().replace("=", "").replace("=", "")
         data = data[::-1]
         f.write(data)
@@ -103,7 +114,7 @@ def crop_value(value: float):
 
 
 
-def format_timeUnits(timeUnits: float, n):
+def format_timeUnits(timeUnits: float, n=0):
     timeUnits = crop_value(timeUnits)
     if timeUnits < 1000:
         return "".join([" " for _ in range(n+2 - len(str(timeUnits)))]) + str(timeUnits)
@@ -113,7 +124,7 @@ def format_timeUnits(timeUnits: float, n):
             return "".join([" " for _ in range(n - len(timeUnits.replace(".", "").replace(unit, "")))]) + timeUnits
     return f"{timeUnits:.0f}"
 
-def format_time_no_convertion(value: int, n: int):
+def format_time_no_convertion(value: int, n: int=0):
     return "".join([" " for _ in range(n+2 - len(str(value)))]) + str(value)   
 
 
