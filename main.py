@@ -30,7 +30,6 @@ pg.display.set_caption('Time Clicker')
 def main():
     # define game values
     timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, last_saved_time = get_data(appdata_path)
-    clicker_amount = 100000
     max_timeUnits = int(float(max_timeUnits))
     LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
     
