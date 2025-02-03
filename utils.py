@@ -13,16 +13,17 @@ def adapt_size_height(size, height, debug=False):
     return int(round(size / 1080 * height))
 def adapt_size_width(size, width, debug=False):
     if debug:
-        print(int(round(size / 1920 * width)))
-    return int(round(size / 1920 * width))
+        print("Size: " + str(size))
+        print("Size type: " + str(type(size)))
+    return int(round(float(size) / 1920 * width))
 
 
-def load_image(path, width, height):
+def load_image(path, width, height, debug=False):
     image: pygame.surface = pygame.image.load(path).convert_alpha()
     return pygame.transform.scale(
         image,
         (
-            adapt_size_width(image.get_width(), width),
+            adapt_size_width(image.get_width(), width, debug),
             adapt_size_height(image.get_height(), height),
         ),
     )
@@ -70,9 +71,9 @@ def get_data(appdata_path):
         data = b64decode(data.encode()).decode()
         data = data.split('\n')
         print(data)
-        if data == ['']:
-            save_data(appdata_path, 0, 0, 0, 1, {"short_list": [], "long_list": []}, 0)
-            return 0, 0, 0, 1, {"short_list": [], "long_list": []}, 0
+        if data == [''] or len(data) < 7:
+            save_data(appdata_path)
+            return get_data(appdata_path)
         timeUnits = float(data[0])
         tps = float(data[1])
         timeline = float(data[2])

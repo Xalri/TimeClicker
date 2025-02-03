@@ -31,6 +31,8 @@ def main():
     # define game values
     timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, last_saved_time = get_data(appdata_path)
     max_timeUnits = int(float(max_timeUnits))
+    timeUnits = 1000000000000000
+    clicker_amount = 10000000
     LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
     
 
@@ -78,7 +80,8 @@ def main():
     upgrade_image: pg.surface = load_image(f"{src_dir}/img/upgrade.png", wi, he)
     temporal_matrix_image: pg.surface = load_image(f"{src_dir}/img/temporal matrix.png", wi, he)
     human_skill_and_boost: pg.surface = load_image(f"{src_dir}/img/human_skill+boost.png", wi, he)
-    shop_image: pg.surface = load_image(f"{src_dir}/img/shop.png", wi, he)
+    shop_fond_image: pg.surface = load_image(f"{src_dir}/img/shop_fond.png", wi, he)
+    shop_bord_image: pg.surface = load_image(f"{src_dir}/img/shop_bord.png", wi, he)    
     red_cable_image: pg.surface = load_image(f"{src_dir}/img/red_cable_on.png", wi, he)
     blue_cable_image: pg.surface = load_image(f"{src_dir}/img/blue_cable_on.png", wi, he)
 
@@ -90,7 +93,7 @@ def main():
     scroll_y = 0
     scroll_speed = 20
     max_scroll_y = 0  # Define the maximum bottom scroll limit
-    scroll_area_rect = pg.Rect(adapt_size_width(1525, wi), adapt_size_height(160, he), adapt_size_width(300, wi), adapt_size_height(620, he))
+    scroll_area_rect = pg.Rect(adapt_size_width(1525, wi), adapt_size_height(80, he), adapt_size_width(300, wi), adapt_size_height(350, he))
     scrollbar_rect = pg.Rect(adapt_size_width(1830, wi), adapt_size_height(160, he), adapt_size_width(20, wi), adapt_size_height(600, he))
 
     running: bool = True
@@ -110,7 +113,8 @@ def main():
             upgrade_image: pg.surface = load_image(f"{src_dir}/img/upgrade.png", w, h)
             temporal_matrix_image: pg.surface = load_image(f"{src_dir}/img/temporal matrix.png", w, h)
             human_skill_and_boost: pg.surface = load_image(f"{src_dir}/img/human_skill+boost.png", w, h)
-            shop_image: pg.surface = load_image(f"{src_dir}/img/shop.png", w, h)
+            shop_fond_image: pg.surface = load_image(f"{src_dir}/img/shop_fond.png", w, h)
+            shop_bord_image: pg.surface = load_image(f"{src_dir}/img/shop_bord.png", w, h)
             red_cable_image: pg.surface = load_image(f"{src_dir}/img/red_cable_on.png", w, h)
             blue_cable_image: pg.surface = load_image(f"{src_dir}/img/blue_cable_on.png", w, h)
         
@@ -139,7 +143,7 @@ def main():
             tps += build["tps_boost"] * next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
             img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
             buildings_buttons.append(Button(
-                (adapt_size_width(1525, w), adapt_size_height(45 + 55 * i, w), adapt_size_width(300, w), adapt_size_height(45, w)),
+                (adapt_size_width(1525, w), adapt_size_height(45 + 55 * i, w) + (scroll_y * 0), adapt_size_width(300, w), adapt_size_height(45, w)),
                 (w, h), background="src/img/buildings/" + build_name.lower() + ".png", border_radius=20,
                 command=lambda b=build_name: buy_building_wrapper(b), identifier=build["name"]
             ))
@@ -168,19 +172,7 @@ def main():
 
         screen.fill(BACKGROUND_COLOR)
         
-        screen.blit(timeline_image, (adapt_size_width(45, w), adapt_size_height(45, h)))
-        screen.blit(upgrade_image, (adapt_size_width(45, w), adapt_size_height(245, h)))
-        screen.blit(temporal_matrix_image, (adapt_size_width(605, w), adapt_size_height(45, h)))
-        screen.blit(human_skill_and_boost, (adapt_size_width(1265, w), adapt_size_height(45, h)))
-        screen.blit(shop_image, (adapt_size_width(1475, w), adapt_size_height(45, h)))
-        screen.blit(red_cable_image, (adapt_size_width(1285, w), adapt_size_height(860, h)))
-        screen.blit(blue_cable_image, (adapt_size_width(1285, w), adapt_size_height(935, h)))
-        
-        screen.blit(timeUnits_text, (adapt_size_width(700, w), adapt_size_height(835, h)))
-        screen.blit(tps_text, (adapt_size_width(715, w), adapt_size_height(190, h)))
-        screen.blit(timeline_text, (adapt_size_width(90, w), adapt_size_height(87, h)))
-        
-        clicker_button.render(screen)
+        screen.blit(shop_fond_image, (adapt_size_width(1475, w), adapt_size_height(45, h)))
         
         for i in range(len(buildings_buttons)):
             build_button = buildings_buttons[i]
@@ -206,23 +198,41 @@ def main():
             
             button_rect = build_button.rect.move(0, scroll_y)
             base_rect = base.get_rect(topleft=(adapt_size_width(1525, w), adapt_size_height(85 + 105 * i, h))).move(0, scroll_y)
-            if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
+            build_button.rect = button_rect
+            if not can_buy_buildings(bought_buildings, build_button.identifier, 1, timeUnits):
                 build_button.rect = button_rect
-                if not can_buy_buildings(bought_buildings, build_button.identifier, 1, timeUnits):
-                    base.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
-                    screen.blit(base, base_rect.topleft)
-                    build_button.render(screen, darker=True)
-                    screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + scroll_y))
-                    screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount)}", True, GREY), (adapt_size_width(1780, w), adapt_size_height(107 + 104.5 * i, h) + scroll_y))
-                else:
-                    screen.blit(base, base_rect.topleft)
-                    build_button.render(screen)
-                    screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + scroll_y))
-                    screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(107 + 104.5 * i, h) + scroll_y))
+                base.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
+                screen.blit(base, base_rect.topleft)
+                build_button.render(screen, darker=True)
+                screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + scroll_y))
+                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount)}", True, GREY), (adapt_size_width(1780, w), adapt_size_height(107 + 104.5 * i, h) + scroll_y))
+            else:
+                screen.blit(base, base_rect.topleft)
+                build_button.render(screen)
+                screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + scroll_y))
+                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(107 + 104.5 * i, h) + scroll_y))
+            button_rect = build_button.rect.move(0, scroll_y)
+            if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
                 if i == len(buildings_buttons) - 1:
                     can_scroll_up = False
                 else:
                     can_scroll_up = True
+                    
+                    
+        screen.blit(timeline_image, (adapt_size_width(45, w), adapt_size_height(45, h)))
+        screen.blit(upgrade_image, (adapt_size_width(45, w), adapt_size_height(245, h)))
+        screen.blit(temporal_matrix_image, (adapt_size_width(605, w), adapt_size_height(45, h)))
+        screen.blit(human_skill_and_boost, (adapt_size_width(1265, w), adapt_size_height(45, h)))
+        screen.blit(shop_bord_image, (adapt_size_width(1475, w), adapt_size_height(45, h)))
+        screen.blit(red_cable_image, (adapt_size_width(1285, w), adapt_size_height(860, h)))
+        screen.blit(blue_cable_image, (adapt_size_width(1285, w), adapt_size_height(935, h)))
+        
+        screen.blit(timeUnits_text, (adapt_size_width(700, w), adapt_size_height(835, h)))
+        screen.blit(tps_text, (adapt_size_width(715, w), adapt_size_height(190, h)))
+        screen.blit(timeline_text, (adapt_size_width(90, w), adapt_size_height(87, h)))
+        
+        clicker_button.render(screen)
+        
             
             
 
