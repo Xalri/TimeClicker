@@ -93,7 +93,7 @@ def main():
     scroll_y = 0
     scroll_speed = 20
     max_scroll_y = 0  # Define the maximum bottom scroll limit
-    scroll_area_rect = pg.Rect(adapt_size_width(1525, wi), adapt_size_height(80, he), adapt_size_width(300, wi), adapt_size_height(350, he))
+    scroll_area_rect = pg.Rect(adapt_size_width(1525, wi), adapt_size_height(80, he), adapt_size_width(300, wi), adapt_size_height(700, he))
     scrollbar_rect = pg.Rect(adapt_size_width(1830, wi), adapt_size_height(160, he), adapt_size_width(20, wi), adapt_size_height(600, he))
 
     running: bool = True
@@ -143,7 +143,7 @@ def main():
             tps += build["tps_boost"] * next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
             img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
             buildings_buttons.append(Button(
-                (adapt_size_width(1525, w), adapt_size_height(45 + 55 * i, w) + (scroll_y * 0), adapt_size_width(300, w), adapt_size_height(45, w)),
+                (adapt_size_width(1525, w), adapt_size_height(45 + 55 * i, w) + (scroll_y * 1), adapt_size_width(300, w), adapt_size_height(45, w)),
                 (w, h), background="src/img/buildings/" + build_name.lower() + ".png", border_radius=20,
                 command=lambda b=build_name: buy_building_wrapper(b), identifier=build["name"]
             ))
@@ -164,13 +164,16 @@ def main():
             
             clicker_button.get_event(event)
             for build_button in buildings_buttons:
-                build_button.get_event(event)
+                button_rect = build_button.rect.move(0, scroll_y)
+                if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
+                    build_button.get_event(event)
 
         mouse_pos = pg.mouse.get_pos()
         for build_button in buildings_buttons:
-            build_button.update_hover_state(mouse_pos)
+            button_rect = build_button.rect.move(0, scroll_y)
+            if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
+                build_button.update_hover_state(mouse_pos)
 
-        screen.fill(BACKGROUND_COLOR)
         
         screen.blit(shop_fond_image, (adapt_size_width(1475, w), adapt_size_height(45, h)))
         
@@ -198,9 +201,8 @@ def main():
             
             button_rect = build_button.rect.move(0, scroll_y)
             base_rect = base.get_rect(topleft=(adapt_size_width(1525, w), adapt_size_height(85 + 105 * i, h))).move(0, scroll_y)
-            build_button.rect = button_rect
+            # build_button.rect = button_rect
             if not can_buy_buildings(bought_buildings, build_button.identifier, 1, timeUnits):
-                build_button.rect = button_rect
                 base.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
                 screen.blit(base, base_rect.topleft)
                 build_button.render(screen, darker=True)
@@ -211,7 +213,6 @@ def main():
                 build_button.render(screen)
                 screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + scroll_y))
                 screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(107 + 104.5 * i, h) + scroll_y))
-            button_rect = build_button.rect.move(0, scroll_y)
             if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
                 if i == len(buildings_buttons) - 1:
                     can_scroll_up = False
@@ -219,6 +220,7 @@ def main():
                     can_scroll_up = True
                     
                     
+        screen.blit(load_image("src/img/background.png", w, h), (0, 0))
         screen.blit(timeline_image, (adapt_size_width(45, w), adapt_size_height(45, h)))
         screen.blit(upgrade_image, (adapt_size_width(45, w), adapt_size_height(245, h)))
         screen.blit(temporal_matrix_image, (adapt_size_width(605, w), adapt_size_height(45, h)))
