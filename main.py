@@ -206,13 +206,13 @@ def main():
                 base.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
                 screen.blit(base, base_rect.topleft)
                 build_button.render(screen, darker=True)
-                screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + scroll_y))
-                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount)}", True, GREY), (adapt_size_width(1780, w), adapt_size_height(107 + 104.5 * i, h) + scroll_y))
+                screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
+                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount)}", True, GREY), (adapt_size_width(1780, w), adapt_size_height(107 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
             else:
                 screen.blit(base, base_rect.topleft)
                 build_button.render(screen)
-                screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + scroll_y))
-                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(107 + 104.5 * i, h) + scroll_y))
+                screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
+                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(107 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
             if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
                 if i == len(buildings_buttons) - 1:
                     LOGGER.DEBUG("stopping scrolling")
