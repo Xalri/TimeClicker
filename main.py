@@ -119,7 +119,7 @@ def main():
             blue_cable_image: pg.surface = load_image(f"{src_dir}/img/blue_cable_on.png", w, h)
         
         timeUnits_text: pg.Surface = get_number_font(65, h).render(f"{format_timeUnits(timeUnits, 9)}", True, RED)
-        tps_text: pg.Surface = get_number_font(50, h).render(f"{format_timeUnits(tps, 9)}", True, RED)
+        tps_text: pg.Surface = get_number_font(50, h).render(f"{format_timeUnits(tps, 9)} TU/s", True, RED)
         
         for i in range(len(buildings)):
             build = buildings[i]
