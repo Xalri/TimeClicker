@@ -118,8 +118,8 @@ def main():
             red_cable_image: pg.surface = load_image(f"{src_dir}/img/red_cable_on.png", w, h)
             blue_cable_image: pg.surface = load_image(f"{src_dir}/img/blue_cable_on.png", w, h)
         
-        timeUnits_text: pg.Surface = get_number_font(65, h).render(f"{format_timeUnits(timeUnits, 9)}", True, RED)
-        tps_text: pg.Surface = get_number_font(50, h).render(f"{format_timeUnits(tps, 9)} TU/s", True, RED)
+        timeUnits_text: pg.Surface = get_number_font(65, h).render(f"{format_timeUnits(timeUnits, 6)}", True, RED)
+        tps_text: pg.Surface = get_number_font(50, h).render(f"{format_timeUnits(tps, 6)} TU/s", True, RED)
         
         for i in range(len(buildings)):
             build = buildings[i]
@@ -143,7 +143,7 @@ def main():
             tps += build["tps_boost"] * next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
             img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
             buildings_buttons.append(Button(
-                (adapt_size_width(1525, w), adapt_size_height(45, w) + (adapt_size_height(53, w)*i) + adapt_size_height((scroll_y * 0), h), adapt_size_width(300, w), adapt_size_height(45, w)),
+                (adapt_size_width(1525, w), adapt_size_height(85, h) + (adapt_size_height(105, h)*i) + adapt_size_height((scroll_y * 1), h), adapt_size_width(300, w), adapt_size_height(45, w)),
                 (w, h), background="src/img/buildings/" + build_name.lower() + ".png", border_radius=20,
                 command=lambda b=build_name: buy_building_wrapper(b), identifier=build["name"]
             ))
@@ -199,8 +199,8 @@ def main():
                 case 5:
                     base = load_image("src/img/buildings/base_5.png", w, h)
             
-            button_rect = build_button.rect.move(0, scroll_y)
-            base_rect = base.get_rect(topleft=(adapt_size_width(1525, w), adapt_size_height(85 + 105 * i, h))).move(0, scroll_y)
+            button_rect = build_button.rect.move(0,  adapt_size_height((scroll_y * 1), h))
+            base_rect = base.get_rect(topleft=(adapt_size_width(1525, w), adapt_size_height(85 + 105 * i, h))).move(0, adapt_size_height((scroll_y * 1), h))
             # build_button.rect = button_rect
             if not can_buy_buildings(bought_buildings, build_button.identifier, 1, timeUnits):
                 base.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
@@ -232,7 +232,7 @@ def main():
         screen.blit(blue_cable_image, (adapt_size_width(1285, w), adapt_size_height(935, h)))
         
         screen.blit(timeUnits_text, (adapt_size_width(700, w), adapt_size_height(835, h)))
-        screen.blit(tps_text, (adapt_size_width(715, w), adapt_size_height(190, h)))
+        screen.blit(tps_text, (adapt_size_width(710, w), adapt_size_height(187.5, h)))
         screen.blit(timeline_text, (adapt_size_width(90, w), adapt_size_height(87, h)))
         
         clicker_button.render(screen)
