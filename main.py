@@ -93,7 +93,7 @@ def main():
     scroll_y = 0
     scroll_speed = 20
     max_scroll_y = 0  # Define the maximum bottom scroll limit
-    scroll_area_rect = pg.Rect(adapt_size_width(1525, wi), adapt_size_height(80, he), adapt_size_width(300, wi), adapt_size_height(700, he))
+    scroll_area_rect = pg.Rect(adapt_size_width(1525, wi), adapt_size_height(70, he), adapt_size_width(300, wi), adapt_size_height(700, he))
     scrollbar_rect = pg.Rect(adapt_size_width(1830, wi), adapt_size_height(160, he), adapt_size_width(20, wi), adapt_size_height(600, he))
 
     running: bool = True
