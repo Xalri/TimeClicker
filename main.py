@@ -98,7 +98,7 @@ def main():
 
     running: bool = True
     while running:
-        LOGGER.DEBUG(f"Testing screen => {(w, h)} | {pg.display.get_surface().get_size()}")
+        # LOGGER.DEBUG(f"Testing screen => {(w, h)} | {pg.display.get_surface().get_size()}")
         if w != pg.display.get_surface().get_width() or h != pg.display.get_surface().get_height():
             LOGGER.DEBUG("Updating screen size")
             w, h = pg.display.get_surface().get_size()
@@ -143,7 +143,7 @@ def main():
             tps += build["tps_boost"] * next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
             img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
             buildings_buttons.append(Button(
-                (adapt_size_width(1525, w), adapt_size_height(45 + 55 * i, w) + (scroll_y * 1), adapt_size_width(300, w), adapt_size_height(45, w)),
+                (adapt_size_width(1525, w), adapt_size_height(45, w) + (adapt_size_height(53, w)*i) + adapt_size_height((scroll_y * 0), h), adapt_size_width(300, w), adapt_size_height(45, w)),
                 (w, h), background="src/img/buildings/" + build_name.lower() + ".png", border_radius=20,
                 command=lambda b=build_name: buy_building_wrapper(b), identifier=build["name"]
             ))
@@ -215,8 +215,10 @@ def main():
                 screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(107 + 104.5 * i, h) + scroll_y))
             if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
                 if i == len(buildings_buttons) - 1:
+                    LOGGER.DEBUG("stopping scrolling")
                     can_scroll_up = False
                 else:
+                    LOGGER.DEBUG("starting scrolling")
                     can_scroll_up = True
                     
                     
@@ -249,7 +251,7 @@ def main():
         pg.display.flip()
         elapsed_time = clock.get_time() / 1000.0  # Get elapsed time in seconds
         loop_number = int(elapsed_time // (1 / framerate))
-        print("-" * 50 + f" loop {loop_number} tick {current_frame}/{framerate}")
+        # print("-" * 50 + f" loop {loop_number} tick {current_frame}/{framerate}")
 
 if __name__ == "__main__":
     main()
