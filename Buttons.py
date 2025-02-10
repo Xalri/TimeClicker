@@ -101,8 +101,8 @@ class Button:
         if event.type == pg.USEREVENT + 1:
             self.reset_bump()
 
-        if event.type == pg.MOUSEMOTION:
-            self.update_hover_state(event.pos)
+        # if event.type == pg.MOUSEMOTION:
+        #     self.update_hover_state(event.pos)
 
     def update_hover_state(self, mouse_pos):
         """Update hover state and set the cursor accordingly."""

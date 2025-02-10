@@ -1,25 +1,49 @@
+import os
+import sys
+import time
+import ctypes
+import inspect
+from pprint import pprint
+from datetime import datetime
+
 import pygame as pg
 from pygame._sdl2 import Window
+from pygame.locals import *
+
 from data import *
 from Buttons import Button
-import time
 from Logger import Logger
 from buildings import buildings
-from utils import adapt_size_height, adapt_size_width, load_image, get_number_font, get_text_font, get_timeline_font, resource_path, save_data, get_data, crop_value, format_timeUnits, format_time_no_convertion, buy_buildings, can_buy_buildings
-import os
-from pprint import pprint
-import inspect
-from datetime import datetime
+from utils import (
+    adapt_size_height, adapt_size_width, load_image, get_number_font,
+    get_text_font, get_timeline_font, resource_path, save_data, get_data,
+    crop_value, format_timeUnits, format_time_no_convertion, buy_buildings,
+    can_buy_buildings
+)
 
 LOGGER: Logger = Logger()
 pg.init()
 pg.font.init()
 clock:  pg.time.Clock = pg.time.Clock()
 
+
+if len(sys.argv) > 1:
+    if sys.argv[1] == "--debug":
+        LOGGER.set_level(4)
+        
 appdata_path = os.path.join(os.getenv('LOCALAPPDATA'), 'TimeClicker')
 src_dir = resource_path("src")
 
 os.makedirs(appdata_path, exist_ok=True)
+
+ctypes.windll.user32.SetProcessDPIAware()
+monitor_info = ctypes.windll.user32.MonitorFromWindow(None, 2)
+monitor_rect = ctypes.wintypes.RECT()
+ctypes.windll.user32.GetMonitorInfoW(monitor_info, ctypes.byref(monitor_rect))
+monitor_x = monitor_rect.left
+monitor_y = monitor_rect.top
+os.environ['SDL_VIDEO_WINDOW_POS'] = f"{monitor_x},{monitor_y}"
+
 
 screen: pg.Surface = pg.display.set_mode((1024, 576), pg.RESIZABLE)
 icon: pg.Surface = pg.image.load(os.path.join(src_dir, "icon.png"))
@@ -29,10 +53,11 @@ pg.display.set_caption('Time Clicker')
 
 def main():
     # define game values
+    save_data(appdata_path)
     timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, last_saved_time = get_data(appdata_path)
     max_timeUnits = int(float(max_timeUnits))
-    timeUnits = 1000000000000000
-    clicker_amount = 10000000
+    # timeUnits = 1000000000000000
+    # clicker_amount = 10000000
     LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
     
 
@@ -54,6 +79,8 @@ def main():
     available_buildings: list = []
 
     can_scroll_up = True
+    
+    is_clickable = False
     
     LOGGER.INFO(timeUnits)
     
@@ -87,13 +114,13 @@ def main():
 
     if buildings[0]["name"] not in bought_buildings["short_list"]:
         bought_buildings["short_list"].append(buildings[0]["name"])
-        bought_buildings["long_list"].append({"name": buildings[0]["name"], "amount": 5})
-    pprint(bought_buildings)
+        bought_buildings["long_list"].append({"name": buildings[0]["name"], "amount": 0})
+    LOGGER.DEBUG(bought_buildings)
 
     scroll_y = 0
     scroll_speed = 20
     max_scroll_y = 0  # Define the maximum bottom scroll limit
-    scroll_area_rect = pg.Rect(adapt_size_width(1525, wi), adapt_size_height(70, he), adapt_size_width(300, wi), adapt_size_height(700, he))
+    scroll_area_rect = pg.Rect(adapt_size_width(1525, wi), adapt_size_height(70, he), adapt_size_width(300, wi), adapt_size_height(750, he))
     scrollbar_rect = pg.Rect(adapt_size_width(1830, wi), adapt_size_height(160, he), adapt_size_width(20, wi), adapt_size_height(600, he))
 
     running: bool = True
@@ -147,31 +174,49 @@ def main():
                 (w, h), background="src/img/buildings/" + build_name.lower() + ".png", border_radius=20,
                 command=lambda b=build_name: buy_building_wrapper(b), identifier=build["name"]
             ))
+            # buildings_buttons.append(Button(
+            #     (adapt_size_width(1525, w), adapt_size_height(85, h) + (adapt_size_height(105, h)*i) + adapt_size_height((scroll_y * 1), h), adapt_size_width(300, w), adapt_size_height(45, w)),
+            #     (w, h), background=BLUE, border_radius=20,
+            #     command=lambda b=build_name: buy_building_wrapper(b), identifier=build["name"]
+            # ))
 
         
-
         pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 print("exiting...")
                 save_data(appdata_path, timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits )
                 running = False
+            elif event.type == pg.KEYDOWN and event.key == pg.K_F7:
+                if LOGGER.get_level() == 4:
+                    LOGGER.INFO("Setting log level to WARNING")
+                    LOGGER.set_level(3)
+                else:
+                    LOGGER.INFO("Setting log level to DEBUG")
+                    LOGGER.set_level(4)
             elif event.type == pg.MOUSEWHEEL and len(available_buildings) > 6:
-                print(event.y)
+                LOGGER.DEBUG(f"scroll offset: {event.y}")
                 if can_scroll_up or event.y > 0:
                     scroll_y += event.y * scroll_speed
                     scroll_y = min(scroll_y, 0)  # Ensure scroll_y does not go below 0
             
-            clicker_button.get_event(event)
+            if event.type == pg.MOUSEMOTION:
+                is_clickable = False
+                clicker_button.get_event(event)
+                for build_button in buildings_buttons:
+                    rel_x, rel_y = event.pos[0] - scroll_area_rect.x, event.pos[1] - scroll_area_rect.y
+                    if 0 <= rel_x < scroll_area_rect.width and 0 <= rel_y < scroll_area_rect.height:
+                        is_clickable = True
+                        
             for build_button in buildings_buttons:
-                button_rect = build_button.rect.move(0, scroll_y)
-                if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
-                    build_button.get_event(event)
+                build_button.get_event(event)
+                
+            clicker_button.get_event(event)
 
         mouse_pos = pg.mouse.get_pos()
         for build_button in buildings_buttons:
-            button_rect = build_button.rect.move(0, scroll_y)
-            if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
+            button_rect = build_button.rect
+            if scroll_area_rect.colliderect(button_rect) and is_clickable:
                 build_button.update_hover_state(mouse_pos)
 
         
@@ -199,7 +244,8 @@ def main():
                 case 5:
                     base = load_image("src/img/buildings/base_5.png", w, h)
             
-            button_rect = build_button.rect.move(0,  adapt_size_height((scroll_y * 1), h))
+            # print(f"scroll_y: {scroll_y}({abs(adapt_size_height((scroll_y * 1), h))})")
+            button_rect = build_button.rect.move(0, build_button.rect.height + adapt_size_height(7.5, h))
             base_rect = base.get_rect(topleft=(adapt_size_width(1525, w), adapt_size_height(85 + 105 * i, h))).move(0, adapt_size_height((scroll_y * 1), h))
             # build_button.rect = button_rect
             if not can_buy_buildings(bought_buildings, build_button.identifier, 1, timeUnits):
@@ -215,13 +261,16 @@ def main():
                 screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(107 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
             if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
                 if i == len(buildings_buttons) - 1:
-                    LOGGER.DEBUG("stopping scrolling")
-                    can_scroll_up = False
+                    if  can_scroll_up:
+                        LOGGER.DEBUG("stopping scrolling")
+                        can_scroll_up = False
                 else:
-                    LOGGER.DEBUG("starting scrolling")
-                    can_scroll_up = True
+                    if not can_scroll_up:
+                        LOGGER.DEBUG("starting scrolling")
+                        can_scroll_up = True
                     
                     
+        
         screen.blit(load_image("src/img/background.png", w, h), (0, 0))
         screen.blit(timeline_image, (adapt_size_width(45, w), adapt_size_height(45, h)))
         screen.blit(upgrade_image, (adapt_size_width(45, w), adapt_size_height(245, h)))
@@ -235,6 +284,8 @@ def main():
         screen.blit(tps_text, (adapt_size_width(710, w), adapt_size_height(187.5, h)))
         screen.blit(timeline_text, (adapt_size_width(90, w), adapt_size_height(87, h)))
         
+        # pg.draw.rect(screen, (0, 0, 255), scroll_area_rect, 2)
+        
         clicker_button.render(screen)
         
             
@@ -247,7 +298,6 @@ def main():
         scrollbar_y = scroll_area_rect.y - scroll_y * visible_ratio
         pg.draw.rect(screen, (200, 200, 200), (scrollbar_rect.x, scrollbar_y, scrollbar_rect.width, scrollbar_height))
 
-        pg.display.update()
         pg.display.flip()
         elapsed_time = clock.get_time() / 1000.0  # Get elapsed time in seconds
         loop_number = int(elapsed_time // (1 / framerate))
