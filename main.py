@@ -283,7 +283,7 @@ def main():
                 screen.blit(building_image, building_rect.topleft)
                 
                 screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
-                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount)}", True, GREY), (adapt_size_width(1780, w), adapt_size_height(112.5 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
+                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount)}", True, GREY), (adapt_size_width(1780, w), adapt_size_height(132.5 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
             else:
                 build_button.render(screen)
                 
