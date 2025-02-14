@@ -58,7 +58,7 @@ def main():
     timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, last_saved_time = get_data(appdata_path)
     bought_upgrades = {"short_list": [], "long_list": []}
     max_timeUnits = int(float(max_timeUnits))
-    timeUnits = 1000000000000000
+    # timeUnits = 1000000000000000
     # clicker_amount = 10000000
     LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
     
