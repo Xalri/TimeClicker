@@ -53,10 +53,10 @@ pg.display.set_caption('Time Clicker')
 
 def main():
     # define game values
-    save_data(appdata_path)
+    # save_data(appdata_path)
     timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, last_saved_time = get_data(appdata_path)
     max_timeUnits = int(float(max_timeUnits))
-    # timeUnits = 1000000000000000
+    timeUnits = 1000000000000000
     # clicker_amount = 10000000
     LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
     
@@ -164,14 +164,28 @@ def main():
         
         buildings_buttons: list = []
         tps: int = 0
+        
+        
+        
+        match era:
+            case 1:
+                base = "src/img/buildings/base_1.png"
+            case 2:
+                base = "src/img/buildings/base_2.png"
+            case 3:
+                base = "src/img/buildings/base_3.png"
+            case 4:
+                base = "src/img/buildings/base_4.png"
+            case 5:
+                base = "src/img/buildings/base_5.png"
         for i in range(len(available_buildings)):
             build = available_buildings[i]
             build_name = build["name"]
             tps += build["tps_boost"] * next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
-            img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
+            # img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
             buildings_buttons.append(Button(
                 (adapt_size_width(1525, w), adapt_size_height(85, h) + (adapt_size_height(105, h)*i) + adapt_size_height((scroll_y * 1), h), adapt_size_width(300, w), adapt_size_height(45, w)),
-                (w, h), background="src/img/buildings/" + build_name.lower() + ".png", border_radius=20,
+                (w, h), background=base, border_radius=20,
                 command=lambda b=build_name: buy_building_wrapper(b), identifier=build["name"]
             ))
             # buildings_buttons.append(Button(
@@ -232,33 +246,23 @@ def main():
                 amount = build["amount"]
                 cost = next((b["cost"](amount + 1) - b["cost"](amount) for b in buildings if b["name"] == build_button.identifier), None)
             
-            match era:
-                case 1:
-                    base = load_image("src/img/buildings/base_1.png", w, h)
-                case 2:
-                    base = load_image("src/img/buildings/base_2.png", w, h)
-                case 3:
-                    base = load_image("src/img/buildings/base_3.png", w, h)
-                case 4:
-                    base = load_image("src/img/buildings/base_4.png", w, h)
-                case 5:
-                    base = load_image("src/img/buildings/base_5.png", w, h)
+            building_image = load_image(f"src/img/buildings/{build_button.identifier.lower()}.png", w, h)
             
             # print(f"scroll_y: {scroll_y}({abs(adapt_size_height((scroll_y * 1), h))})")
             button_rect = build_button.rect.move(0, build_button.rect.height + adapt_size_height(7.5, h))
-            base_rect = base.get_rect(topleft=(adapt_size_width(1525, w), adapt_size_height(85 + 105 * i, h))).move(0, adapt_size_height((scroll_y * 1), h))
+            building_rect = building_image.get_rect(topleft=(adapt_size_width(1525, w), adapt_size_height(85 + 105 * i, h))).move(0, adapt_size_height((scroll_y * 1), h))
             # build_button.rect = button_rect
             if not can_buy_buildings(bought_buildings, build_button.identifier, 1, timeUnits):
-                base.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
-                screen.blit(base, base_rect.topleft)
                 build_button.render(screen, darker=True)
+                building_image.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
+                screen.blit(building_image, building_rect.topleft)
                 screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
-                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount)}", True, GREY), (adapt_size_width(1780, w), adapt_size_height(107 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
+                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount)}", True, GREY), (adapt_size_width(1780, w), adapt_size_height(112.5 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
             else:
-                screen.blit(base, base_rect.topleft)
                 build_button.render(screen)
+                screen.blit(building_image, building_rect.topleft)
                 screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
-                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(107 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
+                screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(132.5 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
             if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
                 if i == len(buildings_buttons) - 1:
                     if  can_scroll_up:

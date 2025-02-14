@@ -50,8 +50,8 @@ class Logger:
             timestamp = Style.BRIGHT + "[{}]".format(self.get_timestamp()) + Style.RESET_ALL
             log_level = self.log_levels[level] + level.upper() + Style.RESET_ALL
             print("{} {} {}".format(timestamp, log_level, text))
-        else:
-            print("Log level too low to display message")
+        # else:
+        #     print("Log level too low to display message")
 
     def INFO(self, text):
         self.log("info", text)

@@ -81,11 +81,9 @@ class Button:
 
     def render(self, screen, darker=False):
         """Render the button onto the screen."""
+        image = self.image
         if darker:
-            image = self.image
             image.fill((100,100,100), special_flags=pg.BLEND_MULT)
-        else:
-            image = self.image
         screen.blit(image, self.rect)
 
     def get_event(self, event):
