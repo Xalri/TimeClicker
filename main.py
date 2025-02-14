@@ -257,13 +257,22 @@ def main():
             # build_button.rect = button_rect
             if not can_buy_buildings(bought_buildings, build_button.identifier, 1, timeUnits):
                 build_button.render(screen, darker=True)
+                
+                base_image.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
+                screen.blit(base_image, base_rect.topleft)
+                
                 building_image.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
                 screen.blit(building_image, building_rect.topleft)
+                
                 screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
                 screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount)}", True, GREY), (adapt_size_width(1780, w), adapt_size_height(112.5 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
             else:
                 build_button.render(screen)
+                
+                screen.blit(base_image, base_rect.topleft)
+                
                 screen.blit(building_image, building_rect.topleft)
+                
                 screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
                 screen.blit(get_text_font(19, h).render(f"{format_time_no_convertion(amount, 6)}", True, WHITE), (adapt_size_width(1750, w), adapt_size_height(132.5 + 104.5 * i, h) + adapt_size_height((scroll_y * 1), h)))
             if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top:
