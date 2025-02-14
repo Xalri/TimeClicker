@@ -167,17 +167,7 @@ def main():
         
         
         
-        match era:
-            case 1:
-                base = "src/img/buildings/base_1.png"
-            case 2:
-                base = "src/img/buildings/base_2.png"
-            case 3:
-                base = "src/img/buildings/base_3.png"
-            case 4:
-                base = "src/img/buildings/base_4.png"
-            case 5:
-                base = "src/img/buildings/base_5.png"
+        
         for i in range(len(available_buildings)):
             build = available_buildings[i]
             build_name = build["name"]
@@ -185,7 +175,7 @@ def main():
             # img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
             buildings_buttons.append(Button(
                 (adapt_size_width(1525, w), adapt_size_height(85, h) + (adapt_size_height(105, h)*i) + adapt_size_height((scroll_y * 1), h), adapt_size_width(300, w), adapt_size_height(45, w)),
-                (w, h), background=base, border_radius=20,
+                (w, h), background=BLUE, transparent=True, border_radius=20,
                 command=lambda b=build_name: buy_building_wrapper(b), identifier=build["name"]
             ))
             # buildings_buttons.append(Button(
@@ -236,6 +226,17 @@ def main():
         
         screen.blit(shop_fond_image, (adapt_size_width(1475, w), adapt_size_height(45, h)))
         
+        match era:
+            case 1:
+                base = "src/img/buildings/base_1.png"
+            case 2:
+                base = "src/img/buildings/base_2.png"
+            case 3:
+                base = "src/img/buildings/base_3.png"
+            case 4:
+                base = "src/img/buildings/base_4.png"
+            case 5:
+                base = "src/img/buildings/base_5.png"
         for i in range(len(buildings_buttons)):
             build_button = buildings_buttons[i]
             build = next((b for b in bought_buildings["long_list"] if b["name"] == build_button.identifier), None)
@@ -246,11 +247,13 @@ def main():
                 amount = build["amount"]
                 cost = next((b["cost"](amount + 1) - b["cost"](amount) for b in buildings if b["name"] == build_button.identifier), None)
             
-            building_image = load_image(f"src/img/buildings/{build_button.identifier.lower()}.png", w, h)
+            building_image = load_image(f"{src_dir}/img/buildings/{build_button.identifier.lower()}.png", w, h)
+            base_image = load_image(base, w, h)
             
             # print(f"scroll_y: {scroll_y}({abs(adapt_size_height((scroll_y * 1), h))})")
             button_rect = build_button.rect.move(0, build_button.rect.height + adapt_size_height(7.5, h))
             building_rect = building_image.get_rect(topleft=(adapt_size_width(1525, w), adapt_size_height(85 + 105 * i, h))).move(0, adapt_size_height((scroll_y * 1), h))
+            base_rect = base_image.get_rect(topleft=(adapt_size_width(1525, w), adapt_size_height(85 + 105 * i, h))).move(0, adapt_size_height((scroll_y * 1), h))
             # build_button.rect = button_rect
             if not can_buy_buildings(bought_buildings, build_button.identifier, 1, timeUnits):
                 build_button.render(screen, darker=True)
