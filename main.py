@@ -14,6 +14,7 @@ from data import *
 from Buttons import Button
 from Logger import Logger
 from buildings import buildings
+from upgrade import UPGRADES
 from utils import (
     adapt_size_height, adapt_size_width, load_image, get_number_font,
     get_text_font, get_timeline_font, resource_path, save_data, get_data,
@@ -55,6 +56,7 @@ def main():
     # define game values
     # save_data(appdata_path)
     timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, last_saved_time = get_data(appdata_path)
+    bought_upgrades = {"short_list": [], "long_list": []}
     max_timeUnits = int(float(max_timeUnits))
     timeUnits = 1000000000000000
     # clicker_amount = 10000000
@@ -77,6 +79,8 @@ def main():
     era: int = 1
     
     available_buildings: list = []
+    
+    available_upgrades: list = []
 
     can_scroll_up = True
     
@@ -115,7 +119,11 @@ def main():
     if buildings[0]["name"] not in bought_buildings["short_list"]:
         bought_buildings["short_list"].append(buildings[0]["name"])
         bought_buildings["long_list"].append({"name": buildings[0]["name"], "amount": 0})
+    if UPGRADES[0]["name"] not in bought_upgrades["short_list"]:
+        bought_upgrades["short_list"].append(UPGRADES[0]["name"])
+        bought_upgrades["long_list"].append({"name": UPGRADES[0]["name"], "amount": 0})
     LOGGER.DEBUG(bought_buildings)
+    LOGGER.DEBUG(bought_upgrades)
 
     scroll_y = 0
     scroll_speed = 20
@@ -123,7 +131,11 @@ def main():
     scroll_area_rect = pg.Rect(adapt_size_width(1525, wi), adapt_size_height(70, he), adapt_size_width(300, wi), adapt_size_height(750, he))
     scrollbar_rect = pg.Rect(adapt_size_width(1830, wi), adapt_size_height(160, he), adapt_size_width(20, wi), adapt_size_height(600, he))
 
-    running: bool = True
+
+
+
+
+    running: bool = True    
     while running:
         # LOGGER.DEBUG(f"Testing screen => {(w, h)} | {pg.display.get_surface().get_size()}")
         if w != pg.display.get_surface().get_width() or h != pg.display.get_surface().get_height():
@@ -156,6 +168,12 @@ def main():
             elif previous_build["name"] in bought_buildings["short_list"] and (next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == previous_build["name"]), None) >= 1):
                 if not build in available_buildings: available_buildings.append(build)
         
+        for i in range(len(UPGRADES)):
+            upgrade
+            
+            
+            
+            
         clock.tick_busy_loop(framerate)
         current_frame: int = (current_frame + 1) % framerate
         
@@ -247,7 +265,7 @@ def main():
                 amount = build["amount"]
                 cost = next((b["cost"](amount + 1) - b["cost"](amount) for b in buildings if b["name"] == build_button.identifier), None)
             
-            building_image = load_image(f"{src_dir}/img/buildings/{build_button.identifier.lower()}.png", w, h)
+            building_image = load_image(f"{src_dir}/img/buildings/{build_button.identifier.lower().replace(" ", "_")}.png", w, h)
             base_image = load_image(base, w, h)
             
             # print(f"scroll_y: {scroll_y}({abs(adapt_size_height((scroll_y * 1), h))})")

@@ -19,7 +19,7 @@ def adapt_size_width(size, width, debug=False):
 
 
 def load_image(path, width, height, debug=False):
-    image: pygame.surface = pygame.image.load(path.replace(" ", "_")).convert_alpha()
+    image: pygame.surface = pygame.image.load(path).convert_alpha()
     return pygame.transform.scale(
         image,
         (
