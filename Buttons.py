@@ -100,7 +100,7 @@ class Button:
         elif event.type == pg.USEREVENT + 1:
             self.reset_bump()
             
-        elif self.identifier == "clicker" and event.type = pg.KEYDOWN and event.key == pg.K_SPACE:
+        elif self.identifier == "clicker" and event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
             if self.bump_on_click and not self.is_bumping:
                 self._bump_effect()
             self.command()
