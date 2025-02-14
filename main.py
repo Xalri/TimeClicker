@@ -105,7 +105,7 @@ def main():
     
     clicker_button: Button = Button(
         (adapt_size_width(705, wi), adapt_size_height(304, he), adapt_size_width(403, wi), adapt_size_height(400, he)), (wi, he)
-        , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.4, 10, True)
+        , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.4, 10, True, identifier="clicker")
     
     timeline_image: pg.surface = load_image(f"{src_dir}/img/timeline.png", wi, he)
     upgrade_image: pg.surface = load_image(f"{src_dir}/img/upgrade.png", wi, he)
@@ -146,7 +146,7 @@ def main():
             
             clicker_button: Button = Button(
                 (adapt_size_width(705, w, True), adapt_size_height(304, h, True), adapt_size_width(403, w, True), adapt_size_height(400, h, True)), (w, h)
-                , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.4, 10, True)
+                , f"{src_dir}/img/hourglass.png", lambda: increment_timeUnits(clicker_amount), 250, False, 0.4, 10, True, identifier="clicker")
             
             timeline_image: pg.surface = load_image(f"{src_dir}/img/timeline.png", w, h)
             upgrade_image: pg.surface = load_image(f"{src_dir}/img/upgrade.png", w, h)

@@ -88,6 +88,7 @@ class Button:
 
     def get_event(self, event):
         """Handle events for the button."""
+        
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
             rel_x, rel_y = event.pos[0] - self.rect.x, event.pos[1] - self.rect.y
             if 0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height:
@@ -96,8 +97,13 @@ class Button:
                         self._bump_effect()
                     self.command()
 
-        if event.type == pg.USEREVENT + 1:
+        elif event.type == pg.USEREVENT + 1:
             self.reset_bump()
+            
+        elif self.identifier == "clicker" and event.type = pg.KEYDOWN and event.key == pg.K_SPACE:
+            if self.bump_on_click and not self.is_bumping:
+                self._bump_effect()
+            self.command()
 
         # if event.type == pg.MOUSEMOTION:
         #     self.update_hover_state(event.pos)
