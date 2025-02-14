@@ -109,7 +109,7 @@ def main():
     
     timeline_image: pg.surface = load_image(f"{src_dir}/img/timeline.png", wi, he)
     upgrade_image: pg.surface = load_image(f"{src_dir}/img/upgrade.png", wi, he)
-    temporal_matrix_image: pg.surface = load_image(f"{src_dir}/img/temporal matrix.png", wi, he)
+    temporal_matrix_image: pg.surface = load_image(f"{src_dir}/img/temporal_matrix.png", wi, he)
     human_skill_and_boost: pg.surface = load_image(f"{src_dir}/img/human_skill+boost.png", wi, he)
     shop_fond_image: pg.surface = load_image(f"{src_dir}/img/shop_fond.png", wi, he)
     shop_bord_image: pg.surface = load_image(f"{src_dir}/img/shop_bord.png", wi, he)    
@@ -150,7 +150,7 @@ def main():
             
             timeline_image: pg.surface = load_image(f"{src_dir}/img/timeline.png", w, h)
             upgrade_image: pg.surface = load_image(f"{src_dir}/img/upgrade.png", w, h)
-            temporal_matrix_image: pg.surface = load_image(f"{src_dir}/img/temporal matrix.png", w, h)
+            temporal_matrix_image: pg.surface = load_image(f"{src_dir}/img/temporal_matrix.png", w, h)
             human_skill_and_boost: pg.surface = load_image(f"{src_dir}/img/human_skill+boost.png", w, h)
             shop_fond_image: pg.surface = load_image(f"{src_dir}/img/shop_fond.png", w, h)
             shop_bord_image: pg.surface = load_image(f"{src_dir}/img/shop_bord.png", w, h)
@@ -168,8 +168,8 @@ def main():
             elif previous_build["name"] in bought_buildings["short_list"] and (next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == previous_build["name"]), None) >= 1):
                 if not build in available_buildings: available_buildings.append(build)
         
-        for i in range(len(UPGRADES)):
-            upgrade
+        # for i in range(len(UPGRADES)):
+        #     upgrade
             
             
             
@@ -265,7 +265,7 @@ def main():
                 amount = build["amount"]
                 cost = next((b["cost"](amount + 1) - b["cost"](amount) for b in buildings if b["name"] == build_button.identifier), None)
             
-            building_image = load_image(f"{src_dir}/img/buildings/{build_button.identifier.lower().replace(" ", "_")}.png", w, h)
+            building_image = load_image(f"{src_dir}/img/buildings/{build_button.identifier.lower().replace(' ', '_')}.png", w, h)
             base_image = load_image(base, w, h)
             
             # print(f"scroll_y: {scroll_y}({abs(adapt_size_height((scroll_y * 1), h))})")
