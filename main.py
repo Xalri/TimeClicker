@@ -15,6 +15,7 @@ from Buttons import Button
 from Logger import Logger
 from buildings import buildings
 from upgrade import UPGRADES
+#import Timeline
 from utils import (
     adapt_size_height, adapt_size_width, load_image, get_number_font,
     get_text_font, get_timeline_font, resource_path, save_data, get_data,
