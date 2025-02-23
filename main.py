@@ -6,7 +6,6 @@ import inspect
 from pprint import pprint
 from datetime import datetime
 
-from networkx import center
 import pygame as pg
 from pygame._sdl2 import Window
 from pygame.locals import *
