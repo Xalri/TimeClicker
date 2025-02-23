@@ -17,31 +17,31 @@ UPGRADES = [
     
     ### UPGRADES BUILDINGS
     # Préhistoire
-    {"name": "Flint", "cost": 10000, "effect_type": "building", "unlock": 10, "effect_value": 10, "building_name": "Campfire", "id": 1},
-    {"name": "Hoe", "cost": 10000, "effect_type": "building", "unlock": 20,  "effect_value": 10, "building_name": "Campfire", "id": 2},
-    {"name": "Brush", "cost": 10000, "effect_type": "building", "unlock": 50,  "effect_value": 10, "building_name": "Campfire", "id": 3},
-    {"name": "Weapons", "cost": 10000, "effect_type": "building", "unlock": 100,  "effect_value": 10, "building_name": "Campfire", "id": 4},
+    {"name": "Flint", "cost": 10000, "effect_type": "building", "effect_value": 10, "building_name": "Campfire"},
+    {"name": "Hoe", "cost": 10000, "effect_type": "building", "unlock": 20,  "effect_value": 10, "building_name": "Farming"},
+    {"name": "Brush", "cost": 10000, "effect_type": "building", "unlock": 50,  "effect_value": 10, "building_name": "Painting"},
+    {"name": "Weapons", "cost": 10000, "effect_type": "building", "unlock": 100,  "effect_value": 10, "building_name": "Hunting"},
 
     # # Antiquité
-    # {"name": "Stone", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
-    # {"name": "Maths", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
-    # {"name": "Artefact", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
-    # {"name": "Gold", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
+    {"name": "Stone", "cost": 10000, "effect_type": "building", "unlock": 10, "effect_value": 10, "building_name": "Aqueduct"},
+    {"name": "Maths", "cost": 10000, "effect_type": "building", "unlock": 20, "effect_value": 10, "building_name": "Pyramid"},
+    {"name": "Artefact", "cost": 10000, "effect_type": "building", "unlock": 50, "effect_value": 10, "building_name": "Temple"},
+    {"name": "Gold", "cost": 10000, "effect_type": "building", "unlock": 100, "effect_value": 10, "building_name": "Cash"},
     
     # # Moyen Âge
-    # {"name": "Paper", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
+    {"name": "Paper", "cost": 10000, "effect_type": "building", "unlock": 10,  "effect_value": 10, "building_name": "Printing"},
     # {"name": "Students", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
     # {"name": "Monk", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
     # {"name": "Soldier", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
     
     # # Temps Modernes
-    # {"name": "Engineers", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
+    {"name": "Engineers", "cost": 10000, "effect_type": "building", "unlock": 10,  "effect_value": 10, "building_name": "Steam Engine"},
     # {"name": "Locomotive", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
     # {"name": "Coal", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
     # {"name": "Drivers", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
     
     # # Époque Contemporaine
-    # {"name": "Printed Circuit", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
+    {"name": "Printed Circuit", "cost": 10000, "effect_type": "building", "unlock": 10,  "effect_value": 10, "building_name": "Electronic"},
     # {"name": "Servers", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
     # {"name": "Fuel", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
     # {"name": "Uranium", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
@@ -52,3 +52,5 @@ UPGRADES = [
     # {"name": "Reactor", "cost": 10000, "effect_type": "building", "effect_value": 10, "building": "campfire"},
    
 ]
+
+treshold = [10, 20, 50, 100, 500, 1000]

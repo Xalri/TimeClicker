@@ -6,6 +6,7 @@ import inspect
 from pprint import pprint
 from datetime import datetime
 
+from networkx import center
 import pygame as pg
 from pygame._sdl2 import Window
 from pygame.locals import *
@@ -14,7 +15,7 @@ from data import *
 from Buttons import Button
 from Logger import Logger
 from buildings import buildings
-from upgrade import UPGRADES
+from upgrade import UPGRADES, treshold
 #import Timeline
 from utils import (
     adapt_size_height, adapt_size_width, load_image, get_number_font,
@@ -57,12 +58,12 @@ def main():
     # define game values
     # save_data(appdata_path)
     timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, bought_upgrades, last_saved_time = get_data(appdata_path)
-    # bought_upgrades = {"short_list": [], "long_list": []}
+    bought_upgrades = {"short_list": [], "long_list": []}
     pprint(bought_buildings)
     # bought_buildings["long_list"][0]["amount"] = 1
     max_timeUnits = int(float(max_timeUnits))
     # timeUnits = 1000000000000000
-    clicker_amount = 10000000
+    # clicker_amount = 10000000
     LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
     
 
@@ -104,8 +105,8 @@ def main():
     def buy_upgrade_wrapper(u):
         nonlocal bought_upgrades, timeUnits, bought_buildings
         bought_upgrades, timeUnits, bought_buildings = buy_upgrades(bought_upgrades, u, timeUnits, bought_buildings)
-        pprint(bought_upgrades)
-        pprint(bought_buildings)
+        # pprint(bought_upgrades)
+        # pprint(bought_buildings)
         
     LOGGER.DEBUG("Initializing screen size")
     wi, he = pg.display.get_surface().get_size()
@@ -186,10 +187,25 @@ def main():
                 
         for i in range(len(UPGRADES)):
             upgrade = UPGRADES[i]
-            max_bought_upgrade = next((u for u in sorted(UPGRADES, key=lambda x: x["id"], reverse=True) if u["building_name"] == upgrade["building_name"] and u["name"] in bought_upgrades["short_list"]), None)
+            build_amount = next((b["amount"] for b in bought_buildings["long_list"] if b["name"] == upgrade["building_name"]), None)
+            
+            if not build_amount is None  :
+            
+            
+            
+                max_bought_level = next((u["level"] for u in bought_upgrades["long_list"] if u["name"] == upgrade["name"]), 0)
+                
+                if build_amount >= treshold[0]:
+                
+                    if max_bought_level == 0:
+                        if not upgrade in available_upgrades: available_upgrades.append(upgrade)
+                    
+                    elif max_bought_level != 0 :
+                        if not upgrade in available_upgrades: available_upgrades.append(upgrade)
+            
             # print(f"upgrade : {upgrade['name']} | max_bought_upgrade : {max_bought_upgrade['name'] if max_bought_upgrade is not None else 'None'}")
-            if ((max_bought_upgrade is None and upgrade["id"] == 1)or (max_bought_upgrade is not None and upgrade["id"] == max_bought_upgrade["id"] + 1)) and not upgrade["name"] in bought_upgrades["short_list"] and upgrade["building_name"] in bought_buildings["short_list"]:
-                if not upgrade in available_upgrades: available_upgrades.append(upgrade)
+            # if ((max_bought_upgrade is None and upgrade["id"] == 1)or (max_bought_upgrade is not None and upgrade["id"] == max_bought_upgrade["id"] + 1) or upgrade["id"] == 4) and upgrade["building_name"] in bought_buildings["short_list"]:
+            #     if not upgrade in available_upgrades: available_upgrades.append(upgrade)
             # if max_bought_upgrade is None:
             # if upgrade["name"] == "campfire":
             #     print(upgrade["building_name"] in bought_buildings["short_list"])
@@ -257,13 +273,9 @@ def main():
             
             if (i - 4) % 4 == 0:
                 x = 110
-                y += 105
-            elif (i - 1) % 4 == 0:
-                x += 100      
-            elif (i - 2) % 4 == 0:
-                x += 100     
-            elif (i - 3) % 4 == 0:
-                x += 100
+                y += 125
+            else:
+                x += 105
                 
                 
             upgrades_buttons.append(Button(
@@ -413,6 +425,7 @@ def main():
         for i in range(len(upgrades_buttons)):
             upgrade_button = upgrades_buttons[i]
             upgrade = next((b for b in UPGRADES if b["name"] == upgrade_button.identifier), None)
+            upgrade_level = next((u["level"] for u in bought_upgrades["long_list"] if u["name"] == upgrade_button.identifier), 0)
             if upgrade is None:
                 cost = 0
             else:
@@ -421,37 +434,39 @@ def main():
             # print(f"{upgrade_button.identifier} ({i}) : ", end='')
             
             upgrade_image = load_image(f"{src_dir}/img/upgrades/{upgrade_button.identifier.lower().replace(' ', '_')}.png", w, h)
+            level_image = load_image(f"{src_dir}/img/upgrades/niv{upgrade_level}.png", w, h, 0.8)
             # y = 220
             if (i - 4) % 4 == 0:
                 x = 110
-                y += 105
+                y += 125
                 # print(f"x -> 1")
-            elif (i - 1) % 4 == 0:
-                x += 100      
-                # print(f"x -> 2")
-            elif (i - 2) % 4 == 0:
-                x += 100     
-                # print(f"x -> 3")
-            elif (i - 3) % 4 == 0:
-                x += 100
+            else:
+                x += 105
                 # print(f"x -> 4")
                 
             upgrade_button_rect = upgrade_button.rect.move(0, upgrade_button.rect.height + adapt_size_height(7.5, h))
             upgrade_rect = upgrade_image.get_rect(topleft=(adapt_size_width(x, w), adapt_size_height(y, h))).move(0, adapt_size_height((scroll_y_bis * 1), h))
             
-            if not can_buy_upgrade(bought_upgrades, upgrade_button.identifier, timeUnits):
+            level_rect = level_image.get_rect(center=upgrade_rect.center)
+            
+            if not can_buy_upgrade(bought_upgrades, upgrade_button.identifier, timeUnits, bought_buildings):
                 upgrade_button.render(screen, darker=True)
                 
                 upgrade_image.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
                 screen.blit(upgrade_image, upgrade_rect.topleft)
                 
-                screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y_bis * 1), h)))
+                level_image.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
+                screen.blit(level_image, level_rect.topleft)
+                
+                # screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y_bis * 1), h)))
             else:
                 upgrade_button.render(screen)
                 
                 screen.blit(upgrade_image, upgrade_rect.topleft)
                 
-                screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y_bis * 1), h)))
+                # screen.blit(get_text_font(25, h).render(f"{format_timeUnits(round(cost))}", True, BROWN), (adapt_size_width(1592, w), adapt_size_height(132 + 104.5 * i, h) + adapt_size_height((scroll_y_bis * 1), h)))
+                
+                screen.blit(level_image, level_rect.topleft)
             
             
             if scroll_area_rect_bis.colliderect(upgrade_button_rect) and upgrade_button_rect.top >= scroll_area_rect_bis.top + adapt_size_height(50, h):

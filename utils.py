@@ -6,7 +6,7 @@ import os
 from base64 import b64decode, b64encode
 from buildings import buildings
 from datetime import datetime
-from upgrade import UPGRADES
+from upgrade import UPGRADES, treshold
 import upgrade
 
 
@@ -14,6 +14,8 @@ def adapt_size_height(size, height, debug=False):
     if debug:
         print(int(round((size / 1080 * height))))
     return int(round(size / 1080 * height))
+
+
 def adapt_size_width(size, width, debug=False):
     if debug:
         print("Size: " + str(size))
@@ -21,13 +23,13 @@ def adapt_size_width(size, width, debug=False):
     return int(round(float(size) / 1920 * width))
 
 
-def load_image(path, width, height, debug=False):
+def load_image(path, width, height, scale=1, debug=False):
     image: pygame.surface = pygame.image.load(path).convert_alpha()
     return pygame.transform.scale(
         image,
         (
-            adapt_size_width(image.get_width(), width, debug),
-            adapt_size_height(image.get_height(), height),
+            adapt_size_width(image.get_width(), width, debug) * scale,
+            adapt_size_height(image.get_height(), height) * scale,
         ),
     )
 
@@ -57,37 +59,59 @@ def get_number_font(size, height):
 
 
 def get_text_font(size, height):
-    return pygame.font.Font(resource_path("src") + "/fonts/FranklinGothicHeavyRegular.ttf", int(adapt_size_height(size, height)))
-
+    return pygame.font.Font(
+        resource_path("src") + "/fonts/FranklinGothicHeavyRegular.ttf",
+        int(adapt_size_height(size, height)),
+    )
 
 
 def get_data(appdata_path):
-    if not os.path.exists(os.path.join(appdata_path, 'data')):
+    if not os.path.exists(os.path.join(appdata_path, "data")):
         save_data(0, 0, 0, 1, {"short_list": [], "long_list": []}, 0)
-    
-    print("path is: " + str(os.path.join(appdata_path, 'data')))
-    with open(os.path.join(appdata_path, 'data'), 'r') as f:
+
+    print("path is: " + str(os.path.join(appdata_path, "data")))
+    with open(os.path.join(appdata_path, "data"), "r") as f:
         data = f.read()
         print(data)
         data = data[::-1]
         data = data + "=="
         data = b64decode(data.encode()).decode()
-        data = data.split('\n')
+        data = data.split("\n")
         print(data)
-        if data == [''] or len(data) < 8:
+        if data == [""] or len(data) < 8:
             save_data(appdata_path)
             return get_data(appdata_path)
         timeUnits = float(data[0])
         tps = float(data[1])
         timeline = float(data[2])
         clicker_amount = int(data[3])
-        buildings = eval(data[4]) # {'short_list': [], 'long_list': []}
+        buildings = eval(data[4])  # {'short_list': [], 'long_list': []}
         temp = data[5]
         upgrades = eval(data[6])
         last_saved = data[7]
-        return timeUnits, tps, timeline, clicker_amount, buildings, temp, upgrades, last_saved
-    
-def save_data(appdata_path, timeUnits=0, tps=0, timeline=0, clicker_amount=1, buildings={"short_list": [], "long_list": []}, max_timeUnits=0, bought_upgrades={"short_list": []}, last_saved_time=datetime.now().strftime(" %Y-%m-%d %H:%M:%S")):    
+        return (
+            timeUnits,
+            tps,
+            timeline,
+            clicker_amount,
+            buildings,
+            temp,
+            upgrades,
+            last_saved,
+        )
+
+
+def save_data(
+    appdata_path,
+    timeUnits=0,
+    tps=0,
+    timeline=0,
+    clicker_amount=1,
+    buildings={"short_list": [], "long_list": []},
+    max_timeUnits=0,
+    bought_upgrades={"short_list": []},
+    last_saved_time=datetime.now().strftime(" %Y-%m-%d %H:%M:%S"),
+):
     if max_timeUnits == 0:
         max_timeUnits = timeUnits
 
@@ -101,14 +125,13 @@ def save_data(appdata_path, timeUnits=0, tps=0, timeline=0, clicker_amount=1, bu
     print(f"Bought Upgrades: {bought_upgrades}")
     print(f"Last Saved Time: {last_saved_time}")
 
-    with open(os.path.join(appdata_path, 'data'), 'w') as f:
+    with open(os.path.join(appdata_path, "data"), "w") as f:
         data = f"{timeUnits}\n{tps}\n{timeline}\n{clicker_amount}\n{buildings}\n{max_timeUnits}\n{bought_upgrades}\n{last_saved_time}"
         data = b64encode(data.encode())
         print("Encoded data: " + str(data))
         data = data.decode().replace("=", "").replace("=", "")
         data = data[::-1]
         f.write(data)
-
 
 
 def crop_value(value: float):
@@ -119,19 +142,49 @@ def crop_value(value: float):
     return round(value, 1)
 
 
-
 def format_timeUnits(timeUnits: float, n=0):
     timeUnits = crop_value(timeUnits)
     if timeUnits < 1000:
-        return "".join([" " for _ in range(n+2 - len(str(timeUnits)))]) + str(timeUnits)
-    for unit, factor in zip(['k', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', 'Ud',  'Dd', 'Td'], [10**i for i in range(3, (14 * 3)+1, 3)]):
+        return "".join([" " for _ in range(n + 2 - len(str(timeUnits)))]) + str(
+            timeUnits
+        )
+    for unit, factor in zip(
+        [
+            "k",
+            "M",
+            "B",
+            "T",
+            "Qa",
+            "Qi",
+            "Sx",
+            "Sp",
+            "Oc",
+            "No",
+            "Dc",
+            "Ud",
+            "Dd",
+            "Td",
+        ],
+        [10**i for i in range(3, (14 * 3) + 1, 3)],
+    ):
         if timeUnits < factor * 1000:
-            timeUnits = f"{timeUnits / factor:.1f}{unit}".rstrip('.0')
-            return "".join([" " for _ in range(n - len(timeUnits.replace(".", "").replace(unit, "")))]) + timeUnits
+            timeUnits = f"{timeUnits / factor:.1f}{unit}".rstrip(".0")
+            return (
+                "".join(
+                    [
+                        " "
+                        for _ in range(
+                            n - len(timeUnits.replace(".", "").replace(unit, ""))
+                        )
+                    ]
+                )
+                + timeUnits
+            )
     return f"{timeUnits:.0f}"
 
-def format_time_no_convertion(value: int, n: int=0):
-    return "".join([" " for _ in range(n+2 - len(str(value)))]) + str(value)   
+
+def format_time_no_convertion(value: int, n: int = 0):
+    return "".join([" " for _ in range(n + 2 - len(str(value)))]) + str(value)
 
 
 def can_buy_buildings(bought_buildings, building_name, amount, timeUnits):
@@ -139,8 +192,17 @@ def can_buy_buildings(bought_buildings, building_name, amount, timeUnits):
     if building is None:
         return False
 
-    current_amount = next((b["amount"] for b in bought_buildings["long_list"] if b["name"] == building_name), 0)
-    cost = round(building["cost"](current_amount + amount) - building["cost"](current_amount))
+    current_amount = next(
+        (
+            b["amount"]
+            for b in bought_buildings["long_list"]
+            if b["name"] == building_name
+        ),
+        0,
+    )
+    cost = round(
+        building["cost"](current_amount + amount) - building["cost"](current_amount)
+    )
 
     return timeUnits >= cost
 
@@ -151,15 +213,26 @@ def buy_buildings(bought_buildings, building_name, amount, timeUnits):
     print(building)
     if building is None:
         return bought_buildings
-    current_amount = next((b["amount"] for b in bought_buildings["long_list"] if b["name"] == building_name), 0)
+    current_amount = next(
+        (
+            b["amount"]
+            for b in bought_buildings["long_list"]
+            if b["name"] == building_name
+        ),
+        0,
+    )
     print(current_amount)
-    cost = round(building["cost"](current_amount+amount)-building["cost"](current_amount))
+    cost = round(
+        building["cost"](current_amount + amount) - building["cost"](current_amount)
+    )
     print(cost)
 
     if timeUnits >= cost:
         if not building_name in bought_buildings["short_list"]:
             bought_buildings["short_list"].append(building_name)
-            bought_buildings["long_list"].append({"name": building_name, "amount": amount})
+            bought_buildings["long_list"].append(
+                {"name": building_name, "amount": amount}
+            )
         else:
             for b in bought_buildings["long_list"]:
                 if b["name"] == building_name:
@@ -168,37 +241,73 @@ def buy_buildings(bought_buildings, building_name, amount, timeUnits):
         timeUnits -= cost
     return bought_buildings, timeUnits
 
+
 def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
-    # print(bought_upgrades)
-    # print(upgrade_name)
+    print("")
+    print("bought upgrades: ", bought_upgrades)
+    print("upgrade name: ", upgrade_name)
     upgrade = next((u for u in UPGRADES if u["name"] == upgrade_name), None)
-    # print(upgrade)
+    build_amount = next(
+        (
+            b["amount"]
+            for b in bought_buildings["long_list"]
+            if b["name"] == upgrade["building_name"]
+        ),
+        0,
+    )
+    print("upgrade: ", upgrade)
+    print("build amount: ", build_amount)
     if upgrade is None:
-        return bought_upgrades
-    max_bought_upgrade = next((u for u in sorted(UPGRADES, key=lambda x: x["id"], reverse=True) if u["building_name"] == upgrade["building_name"] and u["name"] in bought_upgrades["short_list"]), None)
-    if max_bought_upgrade is None or upgrade["id"] == max_bought_upgrade["id"] + 1:
-        if timeUnits >= upgrade["cost"]:
-            build = next((b for b in buildings if b["name"] == upgrade["building_name"]), None)
-            
-            if build is None:
-                return bought_upgrades, timeUnits, bought_buildings
-            
-            for b in bought_buildings["long_list"]:
-                if b["name"] == build["name"]:
-                    b["upgrade_boost"] *= upgrade["effect_value"]
-                    break
-            
+        return bought_upgrades, timeUnits, bought_buildings
+
+    max_bought_level = next(
+        (
+            u["level"]
+            for u in bought_upgrades["long_list"]
+            if u["name"] == upgrade["name"]
+        ),
+        0,
+    )
+    print("max bought level: ", max_bought_level)
+
+    print(timeUnits >= upgrade["cost"])
+    print(build_amount >= treshold[max_bought_level])
+    if timeUnits >= upgrade["cost"] and build_amount >= treshold[max_bought_level]:
+        build = next(
+            (b for b in buildings if b["name"] == upgrade["building_name"]), None
+        )
+        print("build: ", build)
+
+        if build is None:
+            return bought_upgrades, timeUnits, bought_buildings
+
+        for b in bought_buildings["long_list"]:
+            if b["name"] == build["name"]:
+                b["upgrade_boost"] *= upgrade["effect_value"]
+
+        if not upgrade_name in bought_upgrades["short_list"]:
+        
             bought_upgrades["short_list"].append(upgrade_name)
-            timeUnits -= upgrade["cost"]
-            
-    
-            
-    
-    # print(bought_upgrades)
+            bought_upgrades["long_list"].append(
+                {"name": upgrade_name, "level": max_bought_level + 1}
+            )
+        else:
+            for u in bought_upgrades["long_list"]:
+                if u["name"] == upgrade_name:
+                    u["level"] += 1
+        timeUnits -= upgrade["cost"]
+
+    print("bought upgrades: ", bought_upgrades)
+    print("bought buildings: ", bought_buildings)
     return bought_upgrades, timeUnits, bought_buildings
 
-def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits):
+
+def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
     upgrade = next((u for u in UPGRADES if u["name"] == upgrade_name), None)
     if upgrade is None:
-        return False 
-    return timeUnits >= upgrade["cost"] 
+        return False
+    
+    build_amount = next((b["amount"] for b in bought_buildings["long_list"] if b["name"] == upgrade["building_name"]), 0)
+    max_bought_level = next((u["level"] for u in bought_upgrades["long_list"] if u["name"] == upgrade["name"]), 0)
+    
+    return timeUnits >= upgrade["cost"] and build_amount >= treshold[max_bought_level]
