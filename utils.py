@@ -7,6 +7,7 @@ from base64 import b64decode, b64encode
 from buildings import buildings
 from datetime import datetime
 from upgrade import UPGRADES
+import upgrade
 
 
 def adapt_size_height(size, height, debug=False):
@@ -82,10 +83,11 @@ def get_data(appdata_path):
         clicker_amount = int(data[3])
         buildings = eval(data[4]) # {'short_list': [], 'long_list': []}
         temp = data[5]
-        last_saved = data[6]
-        return timeUnits, tps, timeline, clicker_amount, buildings, temp, last_saved
+        upgrades = eval(data[6])
+        last_saved = data[7]
+        return timeUnits, tps, timeline, clicker_amount, buildings, temp, upgrades, last_saved
     
-def save_data(appdata_path, timeUnits=0, tps=0, timeline=0, clicker_amount=1, buildings={"short_list": [], "long_list": []}, max_timeUnits=0, last_saved_time=datetime.now().strftime(" %Y-%m-%d %H:%M:%S")):    
+def save_data(appdata_path, timeUnits=0, tps=0, timeline=0, clicker_amount=1, buildings={"short_list": [], "long_list": []}, max_timeUnits=0, bought_upgrades={"short_list": []}, last_saved_time=datetime.now().strftime(" %Y-%m-%d %H:%M:%S")):    
     if max_timeUnits == 0:
         max_timeUnits = timeUnits
 
@@ -96,10 +98,11 @@ def save_data(appdata_path, timeUnits=0, tps=0, timeline=0, clicker_amount=1, bu
     print(f"Clicker Amount: {clicker_amount}")
     pprint(f"Buildings: {buildings}")
     print(f"Max Time Units: {max_timeUnits}")
+    print(f"Bought Upgrades: {bought_upgrades}")
     print(f"Last Saved Time: {last_saved_time}")
 
     with open(os.path.join(appdata_path, 'data'), 'w') as f:
-        data = f"{timeUnits}\n{tps}\n{timeline}\n{clicker_amount}\n{buildings}\n{max_timeUnits}\n{last_saved_time}"
+        data = f"{timeUnits}\n{tps}\n{timeline}\n{clicker_amount}\n{buildings}\n{max_timeUnits}\n{bought_upgrades}\n{last_saved_time}"
         data = b64encode(data.encode())
         print("Encoded data: " + str(data))
         data = data.decode().replace("=", "").replace("=", "")
@@ -165,21 +168,34 @@ def buy_buildings(bought_buildings, building_name, amount, timeUnits):
         timeUnits -= cost
     return bought_buildings, timeUnits
 
-def buy_upgrades(bought_upgrades, upgrade_name, timeUnits):
-    print(bought_upgrades)
-    print(upgrade_name)
+def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
+    # print(bought_upgrades)
+    # print(upgrade_name)
     upgrade = next((u for u in UPGRADES if u["name"] == upgrade_name), None)
-    print(upgrade)
+    # print(upgrade)
     if upgrade is None:
         return bought_upgrades
     max_bought_upgrade = next((u for u in sorted(UPGRADES, key=lambda x: x["id"], reverse=True) if u["building_name"] == upgrade["building_name"] and u["name"] in bought_upgrades["short_list"]), None)
     if max_bought_upgrade is None or upgrade["id"] == max_bought_upgrade["id"] + 1:
         if timeUnits >= upgrade["cost"]:
+            build = next((b for b in buildings if b["name"] == upgrade["building_name"]), None)
+            
+            if build is None:
+                return bought_upgrades, timeUnits, bought_buildings
+            
+            for b in bought_buildings["long_list"]:
+                if b["name"] == build["name"]:
+                    b["upgrade_boost"] *= upgrade["effect_value"]
+                    break
+            
             bought_upgrades["short_list"].append(upgrade_name)
             timeUnits -= upgrade["cost"]
+            
     
-    print(bought_upgrades)
-    return bought_upgrades, timeUnits
+            
+    
+    # print(bought_upgrades)
+    return bought_upgrades, timeUnits, bought_buildings
 
 def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits):
     upgrade = next((u for u in UPGRADES if u["name"] == upgrade_name), None)

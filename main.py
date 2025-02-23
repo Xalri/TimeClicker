@@ -56,11 +56,13 @@ pg.display.set_caption('Time Clicker')
 def main():
     # define game values
     # save_data(appdata_path)
-    timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, last_saved_time = get_data(appdata_path)
-    bought_upgrades = {"short_list": [], "long_list": []}
+    timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, bought_upgrades, last_saved_time = get_data(appdata_path)
+    # bought_upgrades = {"short_list": [], "long_list": []}
+    pprint(bought_buildings)
+    # bought_buildings["long_list"][0]["amount"] = 1
     max_timeUnits = int(float(max_timeUnits))
     # timeUnits = 1000000000000000
-    # clicker_amount = 10000000
+    clicker_amount = 10000000
     LOGGER.DEBUG(f"{timeUnits}({type(timeUnits)}), {tps}({type(tps)}), {timeline}({type(timeline)}), {clicker_amount}({type(clicker_amount)}), {bought_buildings}({type(bought_buildings)}), {max_timeUnits}({type(max_timeUnits)}).")
     
 
@@ -100,8 +102,10 @@ def main():
         bought_buildings, timeUnits = buy_buildings(bought_buildings, b, 1, timeUnits)
         
     def buy_upgrade_wrapper(u):
-        nonlocal bought_upgrades, timeUnits
-        bought_upgrades, timeUnits = buy_upgrades(bought_upgrades, u, timeUnits)
+        nonlocal bought_upgrades, timeUnits, bought_buildings
+        bought_upgrades, timeUnits, bought_buildings = buy_upgrades(bought_upgrades, u, timeUnits, bought_buildings)
+        pprint(bought_upgrades)
+        pprint(bought_buildings)
         
     LOGGER.DEBUG("Initializing screen size")
     wi, he = pg.display.get_surface().get_size()
@@ -126,6 +130,7 @@ def main():
 
     if buildings[0]["name"] not in bought_buildings["short_list"]:
         bought_buildings["short_list"].append(buildings[0]["name"])
+        bought_buildings["long_list"].append({"name": buildings[0]["name"], "amount": 0})
     LOGGER.DEBUG(bought_buildings)
     LOGGER.DEBUG(bought_upgrades)
     
@@ -181,17 +186,18 @@ def main():
                 
         for i in range(len(UPGRADES)):
             upgrade = UPGRADES[i]
-            # max_bought_upgrade = next((u for u in sorted(UPGRADES, key=lambda x: x["cost"], reverse=True) if u["building_name"] == upgrade["building_name"] and u["name"] in bought_upgrades["short_list"]), None)
+            max_bought_upgrade = next((u for u in sorted(UPGRADES, key=lambda x: x["id"], reverse=True) if u["building_name"] == upgrade["building_name"] and u["name"] in bought_upgrades["short_list"]), None)
             # print(f"upgrade : {upgrade['name']} | max_bought_upgrade : {max_bought_upgrade['name'] if max_bought_upgrade is not None else 'None'}")
-            
-            # if max_bought_upgrade is None:
-            if upgrade["name"] == "campfire":
-                print(upgrade["building_name"] in bought_buildings["short_list"])
-                print("(next((int(b['amount']) for b in bought_buildings['long_list'] if b['name'].lower() == upgrade['building_name']), None) :", next((int(b['amount']) for b in bought_buildings["long_list"] if b['name'].lower() == upgrade["building_name"]), None))
-                print("upgrade['unlock'] :", upgrade["unlock"])
-                print()
-            if upgrade["building_name"] in bought_buildings["short_list"] and (next((int(b['amount']) for b in bought_buildings["long_list"] if b['name'].lower() == upgrade["building_name"].lower()), None) >= upgrade["unlock"]):
+            if ((max_bought_upgrade is None and upgrade["id"] == 1)or (max_bought_upgrade is not None and upgrade["id"] == max_bought_upgrade["id"] + 1)) and not upgrade["name"] in bought_upgrades["short_list"] and upgrade["building_name"] in bought_buildings["short_list"]:
                 if not upgrade in available_upgrades: available_upgrades.append(upgrade)
+            # if max_bought_upgrade is None:
+            # if upgrade["name"] == "campfire":
+            #     print(upgrade["building_name"] in bought_buildings["short_list"])
+            #     print("(next((int(b['amount']) for b in bought_buildings['long_list'] if b['name'].lower() == upgrade['building_name']), None) :", next((int(b['amount']) for b in bought_buildings["long_list"] if b['name'].lower() == upgrade["building_name"]), None))
+            #     print("upgrade['unlock'] :", upgrade["unlock"])
+            #     print()
+            # if not upgrade["name"] in bought_upgrades["short_list"] and upgrade["building_name"] in bought_buildings["short_list"] and (next((int(b['amount']) for b in bought_buildings["long_list"] if b['name'].lower() == upgrade["building_name"].lower()), None) >= upgrade["unlock"]):
+            #     if not upgrade in available_upgrades: available_upgrades.append(upgrade)
                     
             # elif upgrade["id"] == max_bought_upgrade["id"] + 1:
             #     if not upgrade in available_upgrades: available_upgrades.append(upgrade)
@@ -213,13 +219,24 @@ def main():
         upgrades_buttons: list = []
         tps: int = 0
         
-        
+        for build in bought_buildings["long_list"]:
+            try:
+                temp = build["upgrade_boost"]
+            except KeyError:
+                build["upgrade_boost"] = 1
+                
         
         
         for i in range(len(available_buildings)):
             build = available_buildings[i]
+            
+            
+            
             build_name = build["name"]
-            tps += build["tps_boost"] * next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
+            build_tps = build["tps_boost"]
+            build_amount = next((b['amount'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 0)
+            build_augment = next((b['upgrade_boost'] for b in bought_buildings["long_list"] if b['name'] == build["name"]), 1) 
+            tps += build_tps * build_amount * build_augment
             # img = load_image("src/img/buildings/" + build["name"].lower() + ".png", w, h)
             buildings_buttons.append(Button(
                 (adapt_size_width(1525, w), adapt_size_height(85, h) + (adapt_size_height(105, h)*i) + adapt_size_height((scroll_y * 1), h), adapt_size_width(300, w), adapt_size_height(45, w)),
@@ -241,17 +258,12 @@ def main():
             if (i - 4) % 4 == 0:
                 x = 110
                 y += 105
-                # print(f"x -> 1")
             elif (i - 1) % 4 == 0:
                 x += 100      
-                # print(f"x -> 2")
             elif (i - 2) % 4 == 0:
                 x += 100     
-                # print(f"x -> 3")
             elif (i - 3) % 4 == 0:
                 x += 100
-                # print(f"x -> 4")
-                x= 230
                 
                 
             upgrades_buttons.append(Button(
@@ -272,7 +284,7 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 print("exiting...")
-                save_data(appdata_path, timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits )
+                save_data(appdata_path, timeUnits, tps, timeline, clicker_amount, bought_buildings, max_timeUnits, bought_upgrades )
                 running = False
             elif event.type == pg.KEYDOWN and event.key == pg.K_F7:
                 if LOGGER.get_level() == 4:
@@ -388,11 +400,9 @@ def main():
             if scroll_area_rect.colliderect(button_rect) and button_rect.top >= scroll_area_rect.top + adapt_size_height(50, h):
                 if i == len(buildings_buttons) - 1:
                     if  can_scroll_up:
-                        LOGGER.DEBUG("stopping scrolling")
                         can_scroll_up = False
                 else:
                     if not can_scroll_up:
-                        LOGGER.DEBUG("starting scrolling")
                         can_scroll_up = True
                     
                     
@@ -447,11 +457,9 @@ def main():
             if scroll_area_rect_bis.colliderect(upgrade_button_rect) and upgrade_button_rect.top >= scroll_area_rect_bis.top + adapt_size_height(50, h):
                 if i == len(upgrades_buttons) - 1:
                     if  can_scroll_up_bis:
-                        LOGGER.DEBUG("stopping scrolling")
                         can_scroll_up_bis = False
                 else:
                     if not can_scroll_up_bis:
-                        LOGGER.DEBUG("starting scrolling")
                         can_scroll_up_bis = True
             
             
