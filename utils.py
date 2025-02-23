@@ -1,10 +1,12 @@
 from pprint import pprint
+import time
 import pygame
 import sys
 import os
 from base64 import b64decode, b64encode
 from buildings import buildings
 from datetime import datetime
+from upgrade import UPGRADES
 
 
 def adapt_size_height(size, height, debug=False):
@@ -132,12 +134,12 @@ def format_time_no_convertion(value: int, n: int=0):
 def can_buy_buildings(bought_buildings, building_name, amount, timeUnits):
     building = next((b for b in buildings if b["name"] == building_name), None)
     if building is None:
-        return False  # Building doesn't exist
+        return False
 
     current_amount = next((b["amount"] for b in bought_buildings["long_list"] if b["name"] == building_name), 0)
     cost = round(building["cost"](current_amount + amount) - building["cost"](current_amount))
 
-    return timeUnits >= cost  # Return True if the player can afford it
+    return timeUnits >= cost
 
 
 def buy_buildings(bought_buildings, building_name, amount, timeUnits):
@@ -163,3 +165,24 @@ def buy_buildings(bought_buildings, building_name, amount, timeUnits):
         timeUnits -= cost
     return bought_buildings, timeUnits
 
+def buy_upgrades(bought_upgrades, upgrade_name, timeUnits):
+    print(bought_upgrades)
+    print(upgrade_name)
+    upgrade = next((u for u in UPGRADES if u["name"] == upgrade_name), None)
+    print(upgrade)
+    if upgrade is None:
+        return bought_upgrades
+    max_bought_upgrade = next((u for u in sorted(UPGRADES, key=lambda x: x["id"], reverse=True) if u["building_name"] == upgrade["building_name"] and u["name"] in bought_upgrades["short_list"]), None)
+    if max_bought_upgrade is None or upgrade["id"] == max_bought_upgrade["id"] + 1:
+        if timeUnits >= upgrade["cost"]:
+            bought_upgrades["short_list"].append(upgrade_name)
+            timeUnits -= upgrade["cost"]
+    
+    print(bought_upgrades)
+    return bought_upgrades, timeUnits
+
+def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits):
+    upgrade = next((u for u in UPGRADES if u["name"] == upgrade_name), None)
+    if upgrade is None:
+        return False 
+    return timeUnits >= upgrade["cost"] 

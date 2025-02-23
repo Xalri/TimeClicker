@@ -17,7 +17,7 @@ class Human:
             else:
                 print(f"Pas assez de ressources pour acheter {stat}.")
 
-    def can_afford(self, stat):
+    def can_afford(self, stat, TimeUnits):
         if self.stats[stat]["cost"]<= TimeUnits: # Vérifie que le paramètre peut être acheté
             return True
 
