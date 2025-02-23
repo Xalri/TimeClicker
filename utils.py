@@ -74,7 +74,7 @@ def get_data(appdata_path):
         data = b64decode(data.encode()).decode()
         data = data.split('\n')
         print(data)
-        if data == [''] or len(data) < 7:
+        if data == [''] or len(data) < 8:
             save_data(appdata_path)
             return get_data(appdata_path)
         timeUnits = float(data[0])
