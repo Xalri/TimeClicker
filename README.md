@@ -4,15 +4,11 @@
 
 # Time Clicker 
 
-Time Clicker is a clicker where you gain Time Units in order to advance the Timeline to discover new age
+Time Clicker is a clicker where you gain Time Units in order to advance the Timeline to discord new age
 
 ## Installation
 
-Install Time Clicker with pip
-
-```bash
-  pip install -r requirements.txt
-```
+Download the last release
     
 ## Run
 
@@ -20,7 +16,7 @@ Install Time Clicker with pip
 Start the game
 
 ```bash
-  python3 TimeClicker.py
+  Run the TimeClicker.exe file
 ```
 
 
@@ -35,9 +31,9 @@ Start the game
 
 For support:
 - email xalri@xalri.ovh
-- add ******xalri****** on [discord](https://discord.com)
-- add ******rex14_0****** on [discord](https://discord.com)
-- add ******akisuk0****** on [discord](https://discord.com)
+- add **xalri** on [discord](https://discord.com)
+- add **rex14_0** on [discord](https://discord.com)
+- add **akisuk0** on [discord](https://discord.com)
 
 
 ## Used By
