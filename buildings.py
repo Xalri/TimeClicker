@@ -1,6 +1,6 @@
 buildings = [
     # Préhistoire
-    {"name": "Campfire", "cost": lambda x: (x**1.15)*15, "tps_boost": 0.1},
+    {"name": "Campfire", "cost": lambda x: (x**1.15)*50, "tps_boost": 0.1},
     {"name": "Farming", "cost": lambda x: (x**1.15)*100, "tps_boost": 1},
     {"name": "Painting", "cost": lambda x: (x**1.15)*1100, "tps_boost": 8},
     {"name": "Hunting", "cost": lambda x: (x**1.15)*12000, "tps_boost": 47},

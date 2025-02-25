@@ -119,7 +119,7 @@ class Button:
             info_box = pg.Surface((max_width + 10, total_height + 10))
             info_box.fill((0, 0, 0))  # Background color for the info box
             info_box.set_alpha(200)  # Transparency for the info box
-            info_box_rect = info_box.get_rect(topleft=(self.mouse_pos[0], self.mouse_pos[1]))
+            info_box_rect = info_box.get_rect(topleft=(self.mouse_pos[0] + adapt_size_width(10, w), self.mouse_pos[1]+adapt_size_height(10, h)))
             
             screen.blit(info_box, info_box_rect)
             

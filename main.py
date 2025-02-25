@@ -57,19 +57,20 @@ ctypes.windll.user32.SetProcessDPIAware()
 monitor_info = ctypes.windll.user32.MonitorFromWindow(None, 2)
 monitor_rect = ctypes.wintypes.RECT()
 ctypes.windll.user32.GetMonitorInfoW(monitor_info, ctypes.byref(monitor_rect))
-monitor_x = monitor_rect.left
-monitor_y = monitor_rect.top
-os.environ["SDL_VIDEO_WINDOW_POS"] = f"{monitor_x},{monitor_y}"
+os.environ["SDL_VIDEO_WINDOW_POS"] = f"{500},{300}"
 
 
 screen: pg.Surface = pg.display.set_mode((1024, 576), pg.RESIZABLE)
 icon: pg.Surface = pg.image.load(os.path.join(src_dir, "icon.png"))
 pg.display.set_icon(icon)
-Window.from_display_module().maximize()
+window = Window.from_display_module()
+window.maximize()
+is_maximized = True
 pg.display.set_caption("Time Clicker")
 
 
 def main():
+    is_maximized = True
     # define game values
     # save_data(appdata_path)
     (
@@ -117,9 +118,9 @@ def main():
 
     is_clickable = False
     is_clickable_bis = False
-    
+
     save_count = 0
-    
+
     blue_cable_count = 0
     blue_cable_timer = randint(60, 350)
     # is_blue_cable_off
@@ -144,14 +145,15 @@ def main():
 
     def buy_blue_cable():
         nonlocal blue_cable_count, blue_cable_timer, blue_cable_image, blue_cable_button
-    
+
     LOGGER.DEBUG("Initializing screen size")
     wi, he = pg.display.get_surface().get_size()
     timeUnits_text: pg.Surface = get_number_font(65, he).render(
-        f"{format_timeUnits(timeUnits, 9)}", True, RED
+        f"{format_timeUnits(timeUnits, 9)}", True, RED_OCHRE
     )
+    timeUnits_text_logo: pg.Surface = load_image(f"{src_dir}/img/timeUnits.png", wi, he)
     tps_text: pg.Surface = get_number_font(50, he).render(
-        f"{format_timeUnits(tps, 9)}", True, RED
+        f"{format_timeUnits(tps, 9)}", True, RED_OCHRE
     )
 
     timeline_text: pg.Surface = get_timeline_font(124, he).render(
@@ -207,7 +209,7 @@ def main():
         command=lambda: buy_upgrade_wrapper("blue_cable"),
         border_radius=0,
         transparent=False,
-        image_scale=1
+        image_scale=1,
     )
 
     if buildings[0]["name"] not in bought_buildings["short_list"]:
@@ -306,15 +308,18 @@ def main():
             blue_cable_image: pg.surface = load_image(
                 f"{src_dir}/img/blue_cable_on.png", w, h
             )
-        
-        if blue_cable_count == framerate*blue_cable_timer:
+
+        if blue_cable_count == framerate * blue_cable_timer:
             is_blue_cable_off = True
 
         timeUnits_text: pg.Surface = get_number_font(65, h).render(
-            f"{format_timeUnits(timeUnits, 6)}", True, RED
+            f"{format_timeUnits(timeUnits, 6)}", True, RED_OCHRE
+        )
+        timeUnits_text_logo: pg.Surface = load_image(
+            f"{src_dir}/img/timeUnits.png", w, h, scale=0.12
         )
         tps_text: pg.Surface = get_number_font(50, h).render(
-            f"{format_timeUnits(tps, 6)} TU/s", True, RED
+            f"{format_timeUnits(tps, 6)} TU/s", True, RED_OCHRE
         )
 
         for i in range(len(buildings)):
@@ -526,6 +531,13 @@ def main():
                 else:
                     LOGGER.INFO("Setting log level to DEBUG")
                     LOGGER.set_level(4)
+            elif event.type == pg.KEYDOWN and event.key == pg.K_F11:
+                if is_maximized:
+                    window.restore()
+                    is_maximized = False
+                else:
+                    window.maximize()
+                    is_maximized = True
 
             elif event.type == pg.MOUSEWHEEL and len(available_buildings) > 6:
                 LOGGER.DEBUG(f"scroll offset: {event.y}")
@@ -734,10 +746,34 @@ def main():
                 ),
                 0,
             )
+            max_bought_level = next(
+                (
+                    u["level"]
+                    for u in bought_upgrades["long_list"]
+                    if u["name"] == upgrade["name"]
+                ),
+                0,
+            )
+            xth_build_price = next(
+                (
+                    b["cost"](treshold[max_bought_level])
+                    for b in buildings
+                    if b["name"] == upgrade["building_name"]
+                ),
+                0,
+            ) - next(
+                (
+                    b["cost"](treshold[max_bought_level] - 1)
+                    for b in buildings
+                    if b["name"] == upgrade["building_name"]
+                ),
+                0,
+            )
+
             if upgrade is None:
                 cost = 0
             else:
-                cost = upgrade["cost"]
+                cost = xth_build_price * 3
 
             # print(f"{upgrade_button.identifier} ({i}) : ", end='')
 
@@ -780,7 +816,7 @@ def main():
 
                 screen.blit(
                     get_text_font(25, h).render(
-                        f"{format_timeUnits(round(cost))}", True, DARK_BROWN
+                        f"{format_timeUnits(round(cost))}", True, GREY
                     ),
                     (adapt_size_width(x, w), adapt_size_height(y + 40, h)),
                 )
@@ -795,7 +831,7 @@ def main():
                 if not upgrade_level == len(treshold):
                     screen.blit(
                         get_text_font(25, h).render(
-                            f"{format_timeUnits(round(cost))}", True, BROWN
+                            f"{format_timeUnits(round(cost))}", True, WHITE
                         ),
                         (adapt_size_width(x, w), adapt_size_height(y + 40, h)),
                     )
@@ -836,9 +872,27 @@ def main():
         )
 
         screen.blit(
-            timeUnits_text, (adapt_size_width(700, w), adapt_size_height(835, h))
+            timeUnits_text,
+            timeUnits_text.get_rect(
+                center=(adapt_size_width(870, w), adapt_size_height(865, h))
+            ),
         )
-        screen.blit(tps_text, (adapt_size_width(710, w), adapt_size_height(187.5, h)))
+        screen.blit(
+            timeUnits_text_logo,
+            timeUnits_text_logo.get_rect(
+                midleft=timeUnits_text.get_rect(
+                    center=(adapt_size_width(870, w), adapt_size_height(865, h))
+                )
+                .move(0, adapt_size_height(-5, h))
+                .midright
+            ),
+        )
+        screen.blit(
+            tps_text,
+            tps_text.get_rect(
+                center=(adapt_size_width(882.5, w), adapt_size_height(212.5, h))
+            ),
+        )
         screen.blit(timeline_text, (adapt_size_width(90, w), adapt_size_height(87, h)))
         blue_cable_button.render(screen, w=w, h=h)
 
@@ -869,17 +923,17 @@ def main():
         # print("-" * 50 + f" loop {loop_number} tick {current_frame}/{framerate}")
         save_count += 1
         # print(count)
-        if save_count == framerate*60:
+        if save_count == framerate * 60:
             save_data(
-                    appdata_path,
-                    timeUnits,
-                    tps,
-                    timeline,
-                    clicker_amount,
-                    bought_buildings,
-                    max_timeUnits,
-                    bought_upgrades,
-                )
+                appdata_path,
+                timeUnits,
+                tps,
+                timeline,
+                clicker_amount,
+                bought_buildings,
+                max_timeUnits,
+                bought_upgrades,
+            )
             # cancel_save_timer()
             count = 0
             LOGGER.INFO("Data saved")
