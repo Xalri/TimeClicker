@@ -8,6 +8,9 @@ from buildings import buildings
 from datetime import datetime
 from upgrade import UPGRADES, treshold
 import upgrade
+from data import UNITS
+import ctypes
+import threading
 
 
 def adapt_size_height(size, height, debug=False):
@@ -109,7 +112,7 @@ def save_data(
     clicker_amount=1,
     buildings={"short_list": [], "long_list": []},
     max_timeUnits=0,
-    bought_upgrades={"short_list": []},
+    bought_upgrades={"short_list": [], "long_list": []},
     last_saved_time=datetime.now().strftime(" %Y-%m-%d %H:%M:%S"),
 ):
     if max_timeUnits == 0:
@@ -149,23 +152,8 @@ def format_timeUnits(timeUnits: float, n=0):
             timeUnits
         )
     for unit, factor in zip(
-        [
-            "k",
-            "M",
-            "B",
-            "T",
-            "Qa",
-            "Qi",
-            "Sx",
-            "Sp",
-            "Oc",
-            "No",
-            "Dc",
-            "Ud",
-            "Dd",
-            "Td",
-        ],
-        [10**i for i in range(3, (14 * 3) + 1, 3)],
+        UNITS,
+        [10**i for i in range(3, (len(UNITS) * 3) + 1, 3)],
     ):
         if timeUnits < factor * 1000:
             timeUnits = f"{timeUnits / factor:.1f}{unit}".rstrip(".0")
@@ -256,6 +244,7 @@ def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
         0,
     )
     print("upgrade: ", upgrade)
+    print("build name: ", next(b for b in bought_buildings["long_list"] if b["name"] == upgrade["building_name"]))
     print("build amount: ", build_amount)
     if upgrade is None:
         return bought_upgrades, timeUnits, bought_buildings
@@ -271,7 +260,10 @@ def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
     print("max bought level: ", max_bought_level)
 
     print(timeUnits >= upgrade["cost"])
-    print(build_amount >= treshold[max_bought_level])
+    
+    # print(build_amount >= treshold[max_bought_level])
+    if max_bought_level == len(treshold):
+        return bought_upgrades, timeUnits, bought_buildings
     if timeUnits >= upgrade["cost"] and build_amount >= treshold[max_bought_level]:
         build = next(
             (b for b in buildings if b["name"] == upgrade["building_name"]), None
@@ -310,4 +302,11 @@ def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
     build_amount = next((b["amount"] for b in bought_buildings["long_list"] if b["name"] == upgrade["building_name"]), 0)
     max_bought_level = next((u["level"] for u in bought_upgrades["long_list"] if u["name"] == upgrade["name"]), 0)
     
+    if max_bought_level == len(treshold):
+        return True
+    
     return timeUnits >= upgrade["cost"] and build_amount >= treshold[max_bought_level]
+
+
+def show_message(msg):
+    ctypes.windll.user32.MessageBoxW(0, msg, "Debug Message", 1)

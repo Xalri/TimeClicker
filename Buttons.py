@@ -1,9 +1,9 @@
 import pygame as pg
-from utils import load_image
+from utils import load_image, get_text_font, adapt_size_height, adapt_size_width
 
 
 class Button:
-    def __init__(self, rect, screen_size: tuple[int, int], background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, identifier=None):
+    def __init__(self, rect, screen_size: tuple[int, int], background=(255, 0, 0), command=lambda: print("clicked"), border_radius=0, transparent=False, image_scale=1, image_rotation=0, bump_on_click=False, identifier=None, infos=""):
         """
         Initialize the button.
 
@@ -24,6 +24,9 @@ class Button:
         self.bump_event = pg.USEREVENT + 1  # Timer event for bump reset
         self.identifier = identifier
         self.hovering = False
+        self.display_info = False
+        self.infos = infos
+        self.mouse_pos = (0, 0)
 
 
         # Handle background as color or image
@@ -79,13 +82,52 @@ class Button:
         )
         self.mask = pg.mask.from_surface(mask_surface)
 
-    def render(self, screen, darker=False):
+    def render(self, screen, darker=False, w=1, h=1):
         """Render the button onto the screen."""
         image = self.image
         if darker:
             image.fill((100,100,100), special_flags=pg.BLEND_MULT)
         screen.blit(image, self.rect)
-
+        # if self.display_info:
+        #     # Calculate the size of the info box based on the text dimensions
+        #     texts = [get_text_font(15, h).render(text, True, (255, 255, 255)) for text in self.infos.split("\n")]
+        #     max_width = max(text.get_width() for text in texts)
+        #     total_height = sum(text.get_height() for text in texts) + (len(texts) - 1) * adapt_size_height(5, h)
+            
+        #     # Create the info box surface with the calculated size
+        #     info_box = pg.Surface((max_width + 10, total_height + 10))
+        #     info_box.fill((0, 0, 0))  # Background color for the info box
+        #     info_box.set_alpha(200)  # Transparency for the info box
+        #     info_box_rect = info_box.get_rect(topleft=(self.mouse_pos[0], self.mouse_pos[1]))
+            
+        #     screen.blit(info_box, info_box_rect)
+            
+        #     # Render the text onto the info box
+        #     y_offset = 5
+        #     for text in texts:
+        #         screen.blit(text, (info_box_rect.x + 5, info_box_rect.y + y_offset))
+        #         y_offset += text.get_height() + adapt_size_height(5, h)
+        
+    def render_infos(self, screen, darker=False, w=1, h=1):
+        if self.display_info:
+            # Calculate the size of the info box based on the text dimensions
+            texts = [get_text_font(15, h).render(text, True, (255, 255, 255)) for text in self.infos.split("\n")]
+            max_width = max(text.get_width() for text in texts)
+            total_height = sum(text.get_height() for text in texts) + (len(texts) - 1) * adapt_size_height(5, h)
+            
+            # Create the info box surface with the calculated size
+            info_box = pg.Surface((max_width + 10, total_height + 10))
+            info_box.fill((0, 0, 0))  # Background color for the info box
+            info_box.set_alpha(200)  # Transparency for the info box
+            info_box_rect = info_box.get_rect(topleft=(self.mouse_pos[0], self.mouse_pos[1]))
+            
+            screen.blit(info_box, info_box_rect)
+            
+            # Render the text onto the info box
+            y_offset = 5
+            for text in texts:
+                screen.blit(text, (info_box_rect.x + 5, info_box_rect.y + y_offset))
+                y_offset += text.get_height() + adapt_size_height(5, h)
     def get_event(self, event):
         """Handle events for the button."""
         
@@ -114,10 +156,16 @@ class Button:
         hovering = 0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height and self.mask.get_at((rel_x, rel_y))
 
         if hovering:
-            if not self.hovering:  # Prevent redundant calls
+            if self.infos != "":
+                self.display_info = True
+                self.mouse_pos = mouse_pos
+            if not self.hovering: 
                 pg.mouse.set_cursor(pg.SYSTEM_CURSOR_HAND)
                 self.hovering = True
+            
+            
         else:
+            self.display_info = False
             if self.hovering:
                 pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
                 self.hovering = False

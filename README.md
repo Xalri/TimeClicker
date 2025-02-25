@@ -4,7 +4,7 @@
 
 # Time Clicker 
 
-Time Clicker is a clicker where you gain Time Units in order to advance the Timeline to discord new age
+Time Clicker is a clicker where you gain Time Units in order to advance the Timeline to discover new age
 
 ## Installation
 

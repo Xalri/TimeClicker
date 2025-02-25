@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "C:/Users/Xalri/Documents/ECOLE/NSI/Binary Clicker/main.py"
+   "value": "C:/Users/samyt/Documents/TimeClicker/main.py"
   },
   {
    "optionDest": "onefile",
@@ -19,11 +19,11 @@
   },
   {
    "optionDest": "icon_file",
-   "value": "C:/Users/Xalri/Documents/ECOLE/NSI/Binary Clicker/src/icon.ico"
+   "value": "C:/Users/samyt/Documents/TimeClicker/src/icon.ico"
   },
   {
    "optionDest": "name",
-   "value": "Time Clocker"
+   "value": "Time Clicker"
   },
   {
    "optionDest": "clean_build",
@@ -59,27 +59,27 @@
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/Xalri/Documents/ECOLE/NSI/Binary Clicker/utils.py;."
+   "value": "C:/Users/samyt/Documents/TimeClicker/utils.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/Xalri/Documents/ECOLE/NSI/Binary Clicker/Logger.py;."
+   "value": "C:/Users/samyt/Documents/TimeClicker/Logger.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/Xalri/Documents/ECOLE/NSI/Binary Clicker/data.py;."
+   "value": "C:/Users/samyt/Documents/TimeClicker/data.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/Xalri/Documents/ECOLE/NSI/Binary Clicker/Buttons.py;."
+   "value": "C:/Users/samyt/Documents/TimeClicker/Buttons.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/Xalri/Documents/ECOLE/NSI/Binary Clicker/buildings.py;."
+   "value": "C:/Users/samyt/Documents/TimeClicker/buildings.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/Xalri/Documents/ECOLE/NSI/Binary Clicker/src;src/"
+   "value": "C:/Users/samyt/Documents/TimeClicker/src;src/"
   }
  ],
  "nonPyinstallerOptions": {

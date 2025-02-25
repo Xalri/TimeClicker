@@ -32,6 +32,10 @@ buildings = [
     # Futur
     {"name": "AI", "cost": lambda x: (x**1.15)*30000000000000000000000000000, "tps_boost": 4000000000000000},
     {"name": "Antimatter Central", "cost": lambda x: (x**1.15)*4200000000000000000000000000000, "tps_boost": 31000000000000000},
-    {"name": "Spaceship", "cost": lambda x: (x**1.15)*630000000000000000000000000000000, "tps_boost": 240000000000000000}
-    #{"name": "Time Machine", "cost": 100000000000000000000000000000000000, "tps_boost": },
+    {"name": "Spaceship", "cost": lambda x: (x**1.15)*630000000000000000000000000000000, "tps_boost": 240000000000000000},
+    # {"name": "Time Machine", "cost": 100000000000000000000000000000000000, "tps_boost": 0},
 ]
+
+
+
+

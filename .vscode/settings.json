@@ -19,7 +19,7 @@
   "peacock.color": "#0072e6",
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
   },
   "python.analysis.autoImportCompletions": true
 }
