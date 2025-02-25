@@ -188,9 +188,7 @@ def can_buy_buildings(bought_buildings, building_name, amount, timeUnits):
         ),
         0,
     )
-    cost = round(
-        building["cost"](current_amount + amount) - building["cost"](current_amount)
-    )
+    cost = sum(building["cost"](current_amount + i) for i in range(amount))
 
     return timeUnits >= cost
 
@@ -210,16 +208,17 @@ def buy_buildings(bought_buildings, building_name, amount, timeUnits):
         0,
     )
     print(current_amount)
-    cost = round(
-        building["cost"](current_amount + amount) - building["cost"](current_amount)
-    )
+    # cost = round(
+    #     building["cost"](current_amount + amount) - building["cost"](current_amount)
+    # )
+    cost = sum(building["cost"](current_amount + i) for i in range(amount))
     print(cost)
 
     if timeUnits >= cost:
         if not building_name in bought_buildings["short_list"]:
             bought_buildings["short_list"].append(building_name)
             bought_buildings["long_list"].append(
-                {"name": building_name, "amount": amount}
+                {"name": building_name, "amount": amount, "upgrade_boost":1}
             )
         else:
             for b in bought_buildings["long_list"]:
@@ -259,8 +258,10 @@ def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
         0,
     )
     print("max bought level: ", max_bought_level)
+    if max_bought_level == len(treshold):
+        return bought_upgrades, timeUnits, bought_buildings
     
-    xth_build_price = next((b["cost"](treshold[max_bought_level]) for b in buildings if b["name"] == upgrade["building_name"]), 0)- next((b["cost"](treshold[max_bought_level]-1) for b in buildings if b["name"] == upgrade["building_name"]), 0)
+    xth_build_price = next((b["cost"](treshold[max_bought_level]) for b in buildings if b["name"] == upgrade["building_name"]), 0)
 
     cost= xth_build_price*3
 
@@ -310,7 +311,7 @@ def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
     if max_bought_level == len(treshold):
         return True
     
-    xth_build_price = next((b["cost"](treshold[max_bought_level]) for b in buildings if b["name"] == upgrade["building_name"]), 0)- next((b["cost"](treshold[max_bought_level]-1) for b in buildings if b["name"] == upgrade["building_name"]), 0)
+    xth_build_price = next((b["cost"](treshold[max_bought_level]) for b in buildings if b["name"] == upgrade["building_name"]), 0)
     return timeUnits >= xth_build_price*3 and build_amount >= treshold[max_bought_level]
 
 
