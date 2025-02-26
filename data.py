@@ -1,8 +1,5 @@
 import pygame
 
-pygame.font.init()
-
-
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 # Basics
@@ -29,8 +26,6 @@ DARK_GREY = (53, 53, 53)
 LIGHT_DARK = (28, 28, 28)
 YELLOW_GREEN = (223, 241, 103)
 RED_OCHRE = (240, 74, 56)
-
-BACKGROUND_COLOR = LIGHT_GREY
 
 
 UNITS = [

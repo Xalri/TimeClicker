@@ -4,9 +4,10 @@ import pygame
 import sys
 import os
 from base64 import b64decode, b64encode
+import Timeline
 from buildings import buildings
 from datetime import datetime
-from upgrade import UPGRADES, treshold
+from upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
 import upgrade
 from data import UNITS
 import ctypes
@@ -113,6 +114,7 @@ def save_data(
     buildings={"short_list": [], "long_list": []},
     max_timeUnits=0,
     bought_upgrades={"short_list": [], "long_list": []},
+    human_skills={"agility":0, "intelligence":0, "strength":0},
     last_saved_time=datetime.now().strftime(" %Y-%m-%d %H:%M:%S"),
 ):
     if max_timeUnits == 0:
@@ -317,3 +319,13 @@ def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
 
 def show_message(msg):
     ctypes.windll.user32.MessageBoxW(0, msg, "Debug Message", 1)
+
+def buy_timeline(timeline, timeUnits):
+    cost = TIMELINE_UPGRADE["cost"](timeline)
+    if not timeUnits >= cost or timeline >= 2500:
+        return timeline, timeUnits
+    return timeline + 1, timeUnits - cost
+
+    
+def can_buy_timeline(timeline, timeUnits):
+    return timeline >= 2500 or timeUnits >= TIMELINE_UPGRADE["cost"](timeline)

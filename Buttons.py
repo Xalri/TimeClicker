@@ -27,6 +27,7 @@ class Button:
         self.display_info = False
         self.infos = infos
         self.mouse_pos = (0, 0)
+            # self.command
 
 
         # Handle background as color or image

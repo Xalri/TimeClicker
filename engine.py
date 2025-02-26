@@ -16,11 +16,12 @@ from data import *
 from Buttons import Button
 from Logger import Logger
 from buildings import buildings
-from upgrade import UPGRADES, treshold
+from upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
 
 from utils import (
     adapt_size_height as adapth,
     adapt_size_width as adaptw,
+    buy_timeline,
     load_image,
     get_number_font,
     get_text_font,
@@ -64,14 +65,16 @@ class Engine:
         ctypes.windll.user32.GetMonitorInfoW(monitor_info, ctypes.byref(monitor_rect))
         os.environ["SDL_VIDEO_WINDOW_POS"] = f"{500},{300}"
         
-
+        
+        # os.environ["SDL_VIDEO_WINDOW_POS"] = f"{500},{300}"
         self.screen = pg.display.set_mode((1024, 576), pg.RESIZABLE)
         icon = pg.image.load(os.path.join(self.src_dir, "icon.png"))
         pg.display.set_icon(icon)
         self.window = Window.from_display_module()
+        self.window.restore()
         self.window.maximize()
-        self.is_maximized = True
         pg.display.set_caption("Time Clicker")
+        
         
         
         
@@ -99,7 +102,7 @@ class Engine:
         
         self.save_count = 0
         self.blue_cable_count = 0
-        self.blue_cable_timer = randint(60, 350)
+        self.blue_cable_timer = randint(3, 15)
         
         self.running = True
         
@@ -110,8 +113,10 @@ class Engine:
     def buy_building_wrapper(self, building_name):
         self.bought_buildings, self.timeUnits = buy_buildings(self.bought_buildings, building_name, 1, self.timeUnits)     
     def buy_upgrade_wrapper(self, upgrade_name):
+        self.LOGGER.INFO("upgrade wrapper called")
         self.bought_upgrades, self.timeUnits, self.bought_buildings = buy_upgrades(self.bought_upgrades, upgrade_name, self.timeUnits, self.bought_buildings)
-        
+    def buy_timeline_wrapper(self):
+        self.timeline, self.timeUnits = buy_timeline(self.timeline, self.timeUnits)
       
     def load_data(self):
         (
@@ -201,7 +206,8 @@ class Engine:
                         if not upgrade in self.available_upgrades:
                             self.available_upgrades.append(upgrade)
                             
-                    
+        if next((u for u in self.available_upgrades if u["name"] == UPGRADES[0]["name"]), None) is not None and next((u for u in self.available_upgrades if u["name"] == UPGRADES[1]["name"]), None) is not None:
+            self.available_upgrades.append(TIMELINE_UPGRADE)
     def update(self):
         self.current_frame: int = (self.current_frame + 1) % self.framerate
         
