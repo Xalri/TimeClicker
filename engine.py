@@ -1,11 +1,9 @@
 import os
 from random import randint
 import sys
-import time
 import ctypes
 from pprint import pprint
 from datetime import datetime
-import threading
 
 import pygame as pg
 from pygame._sdl2 import Window
@@ -13,7 +11,6 @@ from pygame.locals import *
 
 from config import FRAMERATE
 from data import *
-from Buttons import Button
 from Logger import Logger
 from buildings import buildings
 from upgrade import TIMELINE_UPGRADE, UPGRADES, treshold

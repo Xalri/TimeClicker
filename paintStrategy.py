@@ -3,15 +3,12 @@ from json import load
 import os
 from re import S
 
-from sklearn.linear_model import Log
 from Buttons import Button
 from config import *
 import pygame as pg
-from pygame._sdl2 import Window
 from data import *
 
 from buildings import buildings
-from main_old import LOGGER
 from upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
 from utils import adapt_size_width as adaptw, adapt_size_height as adapth, can_buy_buildings, can_buy_timeline, can_buy_upgrade, format_time_no_convertion, format_timeUnits, get_number_font, get_text_font, get_timeline_font, load_image
 

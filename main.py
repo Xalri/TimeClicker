@@ -1,6 +1,5 @@
 from engine import Engine
 from paintStrategy import PaintStrategy
-import paintStrategy
 
 
 def main():
