@@ -48,7 +48,7 @@ class PaintStrategy:
         self.tps_text: pg.Surface = get_number_font(50, height).render(f"{format_timeUnits(self.engine.tps, 0)}", True, RED_OCHRE)
         self.tps_text_logo: pg.Surface = load_image(f"{self.src_dir}/img/tps.png", width, height)
         
-        self.timeline_text: pg.Surface = get_timeline_font(124, height).render(f"{format_time_no_convertion(self.engine.timeline,3)}", True, YELLOW_GREEN)
+        self.timeline_text: pg.Surface = get_timeline_font(124, height).render(f"{format_time_no_convertion(int(self.engine.timeline),3)}", True, YELLOW_GREEN)
         
         if self.has_window_been_resized():
             self.clicker_button: Button = Button(
