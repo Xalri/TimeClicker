@@ -2,6 +2,7 @@ import ctypes
 from json import load
 import os
 from re import S
+import time
 from turtle import width
 
 from Buttons import Button
@@ -11,7 +12,7 @@ from data import *
 
 from buildings import buildings
 from upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
-from utils import adapt_size_width as adaptw, adapt_size_height as adapth, can_buy_buildings, can_buy_timeline, can_buy_upgrade, format_time_no_convertion, format_timeUnits, get_number_font, get_text_font, get_timeline_font, load_image
+from utils import adapt_size_width as adaptw, adapt_size_height as adapth, can_buy_buildings, can_buy_timeline, can_buy_upgrade, format_time_no_convertion, format_timeUnits, get_clock_font, get_number_font, get_text_font, get_timeline_font, load_image
 
 class PaintStrategy:
     def __init__(self, engine, screen, src_dir):
@@ -46,13 +47,32 @@ class PaintStrategy:
         self.tps_text: pg.Surface = get_number_font(50, height).render(f"{format_timeUnits(self.engine.tps, 0)}", True, RED_OCHRE)
         self.tps_text_logo: pg.Surface = load_image(f"{self.src_dir}/img/tps.png", width, height)
         
+        match self.engine.era:
+            case 1:
+                era_name = "Prehistory"
+            case 2:
+                era_name = "Antiquity"
+            case 3:
+                era_name = "Middle Ages"
+            case 4:
+                era_name = "Modern Times"
+            case 5:
+                era_name = "Contemporary"
+            case 6:
+                era_name = "Future"
+            
+        self.era_text: pg.surface = get_timeline_font(35, height).render(f"{era_name}", True, YELLOW_GREEN)
+        
         if self.engine.timeline < 0:
             timeline = "Null"
+            size = 124
         elif self.engine.timeline >= 2500:
             timeline = "Out Of Time"
+            size = 62
         else:
             timeline = format_time_no_convertion(self.engine.timeline)
-        self.timeline_text: pg.Surface = get_timeline_font(124, height).render(f"{timeline}", True, YELLOW_GREEN)
+            size = 124
+        self.timeline_text: pg.Surface = get_timeline_font(size, height).render(f"{timeline}", True, YELLOW_GREEN)
         
         self.blue_cable_image: pg.surface = load_image(f"{self.src_dir}/img/blue_cable_on.png", width, height)
         if self.engine.is_blue_cable_cut:
@@ -218,33 +238,33 @@ class PaintStrategy:
             Button(
                 rect=(adaptw(1280.5, self.width), adapth(748.5, self.height), adaptw(27.5, self.width), adapth(27.5, self.height)),
                 screen_size=(self.width, self.height),
-                background=DARK_ORANGE,
+                background=RED_OCHRE,
                 command=lambda :self.engine.buy_human_skills_wrapper("strength"),
                 border_radius=250,
                 identifier="strength",
-                infos=f"{format_timeUnits(200 * (2**self.engine.human_skills['strength']))} TU"
+                infos=f"The Strength skill allow you to produce more Time Units per click. \nCurrent Time Units/click is {self.engine.clicker_amount}. \nthe cost of the next level is {format_timeUnits(200 * (2**self.engine.human_skills['strength']))} TU"
             )
         )
         self.engine.human_skills_buttons.append(
             Button(
                 rect=(adaptw(1325, self.width), adapth(748.5, self.height), adaptw(27.5, self.width), adapth(27.5, self.height)),
                 screen_size=(self.width, self.height),
-                background=MUSTARD,
+                background=CABLE_BLUE,
                 command=lambda :self.engine.buy_human_skills_wrapper("agility"),
                 border_radius=250,
                 identifier="agility",
-                infos=f"{format_timeUnits(200 * (2**self.engine.human_skills['agility']))} TU"
+                infos=f"The Agility skill increase the duration of the boost from the blue cable. \nCurrent duration is {time.strftime('%M:%S', time.gmtime(60 + self.engine.boost_duration))}. \nthe cost of the next level is {format_timeUnits(200 * (2**self.engine.human_skills['agility']))} TU"
             )
         )
         self.engine.human_skills_buttons.append(
             Button(
                 rect=(adaptw(1370.5, self.width), adapth(748.5, self.height), adaptw(27.5, self.width), adapth(27.5, self.height)),
                 screen_size=(self.width, self.height),
-                background=LIGHT_GREEN,
+                background=YELLOW,
                 command=lambda :self.engine.buy_human_skills_wrapper("intelligence"),
                 border_radius=250,
                 identifier="intelligence",
-                infos=f"{format_timeUnits(200 * (2**self.engine.human_skills['intelligence']))} TU"
+                infos=f"The Intelligence skill decrease the price of buildings and upgrades. \nCurrent reduction is {(self.engine.human_skills['intelligence']/2)}%. \nthe cost of the next level is {format_timeUnits(200 * (2**self.engine.human_skills['intelligence']))} TU"
             )
         )
 
@@ -349,14 +369,29 @@ class PaintStrategy:
         match self.engine.era:
             case 1:
                 base = f"{self.src_dir}/img/buildings/base_1.png"
+                price_color = BROWN
+                price_color_dark = DARK_BROWN
             case 2:
                 base = f"{self.src_dir}/img/buildings/base_2.png"
+                price_color = (119, 224, 219)
+                price_color_dark = (50, 86, 82)
             case 3:
                 base = f"{self.src_dir}/img/buildings/base_3.png"
+                price_color = (255, 217, 149)
+                price_color_dark = (94, 78, 54)
             case 4:
                 base = f"{self.src_dir}/img/buildings/base_4.png"
+                price_color = (10, 71, 0)
+                price_color_dark = (4, 10, 0)
             case 5:
                 base = f"{self.src_dir}/img/buildings/base_5.png"
+                price_color = (0, 233, 236)
+                price_color_dark = (0, 64, 64)
+            case 6:
+                base = f"{self.src_dir}/img/buildings/base_6.png"
+                price_color = (0, 81, 255)
+                price_color_dark = (7, 38, 63)
+                
         for i in range(len(self.engine.buildings_buttons)):
             build_button = self.engine.buildings_buttons[i]
             build = next((b for b in self.engine.bought_buildings["long_list"] if b["name"] == build_button.identifier),None)
@@ -389,7 +424,7 @@ class PaintStrategy:
                 self.screen.blit(building_image, building_rect.topleft)
 
                 self.screen.blit(
-                    get_text_font(25, self.height).render(f"{format_timeUnits(round(cost))}", True, DARK_BROWN),
+                    get_text_font(25, self.height).render(f"{format_timeUnits(round(cost))}", True, price_color_dark),
                     (adaptw(1592, self.width),adapth(132 + 105 * i, self.height)+ adapth((self.scroll_value * 1), self.height),)
                 )
                 self.screen.blit(
@@ -404,7 +439,7 @@ class PaintStrategy:
                 self.screen.blit(building_image, building_rect.topleft)
 
                 self.screen.blit(
-                    get_text_font(25, self.height).render(f"{format_timeUnits(round(cost))}", True, BROWN),
+                    get_text_font(25, self.height).render(f"{format_timeUnits(round(cost))}", True, price_color),
                     (adaptw(1592, self.width),adapth(132 + 105 * i, self.height)+ adapth((self.scroll_value * 1), self.height),)
                 )
                 self.screen.blit(
@@ -552,24 +587,24 @@ class PaintStrategy:
 
     def display_human_skills(self):
         strength_offset = (self.engine.human_skills["strength"] / 100) * 527
-        pg.draw.rect(self.screen, DARK_ORANGE, (adaptw(1285.5, self.width), adapth(734.5-strength_offset, self.height), adaptw(15, self.width), adapth(strength_offset, self.height)), border_radius=60)
+        pg.draw.rect(self.screen, RED_OCHRE, (adaptw(1285.5, self.width), adapth(734.5-strength_offset, self.height), adaptw(15, self.width), adapth(strength_offset, self.height)), border_radius=60)
         self.screen.blit(
-            get_text_font(20, self.height).render(f"{self.engine.human_skills['strength']}", True, WHITE),
-            get_text_font(20, self.height).render(f"{self.engine.human_skills['strength']}", True, WHITE).get_rect(center=(adaptw(1292.5, self.width), adapth(798.5, self.height))),
+            get_number_font(20, self.height).render(f"{self.engine.human_skills['strength']}", True, RED_OCHRE),
+            get_number_font(20, self.height).render(f"{self.engine.human_skills['strength']}", True, RED_OCHRE).get_rect(center=(adaptw(1292.5, self.width), adapth(798.5, self.height))),
         )
         
         agility_offset = (self.engine.human_skills["agility"] / 100) * 527
-        pg.draw.rect(self.screen, MUSTARD, (adaptw(1331, self.width), adapth(734.5-agility_offset, self.height), adaptw(15, self.width), adapth(agility_offset, self.height)), border_radius=60)
+        pg.draw.rect(self.screen, CABLE_BLUE, (adaptw(1331, self.width), adapth(734.5-agility_offset, self.height), adaptw(15, self.width), adapth(agility_offset, self.height)), border_radius=60)
         self.screen.blit(
-            get_text_font(20, self.height).render(f"{self.engine.human_skills['agility']}", True, WHITE),
-            get_text_font(20, self.height).render(f"{self.engine.human_skills['agility']}", True, WHITE).get_rect(center=(adaptw(1338, self.width), adapth(798.5, self.height))),
+            get_number_font(20, self.height).render(f"{self.engine.human_skills['agility']}", True, CABLE_BLUE),
+            get_number_font(20, self.height).render(f"{self.engine.human_skills['agility']}", True, CABLE_BLUE).get_rect(center=(adaptw(1338, self.width), adapth(798.5, self.height))),
         )
                                                                                    
         intelligence_offset = (self.engine.human_skills["intelligence"] / 100) * 527
-        pg.draw.rect(self.screen, LIGHT_GREEN, (adaptw(1375.5, self.width), adapth(734.5-intelligence_offset, self.height), adaptw(15, self.width), adapth(intelligence_offset, self.height)), border_radius=60)
+        pg.draw.rect(self.screen, YELLOW, (adaptw(1375.5, self.width), adapth(734.5-intelligence_offset, self.height), adaptw(15, self.width), adapth(intelligence_offset, self.height)), border_radius=60)
         self.screen.blit(
-            get_text_font(20, self.height).render(f"{self.engine.human_skills['intelligence']}", True, WHITE),
-            get_text_font(20, self.height).render(f"{self.engine.human_skills['intelligence']}", True, WHITE).get_rect(center=(adaptw(1385, self.width), adapth(798.5, self.height))),
+            get_number_font(20, self.height).render(f"{self.engine.human_skills['intelligence']}", True, YELLOW),
+            get_number_font(20, self.height).render(f"{self.engine.human_skills['intelligence']}", True, YELLOW).get_rect(center=(adaptw(1385, self.width), adapth(798.5, self.height))),
         )
 
         for button in self.engine.human_skills_buttons:
@@ -631,7 +666,11 @@ class PaintStrategy:
             ),
         )
 
-        self.screen.blit(self.timeline_text, self.timeline_text.get_rect(center=(adaptw(300, self.width), adapth(150, self.height))))
+        self.screen.blit(self.timeline_text, self.timeline_text.get_rect(center=(adaptw(295, self.width), adapth(147.5, self.height))))
+        
+        
+        
+        self.screen.blit(self.era_text, self.era_text.get_rect(center=(adaptw(900, self.width), adapth(935, self.height))))
         
         
         
@@ -662,20 +701,38 @@ class PaintStrategy:
         
     def init_screen(self):
         if not self.is_init:
-            # self.engine.LOGGER.INFO("maximizing screen")
-            # self.engine.window.maximize()
-            self.engine.LOGGER.DEBUG("Initializing screen...")
             width, height = pg.display.get_surface().get_size()
-            
+        
             # Screen components
             self.timeUnits_text: pg.Surface = get_number_font(65, height).render(f"{format_timeUnits(self.engine.timeUnits, 0)}", True, RED_OCHRE)
             self.timeUnits_text_logo: pg.Surface = load_image(f"{self.src_dir}/img/timeUnits.png", width, height)
             
-            self.engine.LOGGER.WARNING(f"TPS: {self.engine.tps}")
             self.tps_text: pg.Surface = get_number_font(50, height).render(f"{format_timeUnits(self.engine.tps, 0)}", True, RED_OCHRE)
             self.tps_text_logo: pg.Surface = load_image(f"{self.src_dir}/img/tps.png", width, height)
             
-            self.timeline_text: pg.Surface = get_timeline_font(124, height).render(f"{format_time_no_convertion(self.engine.timeline,3)}", True, YELLOW_GREEN)
+            if self.engine.timeline < 0:
+                timeline = "Null"
+                size = 124
+            elif self.engine.timeline >= 2500:
+                timeline = "Out Of Time"
+                size = 62
+            else:
+                timeline = format_time_no_convertion(self.engine.timeline)
+                size = 124
+            self.timeline_text: pg.Surface = get_timeline_font(size, height).render(f"{timeline}", True, YELLOW_GREEN)
+            
+            self.blue_cable_image: pg.surface = load_image(f"{self.src_dir}/img/blue_cable_on.png", width, height)
+            if self.engine.is_blue_cable_cut:
+                self.blue_cable_image = load_image(f"{self.src_dir}/img/blue_cable_off.png", width, height)
+                self.blue_cable_button: Button = Button(
+                    rect=(adaptw(1285, width),adapth(935, height),adaptw(600, width),adapth(75, height)),
+                    screen_size=(width, height),
+                    background=BLUE,
+                    transparent=True,
+                    command=lambda: self.engine.buy_blue_cable_wrapper(),
+                    border_radius=0,
+                )
+            
             
         
             self.clicker_button: Button = Button(
@@ -689,6 +746,22 @@ class PaintStrategy:
                 bump_on_click=True,
                 identifier="clicker",
             )
+            
+            match self.engine.era:
+                case 1:
+                    era_name = "Prehistory"
+                case 2:
+                    era_name = "Antiquity"
+                case 3:
+                    era_name = "Middle Ages"
+                case 4:
+                    era_name = "Modern Times"
+                case 5:
+                    era_name = "Contemporary"
+                case 6:
+                    era_name = "Future"
+                
+            self.era_text: pg.surface = get_text_font(35, height).render(f"{era_name}", True, YELLOW_GREEN)
             
             # Screen images
             self.timeline_image: pg.surface = load_image(f"{self.src_dir}/img/timeline.png", width, height)
@@ -705,23 +778,14 @@ class PaintStrategy:
             
             self.red_cable_image: pg.surface = load_image(f"{self.src_dir}/img/red_cable_on.png", width, height)
             
-            self.blue_cable_image: pg.surface = load_image(f"{self.src_dir}/img/blue_cable_on.png", width, height)
-            if self.engine.is_blue_cable_cut:
-                self.blue_cable_image = load_image(f"{self.src_dir}/img/blue_cable_off.png", width, height)
-                self.blue_cable_button: Button = Button(
-                    rect=(adaptw(1285, width),adapth(935, height),adaptw(600, width),adapth(75, height)),
-                    screen_size=(width, height),
-                    background=BLUE,
-                    transparent=True,
-                    command=lambda: self.engine.buy_blue_cable_wrapper(),
-                    border_radius=0,
-                )
+            
             
             
             
             self.building_scroll_area_rect = pg.Rect(adaptw(1525, width),adapth(70, height),adaptw(300, width),adapth(750, height),)
             
             self.upgrade_scroll_area_rect = pg.Rect(adaptw(67.5, width),adapth(267.5, height),adaptw(460, width),adapth(750, height),)
+            
             
             self.width = width
             self.height = height
@@ -735,10 +799,26 @@ class PaintStrategy:
             
         
         if self.engine.blue_cable_x2_timer != 0:
-            pg.draw.rect(self.screen, BLUE, (adaptw(1265, self.width), adapth(45, self.height), adaptw(150, self.width), adapth(65, self.height)))
+            # pg.draw.rect(self.screen, CABLE_BLUE, (adaptw(1265, self.width), adapth(45, self.height), adaptw(150, self.width), adapth(65, self.height)))
+            
+            usb_image = load_image(f"{self.src_dir}/img/usb_boost_2.png", self.width, self.height)
+            self.screen.blit(usb_image, (adaptw(1265, self.width), adapth(40, self.height)))
+            
+            
+            timer_text = time.strftime("%M:%S", time.gmtime(self.engine.blue_cable_x2_timer/self.engine.framerate))
+            timer_text_surface = get_clock_font(30, self.height).render(f"{timer_text}", True, CLOCK_GREEN)
+            self.screen.blit(timer_text_surface,(adaptw(1328.5, self.width), adapth(59.5, self.height)))
             
             
         if self.engine.blue_cable_x5_timer != 0:
-            pg.draw.rect(self.screen, BLUE, (adaptw(1265, self.width), adapth(115, self.height), adaptw(150, self.width), adapth(65, self.height)))
+            # pg.draw.rect(self.screen, CABLE_BLUE, (adaptw(1265, self.width), adapth(115, self.height), adaptw(150, self.width), adapth(65, self.height)))
+            
+            usb_image = load_image(f"{self.src_dir}/img/usb_boost_5.png", self.width, self.height)
+            self.screen.blit(usb_image, (adaptw(1265, self.width), adapth(113, self.height)))
+            
+            
+            timer_text = time.strftime("%M:%S", time.gmtime(self.engine.blue_cable_x5_timer/self.engine.framerate))
+            timer_text_surface = get_clock_font(30, self.height).render(f"{timer_text}", True, CLOCK_GREEN)
+            self.screen.blit(timer_text_surface,(adaptw(1328.5, self.width), adapth(132.5, self.height)))
         
             

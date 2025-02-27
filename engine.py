@@ -134,7 +134,7 @@ class Engine:
         print("blue cable clicked ", end='')
         if randint(1, 2) == 1:
             print("X2")
-            self.blue_cable_x2_timer = self.framerate * 60 * 1 + self.framerate * 60 * self.boost_duration
+            self.blue_cable_x2_timer = self.framerate * 60 * 1 + self.framerate * self.boost_duration
             # print("base duration :", self.framerate * 60 * 1)
             # print("additional timer :", self.framerate * 60 * self.boost_duration)
             # print("blue cable timer :", self.blue_cable_x2_timer)
@@ -149,7 +149,7 @@ class Engine:
                 self.tps_boost_from_cable += 2
         else:
             print("X5")
-            self.blue_cable_x5_timer = self.framerate * 60 * 1 + self.framerate * 60 * self.boost_duration
+            self.blue_cable_x5_timer = self.framerate * 60 * 1 + self.framerate * self.boost_duration
             # print("base duration :", self.framerate * 60 * 1)
             # print("additional timer :", self.framerate * 60 * self.boost_duration)
             # print("blue cable timer :", self.blue_cable_x2_timer)
@@ -208,27 +208,33 @@ class Engine:
             
             match self.era:
                 case 1:
-                    can_be_bought = True
-                case 2:
                     if i < 4:
                         can_be_bought = True
                     else:
                         can_be_bought = False
-                case 3:
+                case 2:
                     if i < 8:
                         can_be_bought = True
                     else:
                         can_be_bought = False
-                case 4:
+                case 3:
                     if i < 12:
                         can_be_bought = True
                     else:
                         can_be_bought = False
-                case 5:
+                case 4:
                     if i < 16:
                         can_be_bought = True
                     else:
                         can_be_bought = False
+                case 5:
+                    if i < 20:
+                        can_be_bought = True
+                    else:
+                        can_be_bought = False
+                case 6:
+                    can_be_bought = True
+                    
             
             previous_build = buildings[i - 1] if i > 0 else None
             if can_be_bought:
@@ -327,6 +333,7 @@ class Engine:
         self.is_blue_cable_cut = False
     
     def check_cables(self):
+        print(self.blue_cable_x2_timer, self.blue_cable_x5_timer)
         self.blue_cable_count += 1
         
         
@@ -353,7 +360,6 @@ class Engine:
             
                 
     def check_era(self):
-        print(self.era, self.timeline)
         if self.timeline >=   2500:
             self.era = 6
         elif self.timeline >=   1789:
@@ -367,5 +373,8 @@ class Engine:
         else:
             self.era = 1
     
-            
+    
+    def add_cable_boost(self):
+        if self.tps_boost_from_cable != 0:
+            self.tps *= self.tps_boost_from_cable
             

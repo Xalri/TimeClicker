@@ -29,6 +29,8 @@ def main():
         paintstrategy.create_buildings_buttons()
         paintstrategy.create_upgrades_buttons()
         paintstrategy.create_human_skills_buttons()
+        
+        engine.add_cable_boost()
 
         engine.handle_human_skills()
 

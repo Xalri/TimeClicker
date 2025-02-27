@@ -69,6 +69,11 @@ def get_text_font(size, height):
         int(adapt_size_height(size, height)),
     )
 
+def get_clock_font(size, height):
+    return pygame.font.Font(
+        resource_path("src") + "/fonts/DS-DIGIB.TTF",
+        int(adapt_size_height(size, height)),
+    )
 
 def get_data(appdata_path):
     if not os.path.exists(os.path.join(appdata_path, "data")):

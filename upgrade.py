@@ -1,4 +1,4 @@
-from math import e
+from math import e, exp
 
 
 UPGRADES = [
@@ -48,6 +48,6 @@ UPGRADES = [
     {"name": "Reactor", "cost": 10000, "effect_type": "building", "effect_value": 2, "unlock": 50, "building_name": "Spaceship"},
 ]
 
-TIMELINE_UPGRADE = {"name": "Time", "cost": lambda x: 30*(2**x), "effect_type": "timeline"}
+TIMELINE_UPGRADE = {"name": "Time", "cost": lambda x: 30+(1.22 * (10**31) * (exp(0.002 * x) - 1) ), "effect_type": "timeline"}
 
 treshold = [10, 20, 50, 100, 500, 1000]
