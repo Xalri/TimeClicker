@@ -112,7 +112,7 @@ def save_data(
     appdata_path,
     timeUnits=0,
     tps=0,
-    timeline=0,
+    timeline=-1,
     clicker_amount=1,
     buildings={"short_list": [], "long_list": []},
     max_timeUnits=0,
@@ -334,7 +334,7 @@ def unlock_timeline(era, timeline, timeUnits):
         cost = TIMELINE_UPGRADE_PRICE
         if not timeUnits >= cost:
             return timeline, timeUnits
-        return era+1, timeline, timeUnits - cost
+        return era+1, timeline+1, timeUnits - cost
 
 def buy_timeline(timeline, timeUnits):
     cost = TIMELINE_UPGRADE["cost"](timeline)

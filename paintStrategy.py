@@ -46,7 +46,13 @@ class PaintStrategy:
         self.tps_text: pg.Surface = get_number_font(50, height).render(f"{format_timeUnits(self.engine.tps, 0)}", True, RED_OCHRE)
         self.tps_text_logo: pg.Surface = load_image(f"{self.src_dir}/img/tps.png", width, height)
         
-        self.timeline_text: pg.Surface = get_timeline_font(124, height).render(f"{format_time_no_convertion(int(self.engine.timeline),3)}", True, YELLOW_GREEN)
+        if self.engine.timeline < 0:
+            timeline = "Null"
+        elif self.engine.timeline >= 2500:
+            timeline = "Out Of Time"
+        else:
+            timeline = format_time_no_convertion(self.engine.timeline)
+        self.timeline_text: pg.Surface = get_timeline_font(124, height).render(f"{timeline}", True, YELLOW_GREEN)
         
         self.blue_cable_image: pg.surface = load_image(f"{self.src_dir}/img/blue_cable_on.png", width, height)
         if self.engine.is_blue_cable_cut:
@@ -431,16 +437,18 @@ class PaintStrategy:
                 else:
                     x += 112.5
                 
-                upgrade_image = load_image(f"{self.src_dir}/img/upgrades/time.png", self.width, self.height)
-                upgrade_rect = upgrade_image.get_rect(center=(adaptw(x, self.width), adapth(y, self.height)))
-                
-                level_image = load_image(f"{self.src_dir}/img/upgrades/base_timeline.png", self.width, self.height)
-                level_rect = level_image.get_rect(center=upgrade_rect.center).move(adaptw(0, self.width), adapth(15, self.height))
-                
                 cost = TIMELINE_UPGRADE["cost"](self.engine.timeline)
                 
+                upgrade_image = load_image(f"{self.src_dir}/img/upgrades/time.png", self.width, self.height, scale=0.9)
                 if self.engine.era == 1:
                     cost = TIMELINE_UPGRADE_PRICE
+                    upgrade_image = load_image(f"{self.src_dir}/img/upgrades/timeline_unlock_image.png", self.width, self.height)
+                upgrade_rect = upgrade_image.get_rect(center=(adaptw(x, self.width), adapth(y, self.height)))
+                
+                level_image = load_image(f"{self.src_dir}/img/upgrades/base_timeline.png", self.width, self.height, scale=0.9)
+                level_rect = level_image.get_rect(center=upgrade_rect.center).move(adaptw(0, self.width), adapth(15, self.height))
+                
+                
                 
                 if can_buy_timeline(self.engine.timeline, self.engine.timeUnits, self.engine.era):
                 
@@ -623,7 +631,7 @@ class PaintStrategy:
             ),
         )
 
-        self.screen.blit(self.timeline_text, self.timeline_text.get_rect(center=(adaptw(180, self.width), adapth(150, self.height))))
+        self.screen.blit(self.timeline_text, self.timeline_text.get_rect(center=(adaptw(300, self.width), adapth(150, self.height))))
         
         
         

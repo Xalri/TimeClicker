@@ -286,7 +286,6 @@ class Engine:
             self.available_upgrades.append(TIMELINE_UPGRADE)
     
     def update(self):
-        self.timeUnits = 50000
         self.current_frame: int = (self.current_frame + 1) % self.framerate
         
         self.timeUnits += self.tps / self.framerate
