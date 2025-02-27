@@ -4,6 +4,7 @@ import sys
 import ctypes
 from pprint import pprint
 from datetime import datetime
+import threading
 
 import pygame as pg
 from pygame._sdl2 import Window
@@ -18,6 +19,7 @@ from upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
 from utils import (
     adapt_size_height as adapth,
     adapt_size_width as adaptw,
+    buy_human_skill,
     buy_timeline,
     load_image,
     get_number_font,
@@ -61,9 +63,7 @@ class Engine:
         monitor_rect = ctypes.wintypes.RECT()
         ctypes.windll.user32.GetMonitorInfoW(monitor_info, ctypes.byref(monitor_rect))
         os.environ["SDL_VIDEO_WINDOW_POS"] = f"{500},{300}"
-        
-        
-        # os.environ["SDL_VIDEO_WINDOW_POS"] = f"{500},{300}"
+
         self.screen = pg.display.set_mode((1024, 576), pg.RESIZABLE)
         icon = pg.image.load(os.path.join(self.src_dir, "icon.png"))
         pg.display.set_icon(icon)
@@ -71,15 +71,9 @@ class Engine:
         self.window.restore()
         self.window.maximize()
         pg.display.set_caption("Time Clicker")
-        
-        
-        
-        
-        
-
-        
-        
-        
+    
+    
+    
         self.current_frame = 0
         self.framerate = FRAMERATE
 
@@ -90,6 +84,7 @@ class Engine:
         self.bought_buildings = {"short_list": [buildings[0]["name"]], "long_list": [{"name": buildings[0]["name"], "amount": 0}]}
         self.max_timeUnits = 0
         self.bought_upgrades = {"short_list": [], "long_list": []}
+        self.human_skills = {"strength":100, "agility": 0, "intelligence": 0}
         self.last_saved_time = None
         
         self.era = 1
@@ -98,8 +93,21 @@ class Engine:
         self.available_upgrades = []
         
         self.save_count = 0
+        
+        
+        
         self.blue_cable_count = 0
         self.blue_cable_timer = randint(3, 15)
+        self.is_blue_cable_cut = False
+        
+        self.blue_cable_x5_timer=0
+        self.blue_cable_x2_timer=0
+        
+        self.tps_boost_from_cable = 0
+        
+        self.price_reduction = 0
+        
+        self.boost_duration = 0
         
         self.running = True
         
@@ -107,13 +115,51 @@ class Engine:
         
     def increment_timeUnits(self, amount):
         self.timeUnits += amount
+        print(amount)
     def buy_building_wrapper(self, building_name):
-        self.bought_buildings, self.timeUnits = buy_buildings(self.bought_buildings, building_name, 1, self.timeUnits)     
+        self.bought_buildings, self.timeUnits = buy_buildings(self.bought_buildings, building_name, 1, self.timeUnits, self.price_reduction)     
     def buy_upgrade_wrapper(self, upgrade_name):
         self.LOGGER.INFO("upgrade wrapper called")
-        self.bought_upgrades, self.timeUnits, self.bought_buildings = buy_upgrades(self.bought_upgrades, upgrade_name, self.timeUnits, self.bought_buildings)
+        self.bought_upgrades, self.timeUnits, self.bought_buildings = buy_upgrades(self.bought_upgrades, upgrade_name, self.timeUnits, self.bought_buildings, self.price_reduction)
     def buy_timeline_wrapper(self):
         self.timeline, self.timeUnits = buy_timeline(self.timeline, self.timeUnits)
+    def buy_human_skills_wrapper(self, skill_name):
+        self.human_skills, self.timeUnits = buy_human_skill(self.human_skills, self.timeUnits, skill_name)
+    def buy_blue_cable_wrapper(self):
+        print("blue cable clicked ", end='')
+        if randint(1, 2) == 1:
+            print("X2")
+            self.blue_cable_x2_timer = self.framerate * 60 * 1 + self.framerate * 60 * self.boost_duration
+            # print("base duration :", self.framerate * 60 * 1)
+            # print("additional timer :", self.framerate * 60 * self.boost_duration)
+            # print("blue cable timer :", self.blue_cable_x2_timer)
+            
+            
+            
+            self.blue_cable_timer = randint(3, 15)
+            
+            self.is_blue_cable_cut = False
+            
+            if self.tps_boost_from_cable == 5 or self.tps_boost_from_cable == 0:
+                self.tps_boost_from_cable += 2
+        else:
+            print("X5")
+            self.blue_cable_x5_timer = self.framerate * 60 * 1 + self.framerate * 60 * self.boost_duration
+            # print("base duration :", self.framerate * 60 * 1)
+            # print("additional timer :", self.framerate * 60 * self.boost_duration)
+            # print("blue cable timer :", self.blue_cable_x2_timer)
+            
+            
+            
+            self.blue_cable_timer = randint(3, 15)
+            
+            self.is_blue_cable_cut = False
+            
+            if self.tps_boost_from_cable == 2 or self.tps_boost_from_cable == 0:
+                self.tps_boost_from_cable += 5
+            
+            
+      
       
     def load_data(self):
         (
@@ -124,6 +170,7 @@ class Engine:
             self.bought_buildings,
             self.max_timeUnits,
             self.bought_upgrades,
+            self.human_skills,
             self.last_saved_time,
         ) = get_data(self.appdata_path)
         
@@ -138,6 +185,7 @@ class Engine:
             self.bought_buildings,
             self.max_timeUnits,
             self.bought_upgrades,
+            self.human_skills
         )
              
     def give_timeUnits_from_afk(self):
@@ -205,6 +253,7 @@ class Engine:
                             
         if next((u for u in self.available_upgrades if u["name"] == UPGRADES[0]["name"]), None) is not None and next((u for u in self.available_upgrades if u["name"] == UPGRADES[1]["name"]), None) is not None:
             self.available_upgrades.append(TIMELINE_UPGRADE)
+    
     def update(self):
         self.current_frame: int = (self.current_frame + 1) % self.framerate
         
@@ -217,6 +266,7 @@ class Engine:
         self.available_upgrades = []
         self.buildings_buttons: list = []
         self.upgrades_buttons: list = []
+        self.human_skills_buttons: list = []
         
     def exit(self):
         self.save_data()
@@ -233,3 +283,42 @@ class Engine:
             self.save_data()
             self.save_count = 0
             self.LOGGER.INFO("Data saved")
+
+    def handle_human_skills(self):
+        # self.human_skills["intelligence"] = 0
+        self.clicker_amount = 1 + (self.tps * (self.human_skills["strength"]/100))
+        
+        self.price_reduction = 1 - ( (self.human_skills["intelligence"]/2)/100 )
+        
+        self.boost_duration = 17.4 * self.human_skills["agility"]
+        
+        
+    def reset_blue_cable(self):
+        self.is_blue_cable_cut = False
+    
+    def check_cables(self):
+        print(self.blue_cable_x2_timer)
+        self.blue_cable_count += 1
+        
+        
+        if self.is_blue_cable_cut:
+            self.blue_cable_count = 0
+        
+        # if self.blue_cable_count == self.framerate * 60 * self.blue_cable_timer:
+        if self.blue_cable_count == self.framerate * 3:
+            self.is_blue_cable_cut = True
+            
+            self.blue_cable_count = 0
+            
+        if self.blue_cable_x2_timer != 0:
+            self.blue_cable_x2_timer -= 1
+            
+            if self.blue_cable_x2_timer == 0:
+                self.tps_boost_from_cable -= 2
+            
+            
+                
+            
+            
+            
+            

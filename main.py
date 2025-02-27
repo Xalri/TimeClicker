@@ -14,6 +14,9 @@ def main():
         
         engine.update()
         
+        engine.check_cables()
+        
+        
         paintstrategy.init_screen()
 
         engine.check_available_buildings()
@@ -21,6 +24,9 @@ def main():
 
         paintstrategy.create_buildings_buttons()
         paintstrategy.create_upgrades_buttons()
+        paintstrategy.create_human_skills_buttons()
+
+        engine.handle_human_skills()
 
         paintstrategy.update_elements()
 
@@ -35,8 +41,12 @@ def main():
         paintstrategy.display_upgrades()
 
         paintstrategy.display_front_elements()
+        
+        paintstrategy.display_human_skills()
 
         paintstrategy.display_info_box()
+        
+        paintstrategy.display_cables()
 
         paintstrategy.update_screen()
     

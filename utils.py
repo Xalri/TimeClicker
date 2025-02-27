@@ -82,17 +82,18 @@ def get_data(appdata_path):
         data = b64decode(data.encode()).decode()
         data = data.split("\n")
         print(data)
-        if data == [""] or len(data) < 8:
+        if data == [""] or len(data) < 9:
             save_data(appdata_path)
             return get_data(appdata_path)
         timeUnits = float(data[0])
         tps = float(data[1])
         timeline = float(data[2])
-        clicker_amount = int(data[3])
+        clicker_amount = int(float(data[3]))
         buildings = eval(data[4])  # {'short_list': [], 'long_list': []}
         temp = data[5]
         upgrades = eval(data[6])
-        last_saved = data[7]
+        human_skills = eval(data[7])
+        last_saved = data[8]
         return (
             timeUnits,
             tps,
@@ -101,6 +102,7 @@ def get_data(appdata_path):
             buildings,
             temp,
             upgrades,
+            human_skills,
             last_saved,
         )
 
@@ -128,10 +130,11 @@ def save_data(
     pprint(f"Buildings: {buildings}")
     print(f"Max Time Units: {max_timeUnits}")
     print(f"Bought Upgrades: {bought_upgrades}")
+    print(f"Human Skills: {human_skills}")
     print(f"Last Saved Time: {last_saved_time}")
 
     with open(os.path.join(appdata_path, "data"), "w") as f:
-        data = f"{timeUnits}\n{tps}\n{timeline}\n{clicker_amount}\n{buildings}\n{max_timeUnits}\n{bought_upgrades}\n{last_saved_time}"
+        data = f"{timeUnits}\n{tps}\n{timeline}\n{clicker_amount}\n{buildings}\n{max_timeUnits}\n{bought_upgrades}\n{human_skills}\n{last_saved_time}"
         data = b64encode(data.encode())
         print("Encoded data: " + str(data))
         data = data.decode().replace("=", "").replace("=", "")
@@ -195,7 +198,7 @@ def can_buy_buildings(bought_buildings, building_name, amount, timeUnits):
     return timeUnits >= cost
 
 
-def buy_buildings(bought_buildings, building_name, amount, timeUnits):
+def buy_buildings(bought_buildings, building_name, amount, timeUnits, price_reduction):
     print(building_name)
     building = next((b for b in buildings if b["name"] == building_name), None)
     print(building)
@@ -213,7 +216,7 @@ def buy_buildings(bought_buildings, building_name, amount, timeUnits):
     # cost = round(
     #     building["cost"](current_amount + amount) - building["cost"](current_amount)
     # )
-    cost = sum(building["cost"](current_amount + i) for i in range(amount))
+    cost = sum(building["cost"](current_amount + i) for i in range(amount)) * price_reduction
     print(cost)
 
     if timeUnits >= cost:
@@ -231,7 +234,7 @@ def buy_buildings(bought_buildings, building_name, amount, timeUnits):
     return bought_buildings, timeUnits
 
 
-def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
+def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings, price_reduction):
     print("")
     print("bought upgrades: ", bought_upgrades)
     print("bought buildings: ", bought_buildings)
@@ -265,7 +268,7 @@ def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
     
     xth_build_price = next((b["cost"](treshold[max_bought_level]) for b in buildings if b["name"] == upgrade["building_name"]), 0)
 
-    cost= xth_build_price*3
+    cost= xth_build_price*3*price_reduction
 
     print(timeUnits >= cost)
     
@@ -329,3 +332,22 @@ def buy_timeline(timeline, timeUnits):
     
 def can_buy_timeline(timeline, timeUnits):
     return timeline >= 2500 or timeUnits >= TIMELINE_UPGRADE["cost"](timeline)
+
+def buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):
+    print(human_skills)
+    print(timeUnits)
+    print(skill_name)
+    if not skill_name in list(human_skills.keys()) and human_skills[skill_name] >= 100:
+        return human_skills, timeUnits
+    
+    cost = 200 * (2**human_skills[skill_name])
+    print(cost)
+    if not timeUnits >= cost:
+        return human_skills, timeUnits
+    
+    human_skills[skill_name] +=1
+    print(human_skills)
+    print(timeUnits-cost)
+    print(" ")
+    return human_skills, timeUnits-cost
+    

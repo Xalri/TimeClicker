@@ -2,6 +2,7 @@ import ctypes
 from json import load
 import os
 from re import S
+from turtle import width
 
 from Buttons import Button
 from config import *
@@ -47,6 +48,20 @@ class PaintStrategy:
         
         self.timeline_text: pg.Surface = get_timeline_font(124, height).render(f"{format_time_no_convertion(int(self.engine.timeline),3)}", True, YELLOW_GREEN)
         
+        self.blue_cable_image: pg.surface = load_image(f"{self.src_dir}/img/blue_cable_on.png", width, height)
+        if self.engine.is_blue_cable_cut:
+            self.blue_cable_image = load_image(f"{self.src_dir}/img/blue_cable_off.png", width, height)
+            self.blue_cable_button: Button = Button(
+                rect=(adaptw(1285, width),adapth(935, height),adaptw(600, width),adapth(75, height)),
+                screen_size=(width, height),
+                background=BLUE,
+                transparent=True,
+                command=lambda: self.engine.buy_blue_cable_wrapper(),
+                border_radius=0,
+            )
+            
+            
+        
         if self.has_window_been_resized():
             self.clicker_button: Button = Button(
                 rect=(adaptw(705, width),adapth(304, height),adaptw(403, width),adapth(400, height)),
@@ -75,14 +90,7 @@ class PaintStrategy:
             
             self.red_cable_image: pg.surface = load_image(f"{self.src_dir}/img/red_cable_on.png", width, height)
             
-            self.blue_cable_image: pg.surface = load_image(f"{self.src_dir}/img/blue_cable_on.png", width, height)
-            self.blue_cable_button: Button = Button(
-                rect=(adaptw(1285, width),adapth(935, height),adaptw(600, width),adapth(75, height)),
-                screen_size=(width, height),
-                background=BLUE,
-                command=lambda: self.engine.buy_upgrade_wrapper("blue_cable"),
-                border_radius=0,
-            )
+            
             
             
             
@@ -94,8 +102,10 @@ class PaintStrategy:
         self.width = width
         self.height = height
     
+    
     def has_window_been_resized(self):
         return self.width != pg.display.get_surface().get_width()or self.height != pg.display.get_surface().get_height()
+    
     
     def create_buildings_buttons(self):
         for i in range(len(self.engine.available_buildings)):
@@ -142,6 +152,7 @@ class PaintStrategy:
                     infos=infos,
                 )
             )
+
 
     def create_upgrades_buttons(self):
         y = 180
@@ -192,6 +203,40 @@ class PaintStrategy:
                     infos=infos,
                 )
             )
+
+
+    def create_human_skills_buttons(self):
+        self.engine.human_skills_buttons.append(
+            Button(
+                rect=(adaptw(1280.5, self.width), adapth(748.5, self.height), adaptw(27.5, self.width), adapth(27.5, self.height)),
+                screen_size=(self.width, self.height),
+                background=DARK_ORANGE,
+                command=lambda :self.engine.buy_human_skills_wrapper("strength"),
+                border_radius=250,
+                identifier="strength"
+            )
+        )
+        self.engine.human_skills_buttons.append(
+            Button(
+                rect=(adaptw(1325, self.width), adapth(748.5, self.height), adaptw(27.5, self.width), adapth(27.5, self.height)),
+                screen_size=(self.width, self.height),
+                background=MUSTARD,
+                command=lambda :self.engine.buy_human_skills_wrapper("agility"),
+                border_radius=250,
+                identifier="strength"
+            )
+        )
+        self.engine.human_skills_buttons.append(
+            Button(
+                rect=(adaptw(1370.5, self.width), adapth(748.5, self.height), adaptw(27.5, self.width), adapth(27.5, self.height)),
+                screen_size=(self.width, self.height),
+                background=LIGHT_GREEN,
+                command=lambda :self.engine.buy_human_skills_wrapper("intelligence"),
+                border_radius=250,
+                identifier="strength"
+            )
+        )
+
 
     def handle_event(self):
         keys = pygame.key.get_pressed()
@@ -258,25 +303,36 @@ class PaintStrategy:
             for upgrade_button in self.engine.upgrades_buttons:
                 upgrade_button.get_event(event)
 
+            for human_skill_button in self.engine.human_skills_buttons:
+                human_skill_button.get_event(event)
+                
+            if self.engine.is_blue_cable_cut:
+                self.blue_cable_button.get_event(event)
+
             self.clicker_button.get_event(event)
+
 
     def check_mouse_hover(self):
         pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
         
         mouse_pos = pg.mouse.get_pos()
         for build_button in self.engine.buildings_buttons:
-            button_rect = build_button.rect
-            if self.building_scroll_area_rect.colliderect(button_rect) and self.is_building_clickable:
-                build_button.update_hover_state(mouse_pos)
+            build_button.update_hover_state(mouse_pos)
 
         for upgrade_button in self.engine.upgrades_buttons:
-            button_rect = upgrade_button.rect
-            if self.upgrade_scroll_area_rect.colliderect(button_rect) and self.is_upgrading_clickable:
-                upgrade_button.update_hover_state(mouse_pos)
+            upgrade_button.update_hover_state(mouse_pos)
+
+        for human_skill_button in self.engine.human_skills_buttons:
+            human_skill_button.update_hover_state(mouse_pos)
+
+        if self.engine.is_blue_cable_cut:
+            self.blue_cable_button.update_hover_state(mouse_pos)
+
 
     def display_back_images(self):
         self.screen.blit(self.shop_fond_image, (adaptw(1475, self.width), adapth(45, self.height)))
         self.screen.blit(self.upgrade_fond_image, (adaptw(45, self.width), adapth(245, self.height)))
+       
         
     def display_buildings(self):
         match self.engine.era:
@@ -292,35 +348,19 @@ class PaintStrategy:
                 base = f"{self.src_dir}/img/buildings/base_5.png"
         for i in range(len(self.engine.buildings_buttons)):
             build_button = self.engine.buildings_buttons[i]
-            build = next(
-                (
-                    b
-                    for b in self.engine.bought_buildings["long_list"]
-                    if b["name"] == build_button.identifier
-                ),
-                None,
-            )
+            build = next((b for b in self.engine.bought_buildings["long_list"] if b["name"] == build_button.identifier),None)
             if build is None:
                 amount = 0
             else:
                 amount = build["amount"]
 
-            cost = next(
-                (
-                    b["cost"](amount)
-                    for b in buildings
-                    if b["name"] == build_button.identifier
-                ),
-                None,
-            )
+            cost = next((b["cost"](amount)for b in buildings if b["name"] == build_button.identifier),None,) * self.engine.price_reduction
 
             building_image = load_image(f"{self.src_dir}/img/buildings/{build_button.identifier.lower().replace(' ', '_')}.png",self.width,self.height,)
             base_image = load_image(base, self.width, self.height)
 
             # print(f"scroll_y: {scroll_y}({abs(adapth((scroll_y * 1), h))})")
-            button_rect = build_button.rect.move(
-                0, build_button.rect.height + adapth(7.5, self.height)
-            )
+            button_rect = build_button.rect.move(0, build_button.rect.height + adapth(7.5, self.height))
             building_rect = building_image.get_rect(
                 topleft=(adaptw(1525, self.width), adapth(85 + 105 * i, self.height))
             ).move(0, adapth((self.scroll_value * 1), self.height))
@@ -369,6 +409,7 @@ class PaintStrategy:
                 else:
                     if not self.can_scroll:
                         self.can_scroll = True
+
 
     def display_upgrades(self):
         # LOGGER.DEBUG([b.identifier for b in self.engine.upgrades_buttons])
@@ -435,7 +476,7 @@ class PaintStrategy:
                 if upgrade is None:
                     cost = 0
                 else:
-                    cost = xth_build_price * 3
+                    cost = xth_build_price * 3 * self.engine.price_reduction
 
                 if upgrade_level == len(treshold):
                     cost = "FULL"
@@ -491,6 +532,21 @@ class PaintStrategy:
                         )
 
                     upgrade_button.render(self.screen, w=self.width, h=self.height)
+
+
+    def display_human_skills(self):
+        strength_offset = (self.engine.human_skills["strength"] / 100) * 527
+        pg.draw.rect(self.screen, DARK_ORANGE, (adaptw(1285.5, self.width), adapth(734.5-strength_offset, self.height), adaptw(15, self.width), adapth(strength_offset, self.height)), border_radius=60)
+        
+        agility_offset = (self.engine.human_skills["agility"] / 100) * 527
+        pg.draw.rect(self.screen, MUSTARD, (adaptw(1331, self.width), adapth(734.5-agility_offset, self.height), adaptw(15, self.width), adapth(agility_offset, self.height)), border_radius=60)
+                                                                                   
+        intelligence_offset = (self.engine.human_skills["intelligence"] / 100) * 527
+        pg.draw.rect(self.screen, LIGHT_GREEN, (adaptw(1375.5, self.width), adapth(734.5-intelligence_offset, self.height), adaptw(15, self.width), adapth(intelligence_offset, self.height)), border_radius=60)
+
+        for button in self.engine.human_skills_buttons:
+            button.render(self.screen)
+            
 
     def display_front_elements(self):
         self.screen.blit(load_image(f"{self.src_dir}/img/background.png", self.width, self.height), (0, 0))
@@ -548,11 +604,13 @@ class PaintStrategy:
         )
 
         self.screen.blit(self.timeline_text, (adaptw(90, self.width), adapth(87, self.height)))
-        self.blue_cable_button.render(self.screen, w=self.width, h=self.height)
+        if self.engine.is_blue_cable_cut:
+            self.blue_cable_button.render(self.screen, w=self.width, h=self.height)
 
         # pg.draw.rect(screen, (0, 0, 255), scroll_area_rect_bis, 2)
 
         self.clicker_button.render(self.screen, w=self.width, h=self.height)
+      
         
     def display_info_box(self):
         for button in self.engine.buildings_buttons:
@@ -560,11 +618,13 @@ class PaintStrategy:
 
         for button in self.engine.upgrades_buttons:
             button.render_infos(self.screen, w=self.width, h=self.height)
+       
             
     def update_screen(self):
         pg.display.flip()
         
         # self.engine.window.maximize()
+        
         
     def init_screen(self):
         if not self.is_init:
@@ -612,13 +672,16 @@ class PaintStrategy:
             self.red_cable_image: pg.surface = load_image(f"{self.src_dir}/img/red_cable_on.png", width, height)
             
             self.blue_cable_image: pg.surface = load_image(f"{self.src_dir}/img/blue_cable_on.png", width, height)
-            self.blue_cable_button: Button = Button(
-                rect=(adaptw(1285, width),adapth(935, height),adaptw(600, width),adapth(75, height)),
-                screen_size=(width, height),
-                background=BLUE,
-                command=lambda: self.engine.buy_upgrade_wrapper("blue_cable"),
-                border_radius=0,
-            )
+            if self.engine.is_blue_cable_cut:
+                self.blue_cable_image = load_image(f"{self.src_dir}/img/blue_cable_off.png", width, height)
+                self.blue_cable_button: Button = Button(
+                    rect=(adaptw(1285, width),adapth(935, height),adaptw(600, width),adapth(75, height)),
+                    screen_size=(width, height),
+                    background=BLUE,
+                    transparent=True,
+                    command=lambda: self.engine.buy_blue_cable_wrapper(),
+                    border_radius=0,
+                )
             
             
             
@@ -631,4 +694,16 @@ class PaintStrategy:
             
             self.is_init = True
             
-          
+    
+    def display_cables(self):
+        if self.engine.is_blue_cable_cut:
+            self.blue_cable_button.render(self.screen)
+            
+        
+        if self.engine.blue_cable_x2_timer != 0:
+            pg.draw.rect(self.screen, BLUE, (adaptw(1265, self.width), adapth(45, self.height), adaptw(150, self.width), adapth(65, self.height)))
+            
+            
+        if self.engine.blue_cable_x5_timer != 0:
+            pg.draw.rect(self.screen, BLUE, (adaptw(1265, self.width), adapth(115, self.height), adaptw(150, self.width), adapth(65, self.height)))
+            
