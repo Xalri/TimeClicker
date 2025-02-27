@@ -179,6 +179,8 @@ class PaintStrategy:
                 cmd = lambda b=upgrade_name: self.engine.buy_upgrade_wrapper(b)
             elif upgrade["effect_type"] == "timeline":
                 cost = upgrade["cost"](self.engine.timeline)
+                if self.engine.era == 1:
+                    cost = TIMELINE_UPGRADE_PRICE
                 infos = f"The special upgrade '{upgrade_name}' costs {format_timeUnits(cost)} time units. \nIt adds 1 to the timeline."
                 cmd = lambda: self.engine.buy_timeline_wrapper()
 
@@ -437,7 +439,10 @@ class PaintStrategy:
                 
                 cost = TIMELINE_UPGRADE["cost"](self.engine.timeline)
                 
-                if can_buy_timeline(self.engine.timeline, self.engine.timeUnits):
+                if self.engine.era == 1:
+                    cost = TIMELINE_UPGRADE_PRICE
+                
+                if can_buy_timeline(self.engine.timeline, self.engine.timeUnits, self.engine.era):
                 
                     self.screen.blit(upgrade_image, upgrade_rect.topleft)
 

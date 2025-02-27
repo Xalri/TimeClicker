@@ -7,6 +7,7 @@ from base64 import b64decode, b64encode
 import Timeline
 from buildings import buildings
 from datetime import datetime
+from config import TIMELINE_UPGRADE_PRICE
 from upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
 import upgrade
 from data import UNITS
@@ -87,7 +88,7 @@ def get_data(appdata_path):
             return get_data(appdata_path)
         timeUnits = float(data[0])
         tps = float(data[1])
-        timeline = float(data[2])
+        timeline = int(float(data[2]))
         clicker_amount = int(float(data[3]))
         buildings = eval(data[4])  # {'short_list': [], 'long_list': []}
         temp = data[5]
@@ -117,8 +118,12 @@ def save_data(
     max_timeUnits=0,
     bought_upgrades={"short_list": [], "long_list": []},
     human_skills={"agility":0, "intelligence":0, "strength":0},
-    last_saved_time=datetime.now().strftime(" %Y-%m-%d %H:%M:%S"),
+    last_saved_time="None",
 ):
+    
+    now = datetime.now().strftime(" %Y-%m-%d %H:%M:%S")
+    if last_saved_time == "None": last_saved_time = now
+    
     if max_timeUnits == 0:
         max_timeUnits = timeUnits
 
@@ -131,7 +136,8 @@ def save_data(
     print(f"Max Time Units: {max_timeUnits}")
     print(f"Bought Upgrades: {bought_upgrades}")
     print(f"Human Skills: {human_skills}")
-    print(f"Last Saved Time: {last_saved_time}")
+    print(f"Last Saved Time: {last_saved_time} ({now})")
+
 
     with open(os.path.join(appdata_path, "data"), "w") as f:
         data = f"{timeUnits}\n{tps}\n{timeline}\n{clicker_amount}\n{buildings}\n{max_timeUnits}\n{bought_upgrades}\n{human_skills}\n{last_saved_time}"
@@ -323,6 +329,13 @@ def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
 def show_message(msg):
     ctypes.windll.user32.MessageBoxW(0, msg, "Debug Message", 1)
 
+def unlock_timeline(era, timeline, timeUnits):
+    if era == 1:
+        cost = TIMELINE_UPGRADE_PRICE
+        if not timeUnits >= cost:
+            return timeline, timeUnits
+        return era+1, timeline, timeUnits - cost
+
 def buy_timeline(timeline, timeUnits):
     cost = TIMELINE_UPGRADE["cost"](timeline)
     if not timeUnits >= cost or timeline >= 2500:
@@ -330,7 +343,9 @@ def buy_timeline(timeline, timeUnits):
     return timeline + 1, timeUnits - cost
 
     
-def can_buy_timeline(timeline, timeUnits):
+def can_buy_timeline(timeline, timeUnits, era):
+    if era == 1:
+        return timeUnits >= TIMELINE_UPGRADE_PRICE
     return timeline >= 2500 or timeUnits >= TIMELINE_UPGRADE["cost"](timeline)
 
 def buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):

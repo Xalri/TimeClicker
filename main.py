@@ -14,7 +14,11 @@ def main():
         
         engine.update()
         
+        engine.check_era()
+        
         engine.check_cables()
+        
+        engine.check_era()
         
         
         paintstrategy.init_screen()

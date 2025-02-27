@@ -37,6 +37,7 @@ from utils import (
     buy_upgrades,
     can_buy_upgrade,
     show_message,
+    unlock_timeline,
 )
 
 
@@ -80,7 +81,7 @@ class Engine:
 
         self.timeUnits = 0
         self.tps = 0
-        self.timeline = 0
+        self.timeline = -1
         self.clicker_amount = 1
         self.bought_buildings = {"short_list": [buildings[0]["name"]], "long_list": [{"name": buildings[0]["name"], "amount": 0}]}
         self.max_timeUnits = 0
@@ -89,7 +90,7 @@ class Engine:
         self.last_saved_time = None
         
         self.era = 1
-        
+                
         self.available_buildings = []
         self.available_upgrades = []
         
@@ -123,7 +124,10 @@ class Engine:
         self.LOGGER.INFO("upgrade wrapper called")
         self.bought_upgrades, self.timeUnits, self.bought_buildings = buy_upgrades(self.bought_upgrades, upgrade_name, self.timeUnits, self.bought_buildings, self.price_reduction)
     def buy_timeline_wrapper(self):
-        self.timeline, self.timeUnits = buy_timeline(self.timeline, self.timeUnits)
+        if self.era == 1:
+            self.era, self.timeline, self.timeUnits = unlock_timeline(self.era, self.timeline, self.timeUnits)
+        else:
+            self.timeline, self.timeUnits = buy_timeline(self.timeline, self.timeUnits)
     def buy_human_skills_wrapper(self, skill_name):
         self.human_skills, self.timeUnits = buy_human_skill(self.human_skills, self.timeUnits, skill_name)
     def buy_blue_cable_wrapper(self):
@@ -282,6 +286,7 @@ class Engine:
             self.available_upgrades.append(TIMELINE_UPGRADE)
     
     def update(self):
+        self.timeUnits = 50000
         self.current_frame: int = (self.current_frame + 1) % self.framerate
         
         self.timeUnits += self.tps / self.framerate
@@ -349,7 +354,19 @@ class Engine:
             
                 
     def check_era(self):
-        if self.timeline >=   
+        print(self.era, self.timeline)
+        if self.timeline >=   2500:
+            self.era = 6
+        elif self.timeline >=   1789:
+            self.era = 5
+        elif self.timeline >=   1492:
+            self.era = 4
+        elif self.timeline >=   476:
+            self.era = 3
+        elif self.timeline >=   0:
+            self.era = 2
+        else:
+            self.era = 1
     
             
             
