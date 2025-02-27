@@ -86,6 +86,18 @@ class PaintStrategy:
                 border_radius=0,
             )
             
+        self.red_cable_image: pg.surface = load_image(f"{self.src_dir}/img/red_cable_on.png", width, height)
+        if self.engine.is_red_cable_cut:
+            self.red_cable_image = load_image(f"{self.src_dir}/img/red_cable_off.png", width, height)
+            self.red_cable_button: Button = Button(
+                rect=(adaptw(1285, width),adapth(860, height),adaptw(600, width),adapth(75, height)),
+                screen_size=(width, height),
+                background=BLUE,
+                transparent=True,
+                command=lambda: self.engine.buy_red_cable_wrapper(),
+                border_radius=0,
+            )
+            
             
         
         if self.has_window_been_resized():
@@ -98,6 +110,7 @@ class PaintStrategy:
                 image_scale=0.4,
                 image_rotation=10,
                 bump_on_click=True,
+                circle_on_click=True,
                 identifier="clicker",
             )
             
@@ -201,7 +214,7 @@ class PaintStrategy:
                 else:
                     cost = xth_build_price * 3
 
-                infos = f"The upgrade '{upgrade_name}' costs {format_timeUnits(cost)} time units, \nis affecting the building '{upgrade_building_name}'. \nCurrent level: {upgrade_level} \n Effect value: {upgrade_effect_value ** upgrade_level}"
+                infos = f"The upgrade '{upgrade_name}' costs {format_timeUnits(cost)} time units, \nis affecting the building '{upgrade_building_name}'. \nCurrent level: {upgrade_level} \n Effect value: {upgrade_effect_value}"
                 cmd = lambda b=upgrade_name: self.engine.buy_upgrade_wrapper(b)
             elif upgrade["effect_type"] == "timeline":
                 cost = upgrade["cost"](self.engine.timeline)
@@ -242,7 +255,7 @@ class PaintStrategy:
                 command=lambda :self.engine.buy_human_skills_wrapper("strength"),
                 border_radius=250,
                 identifier="strength",
-                infos=f"The Strength skill allow you to produce more Time Units per click. \nCurrent Time Units/click is {self.engine.clicker_amount}. \nthe cost of the next level is {format_timeUnits(200 * (2**self.engine.human_skills['strength']))} TU"
+                infos=f"The Strength skill allow you to produce more Time Units per click. \nCurrent Time Units/click is {format_timeUnits(self.engine.clicker_amount)} TU. \nthe cost of the next level is {format_timeUnits(200 * (2**self.engine.human_skills['strength']))} TU."
             )
         )
         self.engine.human_skills_buttons.append(
@@ -253,7 +266,7 @@ class PaintStrategy:
                 command=lambda :self.engine.buy_human_skills_wrapper("agility"),
                 border_radius=250,
                 identifier="agility",
-                infos=f"The Agility skill increase the duration of the boost from the blue cable. \nCurrent duration is {time.strftime('%M:%S', time.gmtime(60 + self.engine.boost_duration))}. \nthe cost of the next level is {format_timeUnits(200 * (2**self.engine.human_skills['agility']))} TU"
+                infos=f"The Agility skill increase the duration of the boost from the blue cable. \nCurrent duration is {time.strftime('%M:%S', time.gmtime(60 + self.engine.boost_duration))}. \nthe cost of the next level is {format_timeUnits(200 * (2**self.engine.human_skills['agility']))} TU."
             )
         )
         self.engine.human_skills_buttons.append(
@@ -264,7 +277,7 @@ class PaintStrategy:
                 command=lambda :self.engine.buy_human_skills_wrapper("intelligence"),
                 border_radius=250,
                 identifier="intelligence",
-                infos=f"The Intelligence skill decrease the price of buildings and upgrades. \nCurrent reduction is {(self.engine.human_skills['intelligence']/2)}%. \nthe cost of the next level is {format_timeUnits(200 * (2**self.engine.human_skills['intelligence']))} TU"
+                infos=f"The Intelligence skill decrease the price of buildings and upgrades. \nCurrent reduction is {(self.engine.human_skills['intelligence']/2)}%. \nthe cost of the next level is {format_timeUnits(200 * (2**self.engine.human_skills['intelligence']))} TU."
             )
         )
 
@@ -339,6 +352,9 @@ class PaintStrategy:
                 
             if self.engine.is_blue_cable_cut:
                 self.blue_cable_button.get_event(event)
+                
+            if self.engine.is_red_cable_cut:
+                self.red_cable_button.get_event(event)
 
             self.clicker_button.get_event(event)
 
@@ -358,6 +374,9 @@ class PaintStrategy:
 
         if self.engine.is_blue_cable_cut:
             self.blue_cable_button.update_hover_state(mouse_pos)
+            
+        if self.engine.is_red_cable_cut:
+                self.red_cable_button.update_hover_state(mouse_pos)
 
 
     def display_back_images(self):
@@ -732,6 +751,18 @@ class PaintStrategy:
                     command=lambda: self.engine.buy_blue_cable_wrapper(),
                     border_radius=0,
                 )
+                
+            self.red_cable_image: pg.surface = load_image(f"{self.src_dir}/img/red_cable_on.png", width, height)
+            if self.engine.is_red_cable_cut:
+                self.red_cable_image = load_image(f"{self.src_dir}/img/red_cable_off.png", width, height)
+                self.red_cable_button: Button = Button(
+                    rect=(adaptw(1285, width),adapth(860, height),adaptw(600, width),adapth(75, height)),
+                    screen_size=(width, height),
+                    background=BLUE,
+                    transparent=True,
+                    command=lambda: self.engine.buy_red_cable_wrapper(),
+                    border_radius=0,
+                )
             
             
         
@@ -744,6 +775,7 @@ class PaintStrategy:
                 image_scale=0.4,
                 image_rotation=10,
                 bump_on_click=True,
+                circle_on_click=True,
                 identifier="clicker",
             )
             
@@ -775,9 +807,7 @@ class PaintStrategy:
             
             self.shop_fond_image: pg.surface = load_image(f"{self.src_dir}/img/shop_fond.png", width, height)
             self.shop_bord_image: pg.surface = load_image(f"{self.src_dir}/img/shop_bord.png", width, height)
-            
-            self.red_cable_image: pg.surface = load_image(f"{self.src_dir}/img/red_cable_on.png", width, height)
-            
+                        
             
             
             

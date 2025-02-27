@@ -1,7 +1,7 @@
 import os
 
 def generate_tree(directory, prefix=""):
-    ignore_list = {"__pycache__", ".vscode", ".gitignore", ".git"}  # Folders and files to ignore
+    ignore_list = {"__pycache__", ".vscode", ".gitignore", ".git", ".prettierrc", "auto-py-to-exe.json", "build.json", "Dispo.pdf", "humans.py", "main_old.py", "template.jpeg", "tree_maker.py"}  # Folders and files to ignore
     entries = sorted(os.listdir(directory), key=lambda e: (os.path.isdir(os.path.join(directory, e)), e.lower()))
     entries = [e for e in entries if e not in ignore_list]  # Filter out ignored entries
     for i, entry in enumerate(entries):

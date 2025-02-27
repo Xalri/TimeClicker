@@ -105,6 +105,11 @@ class Engine:
         self.blue_cable_x5_timer=0
         self.blue_cable_x2_timer=0
         
+        self.red_cable_timer = randint(3, 15)
+        self.red_cable_count = 0
+        self.is_red_cable_cut = False
+        self.red_cable_tps_reduction = 0
+        
         self.tps_boost_from_cable = 0
         
         self.price_reduction = 0
@@ -162,7 +167,10 @@ class Engine:
             
             if self.tps_boost_from_cable == 2 or self.tps_boost_from_cable == 0:
                 self.tps_boost_from_cable += 5
-            
+    def buy_red_cable_wrapper(self):
+        self.red_cable_timer = randint(3, 15)
+        self.is_red_cable_cut = False
+        self.red_cable_tps_reduction = 0
             
       
       
@@ -292,6 +300,8 @@ class Engine:
             self.available_upgrades.append(TIMELINE_UPGRADE)
     
     def update(self):
+        # self.timeUnits = 50000**10
+        
         self.current_frame: int = (self.current_frame + 1) % self.framerate
         
         self.timeUnits += self.tps / self.framerate
@@ -328,17 +338,29 @@ class Engine:
         self.price_reduction = 1 - ( (self.human_skills["intelligence"]/2)/100 )
         
         self.boost_duration = 17.4 * self.human_skills["agility"]
-        
-    def reset_blue_cable(self):
-        self.is_blue_cable_cut = False
     
     def check_cables(self):
-        print(self.blue_cable_x2_timer, self.blue_cable_x5_timer)
         self.blue_cable_count += 1
+        self.red_cable_count += 1
         
         
+        
+        if self.is_red_cable_cut:
+            self.red_cable_count = 0
+            if self.red_cable_tps_reduction < 100:
+                self.red_cable_tps_reduction += 0.1
+                self.red_cable_tps_reduction = round(self.red_cable_tps_reduction, 1)
         if self.is_blue_cable_cut:
             self.blue_cable_count = 0
+            
+        
+        if self.red_cable_count == self.framerate * 60 * self.red_cable_timer:
+        # if self.red_cable_count == self.framerate * 3:
+            self.is_red_cable_cut = True
+            
+            self.red_cable_count = 0
+            
+            
         
         if self.blue_cable_count == self.framerate * 60 * self.blue_cable_timer:
         # if self.blue_cable_count == self.framerate * 3:
@@ -377,4 +399,6 @@ class Engine:
     def add_cable_boost(self):
         if self.tps_boost_from_cable != 0:
             self.tps *= self.tps_boost_from_cable
+        if self.red_cable_tps_reduction != 0:
+            self.tps *= (1 - self.red_cable_tps_reduction / 100)
             

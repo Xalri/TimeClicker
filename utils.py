@@ -1,5 +1,6 @@
 from pprint import pprint
 import time
+from prometheus_client import h
 import pygame
 import sys
 import os
@@ -364,7 +365,8 @@ def buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):
     print(cost)
     if not timeUnits >= cost:
         return human_skills, timeUnits
-    
+    if human_skills[skill_name] >= 100:
+        return human_skills, timeUnits
     human_skills[skill_name] +=1
     print(human_skills)
     print(timeUnits-cost)
