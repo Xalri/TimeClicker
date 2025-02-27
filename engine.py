@@ -292,20 +292,19 @@ class Engine:
         
         self.boost_duration = 17.4 * self.human_skills["agility"]
         
-        
     def reset_blue_cable(self):
         self.is_blue_cable_cut = False
     
     def check_cables(self):
-        print(self.blue_cable_x2_timer)
+        print(self.tps_boost_from_cable)
         self.blue_cable_count += 1
         
         
         if self.is_blue_cable_cut:
             self.blue_cable_count = 0
         
-        # if self.blue_cable_count == self.framerate * 60 * self.blue_cable_timer:
-        if self.blue_cable_count == self.framerate * 3:
+        if self.blue_cable_count == self.framerate * 60 * self.blue_cable_timer:
+        # if self.blue_cable_count == self.framerate * 3:
             self.is_blue_cable_cut = True
             
             self.blue_cable_count = 0
@@ -316,6 +315,11 @@ class Engine:
             if self.blue_cable_x2_timer == 0:
                 self.tps_boost_from_cable -= 2
             
+        if self.blue_cable_x5_timer != 0:
+            self.blue_cable_x5_timer -= 1
+            
+            if self.blue_cable_x5_timer == 0:
+                self.tps_boost_from_cable -= 5
             
                 
             

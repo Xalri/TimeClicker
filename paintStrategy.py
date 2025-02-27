@@ -131,7 +131,7 @@ class PaintStrategy:
             )
             self.engine.tps += build_tps * build_amount * build_augment
 
-            infos = f"The building '{build_name}' has {build_amount} units,\nproducing {format_timeUnits(build_tps * build_amount * build_augment)} time units per second,\nwith a boost multiplier of {build_augment}x."
+            infos = f"The building '{build_name}' has {build_amount} instances,\nproducing {format_timeUnits(build_tps * build_amount * build_augment)} time units per second,\nwith a boost multiplier of {build_augment}x.\nEach building is producing {format_timeUnits(build_tps * build_augment)} time units per second."
 
             self.engine.buildings_buttons.append(
                 Button(
