@@ -14,9 +14,9 @@ UPGRADES = [
     ### UPGRADES BUILDINGS
     # Préhistoire
     {"name": "Flint", "cost": 10000, "effect_type": "building", "effect_value": 4, "building_name": "Campfire"},
-    {"name": "Hoe", "cost": 10000, "effect_type": "building", "unlock": 20, "effect_value": 4, "building_name": "Farming"},
-    {"name": "Brush", "cost": 10000, "effect_type": "building", "unlock": 50, "effect_value": 4, "building_name": "Painting"},
-    {"name": "Weapons", "cost": 10000, "effect_type": "building", "unlock": 100, "effect_value": 4, "building_name": "Hunting"},
+    {"name": "Hoe", "cost": 10000, "effect_type": "building", "unlock": 20, "effect_value": 2, "building_name": "Farming"},
+    {"name": "Brush", "cost": 10000, "effect_type": "building", "unlock": 50, "effect_value": 2, "building_name": "Painting"},
+    {"name": "Weapons", "cost": 10000, "effect_type": "building", "unlock": 100, "effect_value": 2, "building_name": "Hunting"},
 
     # # Antiquité
     {"name": "Stone", "cost": 10000, "effect_type": "building", "unlock": 10, "effect_value": 2, "building_name": "Aqueduct"},

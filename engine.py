@@ -1,3 +1,4 @@
+import math
 import os
 from random import randint
 import sys
@@ -200,23 +201,49 @@ class Engine:
     def check_available_buildings(self):
         for i in range(len(buildings)):
             build = buildings[i]
+            
+            match self.era:
+                case 1:
+                    can_be_bought = True
+                case 2:
+                    if i < 4:
+                        can_be_bought = True
+                    else:
+                        can_be_bought = False
+                case 3:
+                    if i < 8:
+                        can_be_bought = True
+                    else:
+                        can_be_bought = False
+                case 4:
+                    if i < 12:
+                        can_be_bought = True
+                    else:
+                        can_be_bought = False
+                case 5:
+                    if i < 16:
+                        can_be_bought = True
+                    else:
+                        can_be_bought = False
+            
             previous_build = buildings[i - 1] if i > 0 else None
-            if build["name"] in self.bought_buildings["short_list"] or i == 0:
-                if not build in self.available_buildings:
-                    self.available_buildings.append(build)
-            elif previous_build["name"] in self.bought_buildings["short_list"] and (
-                next(
-                    (
-                        b["amount"]
-                        for b in self.bought_buildings["long_list"]
-                        if b["name"] == previous_build["name"]
-                    ),
-                    None,
-                )
-                >= 1
-            ):
-                if not build in self.available_buildings:
-                    self.available_buildings.append(build)
+            if can_be_bought:
+                if build["name"] in self.bought_buildings["short_list"] or i == 0:
+                    if not build in self.available_buildings:
+                        self.available_buildings.append(build)
+                elif previous_build["name"] in self.bought_buildings["short_list"] and (
+                    next(
+                        (
+                            b["amount"]
+                            for b in self.bought_buildings["long_list"]
+                            if b["name"] == previous_build["name"]
+                        ),
+                        None,
+                    )
+                    >= 1
+                ):
+                    if not build in self.available_buildings:
+                        self.available_buildings.append(build)
 
     def check_available_upgrades(self):
         for i in range(len(UPGRADES)):
@@ -286,7 +313,7 @@ class Engine:
 
     def handle_human_skills(self):
         # self.human_skills["intelligence"] = 0
-        self.clicker_amount = 1 + (self.tps * (self.human_skills["strength"]/100))
+        self.clicker_amount = 1 + (math.log10(1 + 9 * (self.human_skills["strength"] / 100)) * self.tps)
         
         self.price_reduction = 1 - ( (self.human_skills["intelligence"]/2)/100 )
         
@@ -296,7 +323,6 @@ class Engine:
         self.is_blue_cable_cut = False
     
     def check_cables(self):
-        print(self.tps_boost_from_cable)
         self.blue_cable_count += 1
         
         
@@ -322,7 +348,8 @@ class Engine:
                 self.tps_boost_from_cable -= 5
             
                 
-            
-            
+    def check_era(self):
+        if self.timeline >=   
+    
             
             

@@ -213,7 +213,8 @@ class PaintStrategy:
                 background=DARK_ORANGE,
                 command=lambda :self.engine.buy_human_skills_wrapper("strength"),
                 border_radius=250,
-                identifier="strength"
+                identifier="strength",
+                infos=f"{format_timeUnits(200 * (2**self.engine.human_skills['strength']))} TU"
             )
         )
         self.engine.human_skills_buttons.append(
@@ -223,7 +224,8 @@ class PaintStrategy:
                 background=MUSTARD,
                 command=lambda :self.engine.buy_human_skills_wrapper("agility"),
                 border_radius=250,
-                identifier="strength"
+                identifier="agility",
+                infos=f"{format_timeUnits(200 * (2**self.engine.human_skills['agility']))} TU"
             )
         )
         self.engine.human_skills_buttons.append(
@@ -233,7 +235,8 @@ class PaintStrategy:
                 background=LIGHT_GREEN,
                 command=lambda :self.engine.buy_human_skills_wrapper("intelligence"),
                 border_radius=250,
-                identifier="strength"
+                identifier="intelligence",
+                infos=f"{format_timeUnits(200 * (2**self.engine.human_skills['intelligence']))} TU"
             )
         )
 
@@ -537,12 +540,24 @@ class PaintStrategy:
     def display_human_skills(self):
         strength_offset = (self.engine.human_skills["strength"] / 100) * 527
         pg.draw.rect(self.screen, DARK_ORANGE, (adaptw(1285.5, self.width), adapth(734.5-strength_offset, self.height), adaptw(15, self.width), adapth(strength_offset, self.height)), border_radius=60)
+        self.screen.blit(
+            get_text_font(20, self.height).render(f"{self.engine.human_skills['strength']}", True, WHITE),
+            get_text_font(20, self.height).render(f"{self.engine.human_skills['strength']}", True, WHITE).get_rect(center=(adaptw(1292.5, self.width), adapth(798.5, self.height))),
+        )
         
         agility_offset = (self.engine.human_skills["agility"] / 100) * 527
         pg.draw.rect(self.screen, MUSTARD, (adaptw(1331, self.width), adapth(734.5-agility_offset, self.height), adaptw(15, self.width), adapth(agility_offset, self.height)), border_radius=60)
+        self.screen.blit(
+            get_text_font(20, self.height).render(f"{self.engine.human_skills['agility']}", True, WHITE),
+            get_text_font(20, self.height).render(f"{self.engine.human_skills['agility']}", True, WHITE).get_rect(center=(adaptw(1338, self.width), adapth(798.5, self.height))),
+        )
                                                                                    
         intelligence_offset = (self.engine.human_skills["intelligence"] / 100) * 527
         pg.draw.rect(self.screen, LIGHT_GREEN, (adaptw(1375.5, self.width), adapth(734.5-intelligence_offset, self.height), adaptw(15, self.width), adapth(intelligence_offset, self.height)), border_radius=60)
+        self.screen.blit(
+            get_text_font(20, self.height).render(f"{self.engine.human_skills['intelligence']}", True, WHITE),
+            get_text_font(20, self.height).render(f"{self.engine.human_skills['intelligence']}", True, WHITE).get_rect(center=(adaptw(1385, self.width), adapth(798.5, self.height))),
+        )
 
         for button in self.engine.human_skills_buttons:
             button.render(self.screen)
@@ -603,7 +618,10 @@ class PaintStrategy:
             ),
         )
 
-        self.screen.blit(self.timeline_text, (adaptw(90, self.width), adapth(87, self.height)))
+        self.screen.blit(self.timeline_text, self.timeline_text.get_rect(center=(adaptw(180, self.width), adapth(150, self.height))))
+        
+        
+        
         if self.engine.is_blue_cable_cut:
             self.blue_cable_button.render(self.screen, w=self.width, h=self.height)
 
@@ -617,6 +635,9 @@ class PaintStrategy:
             button.render_infos(self.screen, w=self.width, h=self.height)
 
         for button in self.engine.upgrades_buttons:
+            button.render_infos(self.screen, w=self.width, h=self.height)
+            
+        for button in self.engine.human_skills_buttons:
             button.render_infos(self.screen, w=self.width, h=self.height)
        
             
@@ -706,4 +727,5 @@ class PaintStrategy:
             
         if self.engine.blue_cable_x5_timer != 0:
             pg.draw.rect(self.screen, BLUE, (adaptw(1265, self.width), adapth(115, self.height), adaptw(150, self.width), adapth(65, self.height)))
+        
             
