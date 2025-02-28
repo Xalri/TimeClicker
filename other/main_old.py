@@ -11,11 +11,11 @@ import pygame as pg
 from pygame._sdl2 import Window
 from pygame.locals import *
 
-from data import *
+from data.data import *
 from Buttons import Button
-from Logger import Logger
-from buildings import buildings
-from upgrade import UPGRADES, treshold
+from other.Logger import Logger
+from data.buildings import buildings
+from data.upgrade import UPGRADES, treshold
 
 from utils import (
     adapt_size_height,

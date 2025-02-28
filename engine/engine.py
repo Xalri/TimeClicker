@@ -12,10 +12,10 @@ from pygame._sdl2 import Window
 from pygame.locals import *
 
 from config import FRAMERATE
-from data import *
-from Logger import Logger
-from buildings import buildings
-from upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
+from data.data import *
+from other.Logger import Logger
+from data.buildings import buildings
+from data.upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
 
 from utils import (
     adapt_size_height as adapth,

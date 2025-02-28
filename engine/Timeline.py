@@ -1,4 +1,4 @@
-import buildings
+import data.buildings as buildings
 
 class Timeline:
     def __init__(self):

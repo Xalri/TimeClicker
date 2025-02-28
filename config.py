@@ -1,4 +1,4 @@
-from data import *
+from data.data import *
 
 FRAMERATE = 10
 

@@ -1,5 +1,5 @@
 from engine import Engine
-from paintStrategy import PaintStrategy
+from ihm.paintStrategy import PaintStrategy
 
 
 def main():

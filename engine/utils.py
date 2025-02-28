@@ -6,12 +6,12 @@ import sys
 import os
 from base64 import b64decode, b64encode
 import Timeline
-from buildings import buildings
+from data.buildings import buildings
 from datetime import datetime
 from config import TIMELINE_UPGRADE_PRICE
-from upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
-import upgrade
-from data import UNITS
+from data.upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
+import data.upgrade as upgrade
+from data.data import UNITS
 import ctypes
 import threading
 
