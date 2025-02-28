@@ -48,6 +48,6 @@ UPGRADES = [
     {"name": "Reactor", "cost": 10000, "effect_type": "building", "effect_value": 2, "unlock": 50, "building_name": "Spaceship"},
 ]
 
-TIMELINE_UPGRADE = {"name": "Time", "cost": lambda x:  30 + (2 * 10**35 - 30) / (1 + math.exp(-0.1 * (x - 1789))), "effect_type": "timeline"}
+TIMELINE_UPGRADE = {"name": "Time", "cost": lambda x:  30 + (2 * 10**35 - 30) / (1 + math.exp(-0.2 * (x - 1000))), "effect_type": "timeline"}
 
 treshold = [10, 20, 50, 100, 500, 1000]
