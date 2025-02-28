@@ -3,3 +3,7 @@
 /.vscode
 /__pycache__
 /.prettierrc
+/other/__pycache__
+/ihm/__pycache__
+/engine/__pycache__
+/data/__pycache__

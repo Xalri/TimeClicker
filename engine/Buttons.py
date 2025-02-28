@@ -1,5 +1,5 @@
 import pygame as pg
-from utils import load_image, get_text_font, adapt_size_height, adapt_size_width
+from engine.utils import load_image, get_text_font, adapt_size_height, adapt_size_width
 
 
 class Button:

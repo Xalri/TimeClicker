@@ -1,11 +1,9 @@
 from pprint import pprint
 import time
-from prometheus_client import h
 import pygame
 import sys
 import os
 from base64 import b64decode, b64encode
-import Timeline
 from data.buildings import buildings
 from datetime import datetime
 from config import TIMELINE_UPGRADE_PRICE

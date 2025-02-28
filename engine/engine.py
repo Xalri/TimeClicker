@@ -17,7 +17,7 @@ from other.Logger import Logger
 from data.buildings import buildings
 from data.upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
 
-from utils import (
+from engine.utils import (
     adapt_size_height as adapth,
     adapt_size_width as adaptw,
     buy_human_skill,
@@ -124,6 +124,11 @@ class Engine:
         self.timeUnits += amount
         print(amount)
     def buy_building_wrapper(self, building_name):
+        if building_name == "Time Machine":
+            if can_buy_buildings(self.bought_buildings, building_name, 1, self.timeUnits):
+                self.reset("Congratulations! You have finished the game!\n Time Units earned: " + str(format_timeUnits(self.timeUnits)) + "\n THE GAME WILL NOW RESET...")
+                
+
         self.bought_buildings, self.timeUnits = buy_buildings(self.bought_buildings, building_name, 1, self.timeUnits, self.price_reduction)     
     def buy_upgrade_wrapper(self, upgrade_name):
         self.LOGGER.INFO("upgrade wrapper called")
@@ -318,10 +323,10 @@ class Engine:
     def exit(self):
         self.save_data()
         self.running = False    
-    def reset(self):
+    def reset(self, message="The game has been reseted."):
         save_data(self.appdata_path)
-        show_message("The game has been reseted, please restart the game.")
-        self.running = False
+        show_message(message)
+        self.load_data()
     
     def check_autosave(self):
         self.save_count += 1

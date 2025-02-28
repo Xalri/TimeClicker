@@ -5,14 +5,14 @@ from re import S
 import time
 from turtle import width
 
-from Buttons import Button
+from engine.Buttons import Button
 from config import *
 import pygame as pg
 from data.data import *
 
 from data.buildings import buildings
 from data.upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
-from utils import adapt_size_width as adaptw, adapt_size_height as adapth, can_buy_buildings, can_buy_timeline, can_buy_upgrade, format_time_no_convertion, format_timeUnits, get_clock_font, get_number_font, get_text_font, get_timeline_font, load_image
+from engine.utils import adapt_size_width as adaptw, adapt_size_height as adapth, can_buy_buildings, can_buy_timeline, can_buy_upgrade, format_time_no_convertion, format_timeUnits, get_clock_font, get_number_font, get_text_font, get_timeline_font, load_image
 
 class PaintStrategy:
     def __init__(self, engine, screen, src_dir):
@@ -419,7 +419,7 @@ class PaintStrategy:
             else:
                 amount = build["amount"]
 
-            cost = next((b["cost"](amount)for b in buildings if b["name"] == build_button.identifier),None,) * self.engine.price_reduction
+            cost = next((b["cost"](amount) for b in buildings if b["name"] == build_button.identifier),None,) * self.engine.price_reduction
 
             building_image = load_image(f"{self.src_dir}/img/buildings/{build_button.identifier.lower().replace(' ', '_')}.png",self.width,self.height,)
             base_image = load_image(base, self.width, self.height)
