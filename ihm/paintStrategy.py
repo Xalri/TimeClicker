@@ -19,6 +19,7 @@ class PaintStrategy:
         self.engine = engine
         self.screen = screen
         self.src_dir = src_dir
+        assert os.path.exists(self.src_dir), f"Folder {self.src_dir} does not exist"
         
         self.width = self.height = "Null"
         

@@ -212,6 +212,7 @@ def buy_buildings(bought_buildings, building_name, amount, timeUnits, price_redu
     print(building_name)
     building = next((b for b in buildings if b["name"] == building_name), None)
     print(building)
+    assert building is not None, f"Building {building_name} not found"
     if building is None:
         return bought_buildings
     current_amount = next(
@@ -261,6 +262,7 @@ def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings, pri
     print("upgrade: ", upgrade)
     print("build name: ", next(b for b in bought_buildings["long_list"] if b["name"] == upgrade["building_name"]))
     print("build amount: ", build_amount)
+    assert upgrade is not None, f"Upgrade {upgrade_name} not found"
     if upgrade is None:
         return bought_upgrades, timeUnits, bought_buildings
 
@@ -334,6 +336,7 @@ def show_message(msg):
     ctypes.windll.user32.MessageBoxW(0, msg, "Debug Message", 1)
 
 def unlock_timeline(era, timeline, timeUnits):
+    assert TIMELINE_UPGRADE_PRICE is not None and isinstance(TIMELINE_UPGRADE_PRICE, int), "TIMELINE_UPGRADE_PRICE must be an integer"
     if era == 1:
         cost = TIMELINE_UPGRADE_PRICE
         if not timeUnits >= cost:
@@ -356,6 +359,7 @@ def buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):
     print(human_skills)
     print(timeUnits)
     print(skill_name)
+    assert skill_name in list(human_skills.keys()), "skill_name must be a key in human_skills"
     if not skill_name in list(human_skills.keys()) and human_skills[skill_name] >= 100:
         return human_skills, timeUnits
     
