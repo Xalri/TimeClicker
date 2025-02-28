@@ -190,7 +190,7 @@ def format_time_no_convertion(value: int, n: int = 0):
     return "".join([" " for _ in range(n + 2 - len(str(value)))]) + str(value)
 
 
-def can_buy_buildings(bought_buildings, building_name, amount, timeUnits):
+def can_buy_buildings(bought_buildings, building_name, amount, timeUnits, reduction=1):
     building = next((b for b in buildings if b["name"] == building_name), None)
     if building is None:
         return False
@@ -203,7 +203,7 @@ def can_buy_buildings(bought_buildings, building_name, amount, timeUnits):
         ),
         0,
     )
-    cost = sum(building["cost"](current_amount + i) for i in range(amount))
+    cost = sum(building["cost"](current_amount + i) for i in range(amount))*reduction
 
     return timeUnits >= cost
 
@@ -317,7 +317,7 @@ def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings, pri
     return bought_upgrades, timeUnits, bought_buildings
 
 
-def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
+def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings, reduction=1):
     upgrade = next((u for u in UPGRADES if u["name"] == upgrade_name), None)
     if upgrade is None:
         return False
@@ -328,7 +328,7 @@ def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings):
     if max_bought_level == len(treshold):
         return True
     
-    xth_build_price = next((b["cost"](treshold[max_bought_level]) for b in buildings if b["name"] == upgrade["building_name"]), 0)
+    xth_build_price = next((b["cost"](treshold[max_bought_level]) for b in buildings if b["name"] == upgrade["building_name"]), 0)*reduction
     return timeUnits >= xth_build_price*3 and build_amount >= treshold[max_bought_level]
 
 
@@ -375,3 +375,10 @@ def buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):
     print(" ")
     return human_skills, timeUnits-cost
     
+def can_buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):
+    if not skill_name in list(human_skills.keys()) and human_skills[skill_name] >= 100:
+        return human_skills, timeUnits
+    
+    cost = 200 * (2**human_skills[skill_name])
+    print(cost)
+    return timeUnits >= cost and human_skills[skill_name] < 100

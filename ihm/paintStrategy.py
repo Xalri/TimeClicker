@@ -12,7 +12,7 @@ from data.data import *
 
 from data.buildings import buildings
 from data.upgrade import TIMELINE_UPGRADE, UPGRADES, treshold
-from engine.utils import adapt_size_width as adaptw, adapt_size_height as adapth, can_buy_buildings, can_buy_timeline, can_buy_upgrade, format_time_no_convertion, format_timeUnits, get_clock_font, get_number_font, get_text_font, get_timeline_font, load_image
+from engine.utils import adapt_size_width as adaptw, adapt_size_height as adapth, can_buy_buildings, can_buy_timeline, can_buy_upgrade, format_time_no_convertion, format_timeUnits, get_clock_font, get_number_font, get_text_font, get_timeline_font, load_image, can_buy_human_skill
 
 class PaintStrategy:
     def __init__(self, engine, screen, src_dir):
@@ -383,7 +383,7 @@ class PaintStrategy:
     def display_back_images(self):
         self.screen.blit(self.shop_fond_image, (adaptw(1475, self.width), adapth(45, self.height)))
         self.screen.blit(self.upgrade_fond_image, (adaptw(45, self.width), adapth(245, self.height)))
-       
+    
         
     def display_buildings(self):
         match self.engine.era:
@@ -435,7 +435,7 @@ class PaintStrategy:
             ).move(0, adapth((self.scroll_value * 1), self.height))
             # build_button.rect = button_rect
             if not can_buy_buildings(
-                self.engine.bought_buildings, build_button.identifier, 1, self.engine.timeUnits
+                self.engine.bought_buildings, build_button.identifier, 1, self.engine.timeUnits, self.engine.price_reduction
             ):
                 base_image.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
                 self.screen.blit(base_image, base_rect.topleft)
@@ -476,6 +476,31 @@ class PaintStrategy:
                     if not self.can_scroll:
                         self.can_scroll = True
 
+
+        arrow_color = (255, 255, 255)
+        arrow_size = 20
+
+        if self.scroll_value < 0:
+            pg.draw.polygon(
+                self.screen,
+                arrow_color,
+                [
+                    (self.building_scroll_area_rect.centerx, self.building_scroll_area_rect.top + adapth(10, self.height)),
+                    (self.building_scroll_area_rect.centerx - arrow_size, self.building_scroll_area_rect.top + adapth(30, self.height)),
+                    (self.building_scroll_area_rect.centerx + arrow_size, self.building_scroll_area_rect.top + adapth(30, self.height)),
+                ]
+            )
+
+        if self.can_scroll:
+            pg.draw.polygon(
+                self.screen,
+                arrow_color,
+                [
+                    (self.building_scroll_area_rect.centerx, self.building_scroll_area_rect.bottom - adapth(10, self.height)),
+                    (self.building_scroll_area_rect.centerx - arrow_size, self.building_scroll_area_rect.bottom - adapth(30, self.height)),
+                    (self.building_scroll_area_rect.centerx + arrow_size, self.building_scroll_area_rect.bottom - adapth(30, self.height)),
+                ]
+            )
 
     def display_upgrades(self):
         # LOGGER.DEBUG([b.identifier for b in self.engine.upgrades_buttons])
@@ -567,7 +592,7 @@ class PaintStrategy:
 
                 level_rect = level_image.get_rect(center=upgrade_rect.center).move(adaptw(0, self.width), adapth(15, self.height))
 
-                if not can_buy_upgrade(self.engine.bought_upgrades, upgrade_button.identifier, self.engine.timeUnits, self.engine.bought_buildings):
+                if not can_buy_upgrade(self.engine.bought_upgrades, upgrade_button.identifier, self.engine.timeUnits, self.engine.bought_buildings, self.engine.price_reduction):
                     upgrade_image.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
                     self.screen.blit(upgrade_image, upgrade_rect.topleft)
 
@@ -619,7 +644,7 @@ class PaintStrategy:
             get_number_font(20, self.height).render(f"{self.engine.human_skills['agility']}", True, CABLE_BLUE),
             get_number_font(20, self.height).render(f"{self.engine.human_skills['agility']}", True, CABLE_BLUE).get_rect(center=(adaptw(1338, self.width), adapth(798.5, self.height))),
         )
-                                                                                   
+
         intelligence_offset = (self.engine.human_skills["intelligence"] / 100) * 527
         pg.draw.rect(self.screen, YELLOW, (adaptw(1375.5, self.width), adapth(734.5-intelligence_offset, self.height), adaptw(15, self.width), adapth(intelligence_offset, self.height)), border_radius=60)
         self.screen.blit(
@@ -628,7 +653,10 @@ class PaintStrategy:
         )
 
         for button in self.engine.human_skills_buttons:
-            button.render(self.screen)
+            if can_buy_human_skill(self.engine.human_skills, self.engine.timeUnits, button.identifier):
+                button.render(self.screen)
+            else:
+                button.render(self.screen, darker=True)
             
 
     def display_front_elements(self):
@@ -700,7 +728,7 @@ class PaintStrategy:
         # pg.draw.rect(screen, (0, 0, 255), scroll_area_rect_bis, 2)
 
         self.clicker_button.render(self.screen, w=self.width, h=self.height)
-      
+    
         
     def display_info_box(self):
         for button in self.engine.buildings_buttons:
@@ -711,7 +739,7 @@ class PaintStrategy:
             
         for button in self.engine.human_skills_buttons:
             button.render_infos(self.screen, w=self.width, h=self.height)
-       
+    
             
     def update_screen(self):
         pg.display.flip()

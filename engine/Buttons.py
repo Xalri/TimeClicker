@@ -90,9 +90,9 @@ class Button:
             image.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
         screen.blit(image, self.rect)
         for circle in self.circles:
-            circle_surface = pg.Surface((100, 100), pg.SRCALPHA)
-            pg.draw.circle(circle_surface, (255, 0, 0, circle['alpha']), (50, 50), 30, 3)
-            screen.blit(circle_surface, (circle['pos'][0] - 50, circle['pos'][1] - 50))
+            circle_surface = pg.Surface((circle['radius'] * 2, circle['radius'] * 2), pg.SRCALPHA)
+            pg.draw.circle(circle_surface, (255, 0, 0, circle['alpha']), (circle['radius'], circle['radius']), circle['radius'])
+            screen.blit(circle_surface, (circle['pos'][0] - circle['radius'], circle['pos'][1] - circle['radius']))
 
 
     def render_infos(self, screen, darker=False, w=1, h=1):
@@ -185,13 +185,14 @@ class Button:
 
     def _circle_effect(self, pos):
         """Create a circle effect at the click position."""
-        self.circles.append({'pos': pos, 'alpha': 255})
+        self.circles.append({'pos': pos, 'alpha': 255, 'radius': 5})
         pg.time.set_timer(self.circle_event, 50)
 
     def _fade_circle(self):
-        """Fade out the circle effect."""
+        """Grow and fade out the circle effect."""
         for circle in self.circles:
             circle['alpha'] -= 25
+            circle['radius'] += 5
         self.circles = [circle for circle in self.circles if circle['alpha'] > 0]
         if not self.circles:
             pg.time.set_timer(self.circle_event, 0)

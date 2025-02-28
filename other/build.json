@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "C:/Users/samyt/Documents/TimeClicker/main.py"
+   "value": "C:/Users/samy9/OneDrive/Documents/TimeClicker/main.py"
   },
   {
    "optionDest": "onefile",
@@ -19,7 +19,7 @@
   },
   {
    "optionDest": "icon_file",
-   "value": "C:/Users/samyt/Documents/TimeClicker/src/icon.ico"
+   "value": "C:/Users/samy9/OneDrive/Documents/TimeClicker/src/icon.ico"
   },
   {
    "optionDest": "name",
@@ -59,27 +59,27 @@
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/samyt/Documents/TimeClicker/utils.py;."
+   "value": "C:/Users/samy9/OneDrive/Documents/TimeClicker/engine/utils.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/samyt/Documents/TimeClicker/Logger.py;."
+   "value": "C:/Users/samy9/OneDrive/Documents/TimeClicker/other/Logger.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/samyt/Documents/TimeClicker/data.py;."
+   "value": "C:/Users/samy9/OneDrive/Documents/TimeClicker/data/data.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/samyt/Documents/TimeClicker/Buttons.py;."
+   "value": "C:/Users/samy9/OneDrive/Documents/TimeClicker/engine/Buttons.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/samyt/Documents/TimeClicker/buildings.py;."
+   "value": "C:/Users/samy9/OneDrive/Documents/TimeClicker/data/buildings.py;."
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/samyt/Documents/TimeClicker/src;src/"
+   "value": "C:/Users/samy9/OneDrive/Documents/TimeClicker/src;src/"
   }
  ],
  "nonPyinstallerOptions": {
