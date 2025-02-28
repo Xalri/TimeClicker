@@ -325,6 +325,7 @@ class Engine:
         self.running = False    
     def reset(self, message="The game has been reseted."):
         save_data(self.appdata_path)
+        self.bought_buildings = {"short_list": [], "long_list": []}
         show_message(message)
         self.load_data()
     
