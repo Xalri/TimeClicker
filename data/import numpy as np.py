@@ -8,7 +8,7 @@ def equation(x):
     D = 30     # Starting offset value
     
     # Ensure the result starts at D and grows as expected
-    return 30*np.exp(0.1*x)
+    return 30*np.exp(np.log(31 / 30)*x)
 
 
 

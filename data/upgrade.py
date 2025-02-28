@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 UPGRADES = [
@@ -48,6 +49,6 @@ UPGRADES = [
     {"name": "Reactor", "cost": 10000, "effect_type": "building", "effect_value": 2, "unlock": 50, "building_name": "Spaceship"},
 ]
 
-TIMELINE_UPGRADE = {"name": "Time", "cost": lambda x:  30*math.exp(0.1*x), "effect_type": "timeline"}
+TIMELINE_UPGRADE = {"name": "Time", "cost": lambda x:  30*np.exp(np.log(31 / 30)*x), "effect_type": "timeline"}
 
 treshold = [10, 20, 50, 100, 500, 1000]
