@@ -145,6 +145,8 @@ class Engine:
         if randint(1, 2) == 1:
             print("X2")
             self.blue_cable_x2_timer = self.framerate * 60 * 1 + self.framerate * self.boost_duration
+            self.LOGGER.INFO(f'Setting blue_cable_x2_timer to {self.framerate * self.boost_duration}')
+
             # print("base duration :", self.framerate * 60 * 1)
             # print("additional timer :", self.framerate * 60 * self.boost_duration)
             # print("blue cable timer :", self.blue_cable_x2_timer)
@@ -177,8 +179,8 @@ class Engine:
         self.is_red_cable_cut = False
         self.red_cable_tps_reduction = 0
             
-      
-      
+    
+    
     def load_data(self):
         (
             self.timeUnits,
@@ -205,7 +207,7 @@ class Engine:
             self.bought_upgrades,
             self.human_skills
         )
-             
+        
     def give_timeUnits_from_afk(self):
         if self.last_saved_time:
             elapsed_time = (datetime.now() - datetime.strptime(self.last_saved_time, " %Y-%m-%d %H:%M:%S")).total_seconds()

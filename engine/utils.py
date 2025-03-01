@@ -76,7 +76,7 @@ def get_clock_font(size, height):
 
 def get_data(appdata_path):
     if not os.path.exists(os.path.join(appdata_path, "data")):
-        save_data(0, 0, 0, 1, {"short_list": [], "long_list": []}, 0)
+        save_data(appdata_path)
 
     print("path is: " + str(os.path.join(appdata_path, "data")))
     with open(os.path.join(appdata_path, "data"), "r") as f:

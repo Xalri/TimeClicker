@@ -364,20 +364,21 @@ class PaintStrategy:
         pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
         
         mouse_pos = pg.mouse.get_pos()
-        for build_button in self.engine.buildings_buttons:
-            build_button.update_hover_state(mouse_pos)
+        if self.building_scroll_area_rect.collidepoint(mouse_pos):
+            for build_button in self.engine.buildings_buttons:
+                build_button.update_hover_state(mouse_pos)
 
-        for upgrade_button in self.engine.upgrades_buttons:
-            upgrade_button.update_hover_state(mouse_pos)
+            for upgrade_button in self.engine.upgrades_buttons:
+                upgrade_button.update_hover_state(mouse_pos)
 
-        for human_skill_button in self.engine.human_skills_buttons:
-            human_skill_button.update_hover_state(mouse_pos)
+            for human_skill_button in self.engine.human_skills_buttons:
+                human_skill_button.update_hover_state(mouse_pos)
 
-        if self.engine.is_blue_cable_cut:
-            self.blue_cable_button.update_hover_state(mouse_pos)
-            
-        if self.engine.is_red_cable_cut:
-                self.red_cable_button.update_hover_state(mouse_pos)
+            if self.engine.is_blue_cable_cut:
+                self.blue_cable_button.update_hover_state(mouse_pos)
+                
+            if self.engine.is_red_cable_cut:
+                    self.red_cable_button.update_hover_state(mouse_pos)
 
 
     def display_back_images(self):
@@ -725,7 +726,7 @@ class PaintStrategy:
         if self.engine.is_blue_cable_cut:
             self.blue_cable_button.render(self.screen, w=self.width, h=self.height)
 
-        # pg.draw.rect(screen, (0, 0, 255), scroll_area_rect_bis, 2)
+        pg.draw.rect(self.screen, (0, 0, 255), self.building_scroll_area_rect, 2)
 
         self.clicker_button.render(self.screen, w=self.width, h=self.height)
     

@@ -96,7 +96,10 @@ class Button:
 
 
     def render_infos(self, screen, darker=False, w=1, h=1):
-        if self.display_info:
+        
+        rel_x, rel_y = self.mouse_pos[0] - self.rect.x, self.mouse_pos[1] - self.rect.y
+        hovering = 0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height and self.mask.get_at((rel_x, rel_y))
+        if hovering:
             texts = [get_text_font(15, h).render(text, True, (255, 255, 255)) for text in self.infos.split("\n")]
             max_width = max(text.get_width() for text in texts)
             total_height = sum(text.get_height() for text in texts) + (len(texts) - 1) * adapt_size_height(5, h)
