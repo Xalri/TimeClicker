@@ -368,17 +368,17 @@ class PaintStrategy:
             for build_button in self.engine.buildings_buttons:
                 build_button.update_hover_state(mouse_pos)
 
-            for upgrade_button in self.engine.upgrades_buttons:
-                upgrade_button.update_hover_state(mouse_pos)
+        for upgrade_button in self.engine.upgrades_buttons:
+            upgrade_button.update_hover_state(mouse_pos)
 
-            for human_skill_button in self.engine.human_skills_buttons:
-                human_skill_button.update_hover_state(mouse_pos)
+        for human_skill_button in self.engine.human_skills_buttons:
+            human_skill_button.update_hover_state(mouse_pos)
 
-            if self.engine.is_blue_cable_cut:
-                self.blue_cable_button.update_hover_state(mouse_pos)
-                
-            if self.engine.is_red_cable_cut:
-                    self.red_cable_button.update_hover_state(mouse_pos)
+        if self.engine.is_blue_cable_cut:
+            self.blue_cable_button.update_hover_state(mouse_pos)
+            
+        if self.engine.is_red_cable_cut:
+                self.red_cable_button.update_hover_state(mouse_pos)
 
 
     def display_back_images(self):
