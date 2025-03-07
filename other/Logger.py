@@ -5,6 +5,11 @@ init()
 
 class Logger:
     def __init__(self, level=3):
+        """
+        Initialize the Logger object.
+
+        :param int level: The logging level.
+        """
         self.level = level
         self.log_levels = {
             "info": Fore.BLUE,
@@ -26,6 +31,12 @@ class Logger:
         
         
     def set_level(self, level):
+        """
+        Set the logging level.
+
+        :param str|int level: The logging level to set.
+        :return bool: True if the level was set successfully, False otherwise.
+        """
         if isinstance(level, str):
             if level.isdigit():
                 level = int(level)
@@ -44,8 +55,20 @@ class Logger:
     
 
     def get_level(self):
+        """
+        Get the current logging level.
+
+        :return int: The current logging level.
+        """
         return self.level
+
     def log(self, level, text):
+        """
+        Log a message at the specified level.
+
+        :param str level: The logging level of the message.
+        :param str text: The message to log.
+        """
         if self.level >= self.name_to_level[level]:
             timestamp = Style.BRIGHT + "[{}]".format(self.get_timestamp()) + Style.RESET_ALL
             log_level = self.log_levels[level] + level.upper() + Style.RESET_ALL
@@ -54,21 +77,51 @@ class Logger:
         #     print("Log level too low to display message")
 
     def INFO(self, text):
+        """
+        Log an info message.
+
+        :param str text: The info message to log.
+        """
         self.log("info", text)
 
     def DEBUG(self, text):
+        """
+        Log a debug message.
+
+        :param str text: The debug message to log.
+        """
         self.log("debug", text)
 
     def WARNING(self, text):
+        """
+        Log a warning message.
+
+        :param str text: The warning message to log.
+        """
         self.log("warning", text)
 
     def ERROR(self, text):
+        """
+        Log an error message.
+
+        :param str text: The error message to log.
+        """
         self.log("error", text)
 
     def CRITICAL(self, text):
+        """
+        Log a critical message.
+
+        :param str text: The critical message to log.
+        """
         self.log("critical", text)
 
     def get_timestamp(self):
+        """
+        Get the current timestamp.
+
+        :return str: The current timestamp in the format YYYY-MM-DD HH:MM:SS.mmm.
+        """
         from datetime import datetime
 
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]

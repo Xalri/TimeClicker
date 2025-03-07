@@ -15,12 +15,28 @@ import threading
 
 
 def adapt_size_height(size, height, debug=False):
+    """
+    Adapt the size based on the height.
+
+    :param int size: The original size.
+    :param int height: The height to adapt to.
+    :param bool debug: Whether to print debug information.
+    :return int: The adapted size.
+    """
     if debug:
         print(int(round((size / 1080 * height))))
     return int(round(size / 1080 * height))
 
 
 def adapt_size_width(size, width, debug=False):
+    """
+    Adapt the size based on the width.
+
+    :param int size: The original size.
+    :param int width: The width to adapt to.
+    :param bool debug: Whether to print debug information.
+    :return int: The adapted size.
+    """
     if debug:
         print("Size: " + str(size))
         print("Size type: " + str(type(size)))
@@ -28,6 +44,16 @@ def adapt_size_width(size, width, debug=False):
 
 
 def load_image(path, width, height, scale=1, debug=False):
+    """
+    Load and scale an image.
+
+    :param str path: The path to the image.
+    :param int width: The width to scale to.
+    :param int height: The height to scale to.
+    :param float scale: The scaling factor.
+    :param bool debug: Whether to print debug information.
+    :return pygame.Surface: The loaded and scaled image.
+    """
     image: pygame.surface = pygame.image.load(path).convert_alpha()
     return pygame.transform.scale(
         image,
@@ -39,7 +65,12 @@ def load_image(path, width, height, scale=1, debug=False):
 
 
 def resource_path(relative_path):
-    """Get the absolute path to the resource, works for dev and for PyInstaller"""
+    """
+    Get the absolute path to the resource, works for dev and for PyInstaller.
+
+    :param str relative_path: The relative path to the resource.
+    :return str: The absolute path to the resource.
+    """
     if getattr(sys, "frozen", False):
         base_path = sys._MEIPASS  # Temporary folder for PyInstaller
     else:
@@ -49,6 +80,13 @@ def resource_path(relative_path):
 
 
 def get_timeline_font(size, height):
+    """
+    Get the font for the timeline.
+
+    :param int size: The font size.
+    :param int height: The height to adapt to.
+    :return pygame.font.Font: The timeline font.
+    """
     return pygame.font.Font(
         resource_path("src") + "/fonts/LetterGothicStd-Bold.ttf",
         int(adapt_size_height(size, height)),
@@ -56,6 +94,13 @@ def get_timeline_font(size, height):
 
 
 def get_number_font(size, height):
+    """
+    Get the font for numbers.
+
+    :param int size: The font size.
+    :param int height: The height to adapt to.
+    :return pygame.font.Font: The number font.
+    """
     return pygame.font.Font(
         resource_path("src") + "/fonts/LetterGothicStd-Bold.ttf",
         int(adapt_size_height(size, height)),
@@ -63,18 +108,38 @@ def get_number_font(size, height):
 
 
 def get_text_font(size, height):
+    """
+    Get the font for text.
+
+    :param int size: The font size.
+    :param int height: The height to adapt to.
+    :return pygame.font.Font: The text font.
+    """
     return pygame.font.Font(
         resource_path("src") + "/fonts/FranklinGothicHeavyRegular.ttf",
         int(adapt_size_height(size, height)),
     )
 
 def get_clock_font(size, height):
+    """
+    Get the font for the clock.
+
+    :param int size: The font size.
+    :param int height: The height to adapt to.
+    :return pygame.font.Font: The clock font.
+    """
     return pygame.font.Font(
         resource_path("src") + "/fonts/DS-DIGIB.TTF",
         int(adapt_size_height(size, height)),
     )
 
 def get_data(appdata_path):
+    """
+    Get the game data from the storage.
+
+    :param str appdata_path: The path to the app data.
+    :return tuple: The game data.
+    """
     if not os.path.exists(os.path.join(appdata_path, "data")):
         save_data(appdata_path)
 
@@ -124,7 +189,20 @@ def save_data(
     human_skills={"agility":0, "intelligence":0, "strength":0},
     last_saved_time="None",
 ):
-    
+    """
+    Save the game data to the storage.
+
+    :param str appdata_path: The path to the app data.
+    :param float timeUnits: The time units.
+    :param float tps: The time units per second.
+    :param int timeline: The timeline.
+    :param int clicker_amount: The clicker amount.
+    :param dict buildings: The buildings data.
+    :param float max_timeUnits: The maximum time units.
+    :param dict bought_upgrades: The bought upgrades data.
+    :param dict human_skills: The human skills data.
+    :param str last_saved_time: The last saved time.
+    """
     now = datetime.now().strftime(" %Y-%m-%d %H:%M:%S")
     if last_saved_time == "None": last_saved_time = now
     
@@ -153,14 +231,27 @@ def save_data(
 
 
 def crop_value(value: float):
+    """
+    Crop the value to an integer or a rounded float.
+
+    :param float value: The value to crop.
+    :return int|float: The cropped value.
+    """
     if value == 0.0:
         return 0
     if value >= 10:
-        return int(round(value))
+        return round(value))
     return round(value, 1)
 
 
 def format_timeUnits(timeUnits: float, n=0):
+    """
+    Format the time units.
+
+    :param float timeUnits: The time units to format.
+    :param int n: The number of spaces to pad.
+    :return str: The formatted time units.
+    """
     timeUnits = crop_value(timeUnits)
     if timeUnits < 1000:
         return "".join([" " for _ in range(n + 2 - len(str(timeUnits)))]) + str(
@@ -181,16 +272,33 @@ def format_timeUnits(timeUnits: float, n=0):
                         )
                     ]
                 )
-                + timeUnits
+                + timeUnit
             )
     return f"{timeUnits:.0f}"
 
 
 def format_time_no_convertion(value: int, n: int = 0):
+    """
+    Format the time without conversion.
+
+    :param int value: The value to format.
+    :param int n: The number of spaces to pad.
+    :return str: The formatted time.
+    """
     return "".join([" " for _ in range(n + 2 - len(str(value)))]) + str(value)
 
 
 def can_buy_buildings(bought_buildings, building_name, amount, timeUnits, reduction=1):
+    """
+    Check if the player can buy buildings.
+
+    :param dict bought_buildings: The bought buildings data.
+    :param str building_name: The name of the building.
+    :param int amount: The amount to buy.
+    :param float timeUnits: The time units available.
+    :param float reduction: The price reduction factor.
+    :return bool: True if the player can buy the buildings, False otherwise.
+    """
     building = next((b for b in buildings if b["name"] == building_name), None)
     if building is None:
         return False
@@ -209,6 +317,16 @@ def can_buy_buildings(bought_buildings, building_name, amount, timeUnits, reduct
 
 
 def buy_buildings(bought_buildings, building_name, amount, timeUnits, price_reduction):
+    """
+    Buy buildings.
+
+    :param dict bought_buildings: The bought buildings data.
+    :param str building_name: The name of the building.
+    :param int amount: The amount to buy.
+    :param float timeUnits: The time units available.
+    :param float price_reduction: The price reduction factor.
+    :return tuple: The updated bought buildings data and the remaining time units.
+    """
     print(building_name)
     building = next((b for b in buildings if b["name"] == building_name), None)
     print(building)
@@ -246,6 +364,16 @@ def buy_buildings(bought_buildings, building_name, amount, timeUnits, price_redu
 
 
 def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings, price_reduction):
+    """
+    Buy upgrades.
+
+    :param dict bought_upgrades: The bought upgrades data.
+    :param str upgrade_name: The name of the upgrade.
+    :param float timeUnits: The time units available.
+    :param dict bought_buildings: The bought buildings data.
+    :param float price_reduction: The price reduction factor.
+    :return tuple: The updated bought upgrades data, remaining time units, and bought buildings data.
+    """
     print("")
     print("bought upgrades: ", bought_upgrades)
     print("bought buildings: ", bought_buildings)
@@ -318,6 +446,16 @@ def buy_upgrades(bought_upgrades, upgrade_name, timeUnits, bought_buildings, pri
 
 
 def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings, reduction=1):
+    """
+    Check if the player can buy an upgrade.
+
+    :param dict bought_upgrades: The bought upgrades data.
+    :param str upgrade_name: The name of the upgrade.
+    :param float timeUnits: The time units available.
+    :param dict bought_buildings: The bought buildings data.
+    :param float reduction: The price reduction factor.
+    :return bool: True if the player can buy the upgrade, False otherwise.
+    """
     upgrade = next((u for u in UPGRADES if u["name"] == upgrade_name), None)
     if upgrade is None:
         return False
@@ -333,9 +471,22 @@ def can_buy_upgrade(bought_upgrades, upgrade_name, timeUnits, bought_buildings, 
 
 
 def show_message(msg):
+    """
+    Show a message box.
+
+    :param str msg: The message to display.
+    """
     ctypes.windll.user32.MessageBoxW(0, msg, "Debug Message", 1)
 
 def unlock_timeline(era, timeline, timeUnits):
+    """
+    Unlock the timeline.
+
+    :param int era: The current era.
+    :param int timeline: The current timeline.
+    :param float timeUnits: The time units available.
+    :return tuple: The updated era, timeline, and remaining time units.
+    """
     assert TIMELINE_UPGRADE_PRICE is not None and isinstance(TIMELINE_UPGRADE_PRICE, int), "TIMELINE_UPGRADE_PRICE must be an integer"
     if era == 1:
         cost = TIMELINE_UPGRADE_PRICE
@@ -344,6 +495,13 @@ def unlock_timeline(era, timeline, timeUnits):
         return era+1, timeline+1, timeUnits - cost
 
 def buy_timeline(timeline, timeUnits):
+    """
+    Buy a timeline.
+
+    :param int timeline: The current timeline.
+    :param float timeUnits: The time units available.
+    :return tuple: The updated timeline and remaining time units.
+    """
     cost = TIMELINE_UPGRADE["cost"](timeline)
     if not timeUnits >= cost or timeline >= 2500:
         return timeline, timeUnits
@@ -351,11 +509,27 @@ def buy_timeline(timeline, timeUnits):
 
     
 def can_buy_timeline(timeline, timeUnits, era):
+    """
+    Check if the player can buy a timeline.
+
+    :param int timeline: The current timeline.
+    :param float timeUnits: The time units available.
+    :param int era: The current era.
+    :return bool: True if the player can buy the timeline, False otherwise.
+    """
     if era == 1:
         return timeUnits >= TIMELINE_UPGRADE_PRICE
     return timeline >= 2500 or timeUnits >= TIMELINE_UPGRADE["cost"](timeline)
 
 def buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):
+    """
+    Buy a human skill.
+
+    :param dict human_skills: The human skills data.
+    :param float timeUnits: The time units available.
+    :param str skill_name: The name of the skill to buy.
+    :return tuple: The updated human skills data and remaining time units.
+    """
     print(human_skills)
     print(timeUnits)
     print(skill_name)
@@ -376,6 +550,14 @@ def buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):
     return human_skills, timeUnits-cost
     
 def can_buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):
+    """
+    Check if the player can buy a human skill.
+
+    :param dict human_skills: The human skills data.
+    :param float timeUnits: The time units available.
+    :param str skill_name: The name of the skill to buy.
+    :return bool: True if the player can buy the skill, False otherwise.
+    """
     if not skill_name in list(human_skills.keys()) and human_skills[skill_name] >= 100:
         return human_skills, timeUnits
     
@@ -384,6 +566,11 @@ def can_buy_human_skill(human_skills: dict, timeUnits: float, skill_name: str):
     return timeUnits >= cost and human_skills[skill_name] < 100
 
 def get_dependencies_folder():
+    """
+    Get the dependencies folder.
+
+    :return str: The path to the dependencies folder.
+    """
     if getattr(sys, 'frozen', False):
         exe_folder = os.path.dirname(sys.executable)
     else:
@@ -399,6 +586,11 @@ def get_dependencies_folder():
         return None
 
 def load_dependency(dependency_folder):
+    """
+    Load a dependency from the specified folder.
+
+    :param str dependency_folder: The path to the dependency folder.
+    """
     dependency_file = os.path.join(dependency_folder, 'your_dependency.dll')
     
     if os.path.exists(dependency_file):

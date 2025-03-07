@@ -47,6 +47,9 @@ from engine.utils import (
 
 class Engine:
     def __init__(self):
+        """
+        Initialize the Engine object.
+        """
         self.LOGGER = Logger()
         pg.init()
         pg.font.init()
@@ -121,9 +124,19 @@ class Engine:
         
         
     def increment_timeUnits(self, amount):
+        """
+        Increment the time units by a specified amount.
+
+        :param float amount: The amount to increment the time units by.
+        """
         self.timeUnits += amount
         print(amount)
     def buy_building_wrapper(self, building_name):
+        """
+        Wrapper function to buy a building.
+
+        :param str building_name: The name of the building to buy.
+        """
         if building_name == "Time Machine":
             if can_buy_buildings(self.bought_buildings, building_name, 1, self.timeUnits):
                 self.reset("Congratulations! You have finished the game!\n Time Units earned: " + str(format_timeUnits(self.timeUnits)) + "\n THE GAME WILL NOW RESET...")
@@ -131,16 +144,32 @@ class Engine:
 
         self.bought_buildings, self.timeUnits = buy_buildings(self.bought_buildings, building_name, 1, self.timeUnits, self.price_reduction)     
     def buy_upgrade_wrapper(self, upgrade_name):
+        """
+        Wrapper function to buy an upgrade.
+
+        :param str upgrade_name: The name of the upgrade to buy.
+        """
         self.LOGGER.INFO("upgrade wrapper called")
         self.bought_upgrades, self.timeUnits, self.bought_buildings = buy_upgrades(self.bought_upgrades, upgrade_name, self.timeUnits, self.bought_buildings, self.price_reduction)
     def buy_timeline_wrapper(self):
+        """
+        Wrapper function to buy a timeline.
+        """
         if self.era == 1:
             self.era, self.timeline, self.timeUnits = unlock_timeline(self.era, self.timeline, self.timeUnits)
         else:
             self.timeline, self.timeUnits = buy_timeline(self.timeline, self.timeUnits)
     def buy_human_skills_wrapper(self, skill_name):
+        """
+        Wrapper function to buy a human skill.
+
+        :param str skill_name: The name of the skill to buy.
+        """
         self.human_skills, self.timeUnits = buy_human_skill(self.human_skills, self.timeUnits, skill_name)
     def buy_blue_cable_wrapper(self):
+        """
+        Wrapper function to handle the blue cable click event.
+        """
         print("blue cable clicked ", end='')
         if randint(1, 2) == 1:
             print("X2")
@@ -175,6 +204,9 @@ class Engine:
             if self.tps_boost_from_cable == 2 or self.tps_boost_from_cable == 0:
                 self.tps_boost_from_cable += 5
     def buy_red_cable_wrapper(self):
+        """
+        Wrapper function to handle the red cable click event.
+        """
         self.red_cable_timer = randint(3, 15)
         self.is_red_cable_cut = False
         self.red_cable_tps_reduction = 0
@@ -182,6 +214,9 @@ class Engine:
     
     
     def load_data(self):
+        """
+        Load game data from the storage.
+        """
         (
             self.timeUnits,
             self.tps,
@@ -196,6 +231,9 @@ class Engine:
         
         self.max_timeUnits = int(float(self.max_timeUnits))
     def save_data(self):
+        """
+        Save game data to the storage.
+        """
         save_data(
             self.appdata_path,
             self.timeUnits,
@@ -209,6 +247,9 @@ class Engine:
         )
         
     def give_timeUnits_from_afk(self):
+        """
+        Give time units based on the elapsed time since the last save.
+        """
         if self.last_saved_time:
             elapsed_time = (datetime.now() - datetime.strptime(self.last_saved_time, " %Y-%m-%d %H:%M:%S")).total_seconds()
             self.timeUnits += self.tps * (elapsed_time)  # Add production for the elapsed time
@@ -218,6 +259,9 @@ class Engine:
         
         
     def check_available_buildings(self):
+        """
+        Check and update the list of available buildings.
+        """
         for i in range(len(buildings)):
             build = buildings[i]
             
@@ -271,6 +315,9 @@ class Engine:
                         self.available_buildings.append(build)
 
     def check_available_upgrades(self):
+        """
+        Check and update the list of available upgrades.
+        """
         for i in range(len(UPGRADES)):
             upgrade = UPGRADES[i]
             build_amount = next(
@@ -307,6 +354,9 @@ class Engine:
             self.available_upgrades.append(TIMELINE_UPGRADE)
     
     def update(self):
+        """
+        Update the game state.
+        """
         # self.timeUnits = 50000**10
         
         self.current_frame: int = (self.current_frame + 1) % self.framerate
@@ -323,9 +373,17 @@ class Engine:
         self.human_skills_buttons: list = []
         
     def exit(self):
+        """
+        Save data and exit the game.
+        """
         self.save_data()
         self.running = False    
     def reset(self, message="The game has been reseted."):
+        """
+        Reset the game state.
+
+        :param str message: The message to display after resetting the game.
+        """
         save_data(self.appdata_path)
         self.bought_buildings = {"short_list": [], "long_list": []}
         self.available_buildings = []
@@ -333,6 +391,9 @@ class Engine:
         self.load_data()
     
     def check_autosave(self):
+        """
+        Check and perform autosave if necessary.
+        """
         self.save_count += 1
         # print(count)
         if self.save_count == self.framerate * 10:
@@ -341,6 +402,9 @@ class Engine:
             self.LOGGER.INFO("Data saved")
 
     def handle_human_skills(self):
+        """
+        Handle the human skills logic.
+        """
         # self.human_skills["intelligence"] = 0
         self.clicker_amount = 1 + (math.log10(1 + 9 * (self.human_skills["strength"] / 100)) * self.tps)
         
@@ -349,6 +413,9 @@ class Engine:
         self.boost_duration = 17.4 * self.human_skills["agility"]
     
     def check_cables(self):
+        """
+        Check the state of the cables and update accordingly.
+        """
         self.blue_cable_count += 1
         self.red_cable_count += 1
         
@@ -391,6 +458,9 @@ class Engine:
             
                 
     def check_era(self):
+        """
+        Check and update the current era based on the timeline.
+        """
         if self.timeline >=   2500:
             self.era = 6
         elif self.timeline >=   1789:
@@ -406,8 +476,10 @@ class Engine:
     
     
     def add_cable_boost(self):
+        """
+        Add the cable boost to the TPS (time units per second).
+        """
         if self.tps_boost_from_cable != 0:
             self.tps *= self.tps_boost_from_cable
         if self.red_cable_tps_reduction != 0:
             self.tps *= (1 - self.red_cable_tps_reduction / 100)
-            

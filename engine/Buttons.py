@@ -8,14 +8,17 @@ class Button:
         Initialize the button.
 
         :param rect: The rectangle specifying the button's position and size.
+        :param tuple[int, int] screen_size: The size of the screen.
         :param background: The button background, either an RGB tuple or a path to an image.
         :param command: The function to execute when the button is clicked.
-        :param border_radius: The border radius for rounded corners (only used for color backgrounds).
-        :param transparent: Whether the button should be transparent.
-        :param image_scale: A scaling factor to resize the background image (default is 1, meaning no scaling).
-        :param image_rotation: The angle in degrees to rotate the image (default is 0, meaning no rotation).
-        :param bump_on_click: Whether the button should visually "bump" when clicked (default is False).
-        :param circle_on_click: Whether a circle should appear at the click position and fade out (default is False).
+        :param int border_radius: The border radius for rounded corners (only used for color backgrounds).
+        :param bool transparent: Whether the button should be transparent.
+        :param float image_scale: A scaling factor to resize the background image (default is 1, meaning no scaling).
+        :param float image_rotation: The angle in degrees to rotate the image (default is 0, meaning no rotation).
+        :param bool bump_on_click: Whether the button should visually "bump" when clicked (default is False).
+        :param bool circle_on_click: Whether a circle should appear at the click position and fade out (default is False).
+        :param identifier: An optional identifier for the button.
+        :param str infos: Additional information to display when hovering over the button.
         """
         self.rect = pg.Rect(rect)
         self.command = command
@@ -84,7 +87,14 @@ class Button:
         self.mask = pg.mask.from_surface(mask_surface)
 
     def render(self, screen, darker=False, w=1, h=1):
-        """Render the button onto the screen."""
+        """
+        Render the button onto the screen.
+
+        :param screen: The screen to render the button on.
+        :param bool darker: Whether to render the button in a darker shade.
+        :param float w: Width scaling factor.
+        :param float h: Height scaling factor.
+        """
         image = self.image
         if darker:
             image.fill((100, 100, 100), special_flags=pg.BLEND_MULT)
@@ -96,7 +106,14 @@ class Button:
 
 
     def render_infos(self, screen, darker=False, w=1, h=1):
-        
+        """
+        Render additional information when hovering over the button.
+
+        :param screen: The screen to render the information on.
+        :param bool darker: Whether to render the information in a darker shade.
+        :param float w: Width scaling factor.
+        :param float h: Height scaling factor.
+        """
         rel_x, rel_y = self.mouse_pos[0] - self.rect.x, self.mouse_pos[1] - self.rect.y
         hovering = 0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height and self.mask.get_at((rel_x, rel_y))
         if hovering:
@@ -117,7 +134,11 @@ class Button:
                 y_offset += text.get_height() + adapt_size_height(5, h)
 
     def get_event(self, event):
-        """Handle events for the button."""
+        """
+        Handle events for the button.
+
+        :param event: The event to handle.
+        """
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
             rel_x, rel_y = event.pos[0] - self.rect.x, event.pos[1] - self.rect.y
             if 0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height:
@@ -140,7 +161,11 @@ class Button:
             self.command()
 
     def update_hover_state(self, mouse_pos):
-        """Update hover state and set the cursor accordingly."""
+        """
+        Update hover state and set the cursor accordingly.
+
+        :param tuple[int, int] mouse_pos: The current mouse position.
+        """
         rel_x, rel_y = mouse_pos[0] - self.rect.x, mouse_pos[1] - self.rect.y
         hovering = 0 <= rel_x < self.rect.width and 0 <= rel_y < self.rect.height and self.mask.get_at((rel_x, rel_y))
 
@@ -160,14 +185,18 @@ class Button:
                 self.hovering = False
 
     def _bump_effect(self):
-        """Create a smooth bump effect by gradually scaling the button."""
+        """
+        Create a smooth bump effect by gradually scaling the button.
+        """
         self.is_bumping = True
         self.bump_scale = 1.0
         self.bump_direction = 1
         pg.time.set_timer(self.bump_event, 10)
 
     def _update_bump(self):
-        """Update the bump effect by scaling the button."""
+        """
+        Update the bump effect by scaling the button.
+        """
         if self.is_bumping:
             self.bump_scale += 0.02 * self.bump_direction
             if self.bump_scale >= 1.1:
@@ -187,12 +216,18 @@ class Button:
             self.image.blit(bumped_image, (-offset_x, -offset_y))
 
     def _circle_effect(self, pos):
-        """Create a circle effect at the click position."""
+        """
+        Create a circle effect at the click position.
+
+        :param tuple[int, int] pos: The position of the click.
+        """
         self.circles.append({'pos': pos, 'alpha': 255, 'radius': 5})
         pg.time.set_timer(self.circle_event, 50)
 
     def _fade_circle(self):
-        """Grow and fade out the circle effect."""
+        """
+        Grow and fade out the circle effect.
+        """
         for circle in self.circles:
             circle['alpha'] -= 25
             circle['radius'] += 5
@@ -203,7 +238,9 @@ class Button:
             pg.time.set_timer(self.circle_event, 50)
 
     def reset_bump(self):
-        """Reset the bump effect back to the original image."""
+        """
+        Reset the bump effect back to the original image.
+        """
         self.image = self.original_image.copy()
         self.is_bumping = False
         pg.time.set_timer(self.bump_event, 0)

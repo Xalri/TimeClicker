@@ -19,9 +19,10 @@ class PaintStrategy:
         """
         Initialize the PaintStrategy object.
 
-        :param engine: The game engine.
-        :param screen: The pygame screen to draw on.
-        :param src_dir: The directory containing the images and fonts.
+        :param Engine engine: The game engine.
+        :param pygame.Surface screen: The pygame screen to draw on.
+        :param str src_dir: The directory containing the images and fonts.
+        :raises AssertionError: If the src_dir does not exist.
         """
         self.engine = engine
         self.screen = screen
@@ -48,8 +49,6 @@ class PaintStrategy:
     def update_elements(self):
         """
         Update the screen elements' size and position according to the window's size.
-        
-        This function should be called every time the window is resized.
         """
         
         width, height = pg.display.get_surface().get_size()
@@ -157,10 +156,10 @@ class PaintStrategy:
     
     
     def has_window_been_resized(self):
-        """Check if the window has been resized since the last frame
-        
-        Returns:
-            bool: If the window size has changed since the last frame.
+        """
+        Check if the window has been resized since the last frame.
+
+        :return bool: If the window size has changed since the last frame.
         """
         return self.width != pg.display.get_surface().get_width()or self.height != pg.display.get_surface().get_height()
     
@@ -394,7 +393,10 @@ class PaintStrategy:
 
 
     def check_mouse_hover(self):
-        pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
+        """
+        Check if the mouse is hovering over any interactive elements.
+        """
+        # pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
         
         mouse_pos = pg.mouse.get_pos()
         if self.building_scroll_area_rect.collidepoint(mouse_pos):
@@ -415,11 +417,17 @@ class PaintStrategy:
 
 
     def display_back_images(self):
+        """
+        Display background images on the screen.
+        """
         self.screen.blit(self.shop_fond_image, (adaptw(1475, self.width), adapth(45, self.height)))
         self.screen.blit(self.upgrade_fond_image, (adaptw(45, self.width), adapth(245, self.height)))
     
         
     def display_buildings(self):
+        """
+        Display the buildings on the screen.
+        """
         match self.engine.era:
             case 1:
                 base = f"{self.src_dir}/img/buildings/base_1.png"
@@ -537,6 +545,9 @@ class PaintStrategy:
             )
 
     def display_upgrades(self):
+        """
+        Display the upgrades on the screen.
+        """
         # LOGGER.DEBUG([b.identifier for b in self.engine.upgrades_buttons])
         y = 210
         x = 127.5
@@ -665,6 +676,9 @@ class PaintStrategy:
 
 
     def display_human_skills(self):
+        """
+        Display the human skills on the screen.
+        """
         strength_offset = (self.engine.human_skills["strength"] / 100) * 527
         pg.draw.rect(self.screen, RED_OCHRE, (adaptw(1285.5, self.width), adapth(734.5-strength_offset, self.height), adaptw(15, self.width), adapth(strength_offset, self.height)), border_radius=60)
         self.screen.blit(
@@ -694,6 +708,9 @@ class PaintStrategy:
             
 
     def display_front_elements(self):
+        """
+        Display the front elements on the screen.
+        """
         self.screen.blit(load_image(f"{self.src_dir}/img/background.png", self.width, self.height), (0, 0))
         self.screen.blit(self.timeline_image, (adaptw(45, self.width), adapth(45, self.height)))
         self.screen.blit(
@@ -765,7 +782,9 @@ class PaintStrategy:
     
         
     def display_info_box(self):
-        """Renders all the info boxes of the buttons in the game"""
+        """
+        Renders all the info boxes of the buttons in the game.
+        """
         for button in self.engine.buildings_buttons:
             button.render_infos(self.screen, w=self.width, h=self.height)
 
@@ -777,12 +796,18 @@ class PaintStrategy:
     
             
     def update_screen(self):
+        """
+        Update the display to reflect the current game state.
+        """
         pg.display.flip()
         
         # self.engine.window.maximize()
         
         
     def init_screen(self):
+        """
+        Initialize the screen elements if not already initialized.
+        """
         if not self.is_init:
             width, height = pg.display.get_surface().get_size()
         
@@ -888,6 +913,9 @@ class PaintStrategy:
             
     
     def display_cables(self):
+        """
+        Display the cable-related elements on the screen.
+        """
         if self.engine.is_blue_cable_cut:
             self.blue_cable_button.render(self.screen)
             
@@ -914,5 +942,4 @@ class PaintStrategy:
             timer_text = time.strftime("%M:%S", time.gmtime(self.engine.blue_cable_x5_timer/self.engine.framerate))
             timer_text_surface = get_clock_font(30, self.height).render(f"{timer_text}", True, CLOCK_GREEN)
             self.screen.blit(timer_text_surface,(adaptw(1328.5, self.width), adapth(132.5, self.height)))
-        
-            
+
