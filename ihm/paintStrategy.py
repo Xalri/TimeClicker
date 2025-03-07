@@ -278,6 +278,7 @@ class PaintStrategy:
         Create and position human skills buttons for each available human skill.
         """
         self.engine.human_skills_buttons.append(
+            Button(
                 rect=(adaptw(1280.5, self.width), adapth(748.5, self.height), adaptw(27.5, self.width), adapth(27.5, self.height)),
                 screen_size=(self.width, self.height),
                 background=RED_OCHRE,
@@ -312,11 +313,14 @@ class PaintStrategy:
 
 
     def handle_event(self):
+        """
+        Handle game events to control the game.
+        """
+        
         keys = pygame.key.get_pressed()
         # print(keys[pg.K_LCTRL] in keys, keys[pg.K_RCTRL] in keys, keys[K_F1] in keys)
         for event in pg.event.get():
             if event.type == pg.QUIT or (keys[pg.K_ESCAPE]):
-                self.engine.exit()
             elif keys[pg.K_F7]:
                 if self.engine.LOGGER.get_level() == 4:
                     self.engine.LOGGER.INFO("Setting log level to WARNING")
@@ -754,12 +758,13 @@ class PaintStrategy:
         if self.engine.is_blue_cable_cut:
             self.blue_cable_button.render(self.screen, w=self.width, h=self.height)
 
-        pg.draw.rect(self.screen, (0, 0, 255), self.building_scroll_area_rect, 2)
+        # pg.draw.rect(self.screen, (0, 0, 255), self.building_scroll_area_rect, 2)
 
         self.clicker_button.render(self.screen, w=self.width, h=self.height)
     
         
     def display_info_box(self):
+        """Renders all the info boxes of the buttons in the game"""
         for button in self.engine.buildings_buttons:
             button.render_infos(self.screen, w=self.width, h=self.height)
 
