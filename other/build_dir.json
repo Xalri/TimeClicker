@@ -11,7 +11,7 @@
   },
   {
    "optionDest": "onefile",
-   "value": true
+   "value": false
   },
   {
    "optionDest": "console",
@@ -27,7 +27,7 @@
   },
   {
    "optionDest": "clean_build",
-   "value": false
+   "value": true
   },
   {
    "optionDest": "strip",
@@ -35,7 +35,7 @@
   },
   {
    "optionDest": "noupx",
-   "value": false
+   "value": true
   },
   {
    "optionDest": "disable_windowed_traceback",
@@ -80,6 +80,10 @@
   {
    "optionDest": "datas",
    "value": "C:/Users/Xalri/Documents/ECOLE/NSI/Binary Clicker/src;src/"
+  },
+  {
+   "optionDest": "hiddenimports",
+   "value": "numpy"
   }
  ],
  "nonPyinstallerOptions": {

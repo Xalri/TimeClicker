@@ -16,6 +16,13 @@ from engine.utils import adapt_size_width as adaptw, adapt_size_height as adapth
 
 class PaintStrategy:
     def __init__(self, engine, screen, src_dir):
+        """
+        Initialize the PaintStrategy object.
+
+        :param engine: The game engine.
+        :param screen: The pygame screen to draw on.
+        :param src_dir: The directory containing the images and fonts.
+        """
         self.engine = engine
         self.screen = screen
         self.src_dir = src_dir
@@ -39,6 +46,12 @@ class PaintStrategy:
         
     
     def update_elements(self):
+        """
+        Update the screen elements' size and position according to the window's size.
+        
+        This function should be called every time the window is resized.
+        """
+        
         width, height = pg.display.get_surface().get_size()
         
         # Screen components
@@ -144,10 +157,19 @@ class PaintStrategy:
     
     
     def has_window_been_resized(self):
+        """Check if the window has been resized since the last frame
+        
+        Returns:
+            bool: If the window size has changed since the last frame.
+        """
         return self.width != pg.display.get_surface().get_width()or self.height != pg.display.get_surface().get_height()
     
     
     def create_buildings_buttons(self):
+        """
+        Create the buttons for the buildings available to buy.
+        """
+
         for i in range(len(self.engine.available_buildings)):
             build = self.engine.available_buildings[i]
 
@@ -195,6 +217,10 @@ class PaintStrategy:
 
 
     def create_upgrades_buttons(self):
+        """
+        Create and position upgrade buttons for each available upgrade.
+        """
+
         y = 180
         x = 82.5
         for i in range(len(self.engine.available_upgrades)):
@@ -248,8 +274,10 @@ class PaintStrategy:
 
 
     def create_human_skills_buttons(self):
+        """
+        Create and position human skills buttons for each available human skill.
+        """
         self.engine.human_skills_buttons.append(
-            Button(
                 rect=(adaptw(1280.5, self.width), adapth(748.5, self.height), adaptw(27.5, self.width), adapth(27.5, self.height)),
                 screen_size=(self.width, self.height),
                 background=RED_OCHRE,

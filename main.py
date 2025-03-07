@@ -1,5 +1,34 @@
 from engine.engine import Engine
 from ihm.paintStrategy import PaintStrategy
+import os
+import sys
+import ctypes
+
+
+
+def get_dependencies_folder():
+    if getattr(sys, 'frozen', False):
+        exe_folder = os.path.dirname(sys.executable)
+    else:
+        exe_folder = os.path.dirname(os.path.realpath(__file__))
+
+    appdata_folder = os.path.join(os.getenv('LOCALAPPDATA'), 'MyApp', 'dependencies')
+    
+    if os.path.exists(appdata_folder):
+        print(f"Found dependencies in AppData at: {appdata_folder}")
+        return appdata_folder
+    else:
+        print("Dependencies not found in AppData.")
+        return None
+
+def load_dependency(dependency_folder):
+    dependency_file = os.path.join(dependency_folder, 'your_dependency.dll')
+    
+    if os.path.exists(dependency_file):
+        print(f"Found dependency: {dependency_file}")
+        ctypes.CDLL(dependency_file)
+    else:
+        print(f"Dependency not found: {dependency_file}")
 
 
 
@@ -61,4 +90,12 @@ def main():
 
 
 if __name__ == "__main__":
+    
+    dependencies_folder = get_dependencies_folder()
+
+    if dependencies_folder:
+        print("Loading dependencies...")
+        load_dependency(dependencies_folder)
+
+    
     main()
