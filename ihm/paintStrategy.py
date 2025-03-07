@@ -321,6 +321,7 @@ class PaintStrategy:
         # print(keys[pg.K_LCTRL] in keys, keys[pg.K_RCTRL] in keys, keys[K_F1] in keys)
         for event in pg.event.get():
             if event.type == pg.QUIT or (keys[pg.K_ESCAPE]):
+                self.engine.exit()
             elif keys[pg.K_F7]:
                 if self.engine.LOGGER.get_level() == 4:
                     self.engine.LOGGER.INFO("Setting log level to WARNING")
