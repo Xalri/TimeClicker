@@ -1,9 +1,9 @@
-An error occurred: 'Engine' object has no attribute 'prestige_boost'
+An error occurred: 'Engine' object has no attribute 'buildings_buttons'
 Traceback (most recent call last):
-  File "c:\Users\samyt\Documents\TimeClicker\main.py", line 72, in main
-    paintstrategy.create_buildings_buttons()
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "c:\Users\samyt\Documents\TimeClicker\ihm\paintStrategy.py", line 196, in create_buildings_buttons
-    infos = f"The building '{build_name}' has {build_amount} instances,\nproducing {format_timeUnits(build_tps * build_amount * build_augment * self.engine.prestige_boost)} time units per second,\nwith a boost multiplier of {build_augment}x from upgrade and \n+{self.engine.prestige}% from prestige.\nEach building is producing {format_timeUnits(build_tps * build_augment*self.engine.prestige_boost)} time units per second."
-                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'Engine' object has no attribute 'prestige_boost'. Did you mean: 'prestige_reset'?
+  File "c:\Users\samyt\Documents\TimeClicker\main.py", line 53, in main
+    engine.update()
+    ~~~~~~~~~~~~~^^
+  File "c:\Users\samyt\Documents\TimeClicker\engine\engine.py", line 411, in update
+    self.buildings_buttons.clear()
+    ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Engine' object has no attribute 'buildings_buttons'

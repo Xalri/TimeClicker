@@ -39,14 +39,14 @@ def main():
         engine = Engine()
         paintstrategy = PaintStrategy(engine, engine.screen, engine.src_dir)
 
-        print("INFO", "Engine created")
+        engine.LOGGER.INFO("Engine created")
         engine.load_data()
-        print("INFO", "Data loaded")
+        engine.LOGGER.INFO("Data loaded")
         engine.give_timeUnits_from_afk()
-        print("INFO", "Time units given from afk")
+        engine.LOGGER.INFO("Time units given from afk")
 
         while engine.running:
-            print("INFO", "Game loop started")
+            engine.LOGGER.INFO("Game loop started")
             engine.clock.tick_busy_loop(engine.framerate)
             
             engine.LOGGER.INFO("Updating game state")
@@ -66,8 +66,8 @@ def main():
             
             paintstrategy.init_screen()
 
-            engine.check_available_buildings()
-            engine.check_available_upgrades()
+            # engine.check_available_buildings()
+            # engine.check_available_upgrades()
 
             paintstrategy.create_buildings_buttons()
             paintstrategy.create_upgrades_buttons()

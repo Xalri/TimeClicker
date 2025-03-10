@@ -69,7 +69,7 @@ class Engine:
         ctypes.windll.user32.GetMonitorInfoW(monitor_info, ctypes.byref(monitor_rect))
         os.environ["SDL_VIDEO_WINDOW_POS"] = f"{500},{300}"
 
-        self.screen = pg.display.set_mode((1024, 576), pg.RESIZABLE)
+        self.screen = pg.display.set_mode((1024, 576), pygame.RESIZABLE | pygame.DOUBLEBUF)
         icon = pg.image.load(os.path.join(self.src_dir, "icon.png"))
         pg.display.set_icon(icon)
         self.window = Window.from_display_module()
@@ -411,7 +411,9 @@ class Engine:
         self.upgrades_buttons: list = []
         self.human_skills_buttons: list = []
         
-        # self.timeline = 2500
+        # Perform other necessary updates
+        self.check_available_buildings()
+        self.check_available_upgrades()
         
     def exit(self):
         """

@@ -976,14 +976,14 @@ class PaintStrategy:
         
         current_time = time.time()*5
         bar_widths = [
-            (current_time*3 % 7.5) * 10,  # Example dynamic width for bar 1
-            (current_time*4 % 7.5) * 10,  # Example dynamic width for bar 2
-            (current_time*2 % 7.5) * 10,  # Example dynamic width for bar 3
-            (current_time % 7.5) * 10   # Example dynamic width for bar 4
+            (math.sin(current_time * 0.3) + 1) * 37.5,  # Example dynamic width for bar 1
+            (math.sin(current_time * 0.4) + 1) * 37.5,  # Example dynamic width for bar 2
+            (math.sin(current_time * 0.2) + 1) * 37.5,  # Example dynamic width for bar 3
+            (math.sin(current_time) + 1) * 37.5         # Example dynamic width for bar 4
         ]
         for i in range(4):
             bar_y = bar_y_start + i * (bar_height + bar_spacing)
-            bar_width = bar_widths[i]
+            bar_width = adaptw(bar_widths[i], self.width)
             bar_color = YELLOW_GREEN
 
             pg.draw.rect(self.screen, bar_color, (bar_x, bar_y, bar_width, bar_height), border_radius=40)
@@ -997,14 +997,14 @@ class PaintStrategy:
         
         current_time = time.time()*5
         bar_widths = [
-            (current_time*4.5 % 7.5) * 10,
-            (current_time*1.7 % 7.5) * 10,
-            (current_time*0.7 % 7.5) * 10,
-            (current_time*3.5 % 7.5) * 10
+            (math.sin(current_time * 0.45) + 1) * 37.5,
+            (math.sin(current_time * 0.17) + 1) * 37.5,
+            (math.sin(current_time * 0.7) + 1) * 37.5,
+            (math.sin(current_time * 0.35) + 1) * 37.5
         ]
         for i in range(4):
             bar_y = bar_y_start + i * (bar_height + bar_spacing)
-            bar_width = bar_widths[i]
+            bar_width = adaptw(bar_widths[i], self.width)
             bar_color = LIGHT_CYAN
 
             pg.draw.rect(self.screen, bar_color, (bar_x, bar_y, bar_width, bar_height), border_radius=40)
@@ -1018,29 +1018,29 @@ class PaintStrategy:
         
         current_time = time.time()*5
         bar_heights = [
-            (current_time*1.9 % 7.5) * 10,
-            (current_time*2.4 % 7.5) * 10,
-            (current_time*3.7 % 7.5) * 10,
-            (current_time*2.15 % 7.5) * 10
+            (math.sin(current_time * 0.19) + 1) * 37.5,
+            (math.sin(current_time * 0.24) + 1) * 37.5,
+            (math.sin(current_time * 0.7) + 1) * 37.5,
+            (math.sin(current_time * 0.215) + 1) * 37.5
         ]
         for i in range(4):
             bar_x = bar_x_start + i * (bar_width + bar_spacing)
-            bar_height = -bar_heights[i]
+            bar_height = -adapth(bar_heights[i], self.height)
             bar_color = RED_OCHRE
 
             pg.draw.rect(self.screen, bar_color, (bar_x, bar_y, bar_width, bar_height), border_radius=40)
             
             
             
-        point_radius = 10
-        point_spacing = 30
+        point_radius = adaptw(10, self.width)
+        point_spacing = adaptw(30, self.width)
         point_y = adapth(185, self.height)
         point_x_start = adaptw(442.5, self.width)
 
         blink_alpha_values = [
-            130,
-            500,
-            350
+            3,
+            7,
+            2
         ]
 
         for i in range(3):
@@ -1059,9 +1059,9 @@ class PaintStrategy:
         point_x_start = adaptw(1040, self.width)
 
         blink_alpha_values = [
-            240,
-            420,
-            160
+            2.4,
+            4.2,
+            1.6
         ]
 
         for i in range(3):

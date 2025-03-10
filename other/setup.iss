@@ -10,6 +10,7 @@ Compression=lzma
 SolidCompression=yes
 LicenseFile=C:\Users\samyt\Documents\TimeClicker\LICENCE.md
 PrivilegesRequired=lowest
+AllowNoIcons=yes
 
 [Files]
 ; Copy all necessary files to AppData\TimeClicker
@@ -23,29 +24,9 @@ Name: "{userdesktop}\Time Clicker"; Filename: "{app}\Time Clicker.exe"
 
 [Run]
 ; Optionally run the executable after installation is complete
-Filename: "{app}\Time Clicker.exe"; Description: "Launch Time Clicker"; Flags: nowait postinstall skipifsilent; Check: ShouldRunOnClose
+Filename: "{app}\Time Clicker.exe"; Flags: nowait postinstall skipifsilent; Description: "Launch Time Clicker";
 
 [Code]
-var
-  RunOnCloseCheckbox: TNewCheckBox;
-
-procedure InitializeWizard;
-var
-  Page: TInputOptionWizardPage;
-begin
-  // Create a new page for the checkbox
-  Page := CreateInputOptionPage(wpFinished, 'Run Time Clicker', 'Run Time Clicker after setup completes', '', True, False);
-  RunOnCloseCheckbox := TNewCheckBox.Create(Page);
-  RunOnCloseCheckbox.Parent := Page.Surface;
-  RunOnCloseCheckbox.Caption := 'Run Time Clicker on close';
-  Page.Add(RunOnCloseCheckbox.Caption);
-end;
-
-function ShouldRunOnClose: Boolean;
-begin
-  Result := Assigned(RunOnCloseCheckbox) and RunOnCloseCheckbox.Checked;
-end;
-
 procedure DeleteFilesExceptData(Dir: string);
 var
   FindRec: TFindRec;
