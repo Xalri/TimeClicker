@@ -81,6 +81,7 @@ class Engine:
     
         self.current_frame = 0
         self.framerate = FRAMERATE
+        self.reset_scroll = False
 
         self.timeUnits = 0
         self.tps = 0
@@ -90,6 +91,7 @@ class Engine:
         self.max_timeUnits = 0
         self.bought_upgrades = {"short_list": [], "long_list": []}
         self.human_skills = {"strength":100, "agility": 0, "intelligence": 0}
+        self.prestige = 0
         self.last_saved_time = None
         
         self.era = 1
@@ -139,7 +141,8 @@ class Engine:
         """
         if building_name == "Time Machine":
             if can_buy_buildings(self.bought_buildings, building_name, 1, self.timeUnits):
-                self.reset("Congratulations! You have finished the game!\n Time Units earned: " + str(format_timeUnits(self.timeUnits)) + "\n THE GAME WILL NOW RESET...")
+                pass
+                # self.reset("Congratulations! You have finished the game!\n Time Units earned: " + str(format_timeUnits(self.timeUnits)) + "\n THE GAME WILL NOW RESET...")
                 
 
         self.bought_buildings, self.timeUnits = buy_buildings(self.bought_buildings, building_name, 1, self.timeUnits, self.price_reduction)     
@@ -210,7 +213,12 @@ class Engine:
         self.red_cable_timer = randint(3, 15)
         self.is_red_cable_cut = False
         self.red_cable_tps_reduction = 0
-            
+    def buy_reset_wrapper(self, amount):
+        """
+        Wrapper function to handle the rsset click event.
+        """
+        self.prestige_reset(amount)
+        self.LOGGER.WARNING("Prestige reset " + str(amount))
     
     
     def load_data(self):
@@ -227,9 +235,27 @@ class Engine:
             self.bought_upgrades,
             self.human_skills,
             self.last_saved_time,
+            self.prestige,
         ) = get_data(self.appdata_path)
         
+        self.LOGGER.INFO(
+            f"Loaded data:\n"
+            f"  timeUnits={self.timeUnits},\n"
+            f"  tps={self.tps},\n"
+            f"  timeline={self.timeline},\n"
+            f"  clicker_amount={self.clicker_amount},\n"
+            f"  bought_buildings={self.bought_buildings},\n"
+            f"  max_timeUnits={self.max_timeUnits},\n"
+            f"  bought_upgrades={self.bought_upgrades},\n"
+            f"  human_skills={self.human_skills},\n"
+            f"  last_saved_time={self.last_saved_time},\n"
+            f"  prestige={self.prestige}"
+        )
+        
         self.max_timeUnits = int(float(self.max_timeUnits))
+        self.prestige_boost = 1 + int(self.prestige) / 100
+        self.era_boost = 1 + (self.era - 1) * 0.25
+        
     def save_data(self):
         """
         Save game data to the storage.
@@ -243,7 +269,8 @@ class Engine:
             self.bought_buildings,
             self.max_timeUnits,
             self.bought_upgrades,
-            self.human_skills
+            self.human_skills,
+            self.prestige
         )
         
     def give_timeUnits_from_afk(self):
@@ -257,6 +284,17 @@ class Engine:
                 f"Elapsed time: {round(elapsed_time)} seconds, added {self.tps * (elapsed_time )} timeUnits, tps: {self.tps}"
             )
         
+    def prestige_reset(self, amount):
+        """
+        Reset the game state and give a bonus based on the amount of time units spent.
+
+        :param int amount: The amount of time units spent.
+        """
+        current_prestige = self.prestige
+        self.reset_scroll = True
+        self.reset("The game has been reseted.")
+        self.prestige = int(current_prestige) + int(amount)
+    
         
     def check_available_buildings(self):
         """
@@ -350,7 +388,7 @@ class Engine:
                         if not upgrade in self.available_upgrades:
                             self.available_upgrades.append(upgrade)
                             
-        if next((u for u in self.available_upgrades if u["name"] == UPGRADES[0]["name"]), None) is not None and next((u for u in self.available_upgrades if u["name"] == UPGRADES[1]["name"]), None) is not None:
+        if next((u for u in self.available_upgrades if u["name"] == UPGRADES[0]["name"]), None) is not None and next((u for u in self.available_upgrades if u["name"] == UPGRADES[1]["name"]), None) is not None and (self.timeline < 2500 or "Spaceship" in self.bought_buildings["short_list"]):
             self.available_upgrades.append(TIMELINE_UPGRADE)
     
     def update(self):
@@ -358,6 +396,7 @@ class Engine:
         Update the game state.
         """
         # self.timeUnits = 50000**10
+        # self.clicker_amount = 50000**10
         
         self.current_frame: int = (self.current_frame + 1) % self.framerate
         
@@ -371,6 +410,8 @@ class Engine:
         self.buildings_buttons: list = []
         self.upgrades_buttons: list = []
         self.human_skills_buttons: list = []
+        
+        # self.timeline = 2500
         
     def exit(self):
         """
@@ -416,46 +457,49 @@ class Engine:
         """
         Check the state of the cables and update accordingly.
         """
-        self.blue_cable_count += 1
-        self.red_cable_count += 1
-        
-        
-        
-        if self.is_red_cable_cut:
-            self.red_cable_count = 0
-            if self.red_cable_tps_reduction < 100:
-                self.red_cable_tps_reduction += 0.1
-                self.red_cable_tps_reduction = round(self.red_cable_tps_reduction, 1)
-        if self.is_blue_cable_cut:
-            self.blue_cable_count = 0
-            
-        
-        if self.red_cable_count == self.framerate * 60 * self.red_cable_timer:
-        # if self.red_cable_count == self.framerate * 3:
-            self.is_red_cable_cut = True
-            
-            self.red_cable_count = 0
+        try:
+            self.blue_cable_count += 1
+            self.red_cable_count += 1
             
             
-        
-        if self.blue_cable_count == self.framerate * 60 * self.blue_cable_timer:
-        # if self.blue_cable_count == self.framerate * 3:
-            self.is_blue_cable_cut = True
             
-            self.blue_cable_count = 0
+            if self.is_red_cable_cut:
+                self.red_cable_count = 0
+                if self.red_cable_tps_reduction < 100:
+                    self.red_cable_tps_reduction += 0.1
+                    self.red_cable_tps_reduction = round(self.red_cable_tps_reduction, 1)
+            if self.is_blue_cable_cut:
+                self.blue_cable_count = 0
+                
             
-        if self.blue_cable_x2_timer != 0:
-            self.blue_cable_x2_timer -= 1
+            if self.red_cable_count == self.framerate * 60 * self.red_cable_timer:
+            # if self.red_cable_count == self.framerate * 3:
+                self.is_red_cable_cut = True
+                
+                self.red_cable_count = 0
+                
+                
             
-            if self.blue_cable_x2_timer == 0:
-                self.tps_boost_from_cable -= 2
+            if self.blue_cable_count == self.framerate * 60 * self.blue_cable_timer:
+            # if self.blue_cable_count == self.framerate * 3:
+                self.is_blue_cable_cut = True
+                
+                self.blue_cable_count = 0
+                
+            if self.blue_cable_x2_timer != 0:
+                self.blue_cable_x2_timer -= 1
+                
+                if self.blue_cable_x2_timer == 0:
+                    self.tps_boost_from_cable -= 2
+                
+            if self.blue_cable_x5_timer != 0:
+                self.blue_cable_x5_timer -= 1
+                
+                if self.blue_cable_x5_timer == 0:
+                    self.tps_boost_from_cable -= 5
             
-        if self.blue_cable_x5_timer != 0:
-            self.blue_cable_x5_timer -= 1
-            
-            if self.blue_cable_x5_timer == 0:
-                self.tps_boost_from_cable -= 5
-            
+        except Exception as e:
+            print(f"Error after the last log: {e}")
                 
     def check_era(self):
         """
@@ -475,11 +519,13 @@ class Engine:
             self.era = 1
     
     
-    def add_cable_boost(self):
-        """
-        Add the cable boost to the TPS (time units per second).
-        """
+    def add_tps_boost(self):
         if self.tps_boost_from_cable != 0:
             self.tps *= self.tps_boost_from_cable
         if self.red_cable_tps_reduction != 0:
             self.tps *= (1 - self.red_cable_tps_reduction / 100)
+        self.prestige_boost = 1 + int(self.prestige) / 100
+        self.tps *= self.prestige_boost
+        self.era_boost = 1 + (self.era - 1) * 0.25
+        self.tps *= self.era_boost
+

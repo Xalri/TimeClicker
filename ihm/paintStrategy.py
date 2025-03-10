@@ -4,6 +4,7 @@ import os
 from re import S
 import time
 from turtle import width
+import math
 
 from engine.Buttons import Button
 from config import *
@@ -52,6 +53,10 @@ class PaintStrategy:
         """
         
         width, height = pg.display.get_surface().get_size()
+        
+        if self.engine.reset_scroll:
+            self.scroll_value = 0
+            self.engine.reset_scroll = False
         
         # Screen components
         self.timeUnits_text: pg.Surface = get_number_font(65, height).render(f"{format_timeUnits(self.engine.timeUnits, 0)}", True, RED_OCHRE)
@@ -192,7 +197,7 @@ class PaintStrategy:
             )
             self.engine.tps += build_tps * build_amount * build_augment
 
-            infos = f"The building '{build_name}' has {build_amount} instances,\nproducing {format_timeUnits(build_tps * build_amount * build_augment)} time units per second,\nwith a boost multiplier of {build_augment}x.\nEach building is producing {format_timeUnits(build_tps * build_augment)} time units per second."
+            infos = f"The building '{build_name}' has {build_amount} instances,\nproducing {format_timeUnits(build_tps * build_amount * build_augment * self.engine.prestige_boost)} time units per second,\nwith a boost multiplier of: \n- {build_augment}x from upgrade \n- {self.engine.era_boost}x from era \n- +{self.engine.prestige}% from prestige.\nEach building is producing {format_timeUnits(build_tps * build_augment*self.engine.prestige_boost)} time units per second."
 
             self.engine.buildings_buttons.append(
                 Button(
@@ -246,8 +251,12 @@ class PaintStrategy:
                 cost = upgrade["cost"](self.engine.timeline)
                 if self.engine.era == 1:
                     cost = TIMELINE_UPGRADE_PRICE
-                infos = f"The special upgrade '{upgrade_name}' costs {format_timeUnits(cost)} time units. \nIt adds 1 to the timeline."
-                cmd = lambda: self.engine.buy_timeline_wrapper()
+                if self.engine.timeline >= 2500:
+                    cmd = lambda: self.engine.buy_reset_wrapper(next((b["amount"] for b in self.engine.bought_buildings["long_list"] if b["name"].lower() == "Time Machine".lower()), 0))
+                    infos = f"The upgrade 'Timeline' will prestige your game. \nYour time units, buildings, upgrades, timeline and human skills will be reset. \nYou will gain prestige based on the amount of  Time Machines you have. \n1 prestige = 1% production boost."
+                else:
+                    cmd = lambda: self.engine.buy_timeline_wrapper()
+                    infos = f"The special upgrade '{upgrade_name}' costs {format_timeUnits(cost)} time units. \nIt adds 1 to the timeline."
 
             if (i - 4) % 4 == 0:
                 x = 82.5
@@ -396,7 +405,7 @@ class PaintStrategy:
         """
         Check if the mouse is hovering over any interactive elements.
         """
-        # pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
+        pg.mouse.set_cursor(pg.SYSTEM_CURSOR_ARROW)
         
         mouse_pos = pg.mouse.get_pos()
         if self.building_scroll_area_rect.collidepoint(mouse_pos):
@@ -564,8 +573,14 @@ class PaintStrategy:
                 
                 cost = TIMELINE_UPGRADE["cost"](self.engine.timeline)
                 
+                
+                if self.engine.timeline >= 2500 and next((b["amount"] for b in self.engine.bought_buildings["long_list"] if b["name"] == "Time Machine"), 0) > 0:
+                    is_prestige_button = True
+                else:
+                    is_prestige_button = False
+                
                 upgrade_image = load_image(f"{self.src_dir}/img/upgrades/time.png", self.width, self.height, scale=0.9)
-                if self.engine.era == 1:
+                if self.engine.era == 1 or is_prestige_button:
                     cost = TIMELINE_UPGRADE_PRICE
                     upgrade_image = load_image(f"{self.src_dir}/img/upgrades/timeline_unlock_image.png", self.width, self.height)
                 upgrade_rect = upgrade_image.get_rect(center=(adaptw(x, self.width), adapth(y, self.height)))
@@ -575,18 +590,21 @@ class PaintStrategy:
                 
                 
                 
+                
+                
                 if can_buy_timeline(self.engine.timeline, self.engine.timeUnits, self.engine.era):
                 
                     self.screen.blit(upgrade_image, upgrade_rect.topleft)
 
                     self.screen.blit(level_image, level_rect.topleft)
                     
-                    self.screen.blit(
-                        get_text_font(17.5, self.height).render(f"{format_timeUnits(round(cost))}", True, WHITE),
-                        get_text_font(17.5, self.height)
-                        .render(f"{format_timeUnits(round(cost))}", True, GREY)
-                        .get_rect(center=(adaptw(x, self.width),adapth(y + 32.5, self.height),)),
-                    )
+                    if not is_prestige_button:
+                        self.screen.blit(
+                            get_text_font(17.5, self.height).render(f"{format_timeUnits(round(cost))}", True, WHITE),
+                            get_text_font(17.5, self.height)
+                            .render(f"{format_timeUnits(round(cost))}", True, GREY)
+                            .get_rect(center=(adaptw(x, self.width),adapth(y + 32.5, self.height),)),
+                        )
 
                     upgrade_button.render(self.screen, w=self.width, h=self.height)
                 else:
@@ -769,9 +787,12 @@ class PaintStrategy:
         
         
         
-        self.screen.blit(self.era_text, self.era_text.get_rect(center=(adaptw(900, self.width), adapth(935, self.height))))
+        self.screen.blit(self.era_text, self.era_text.get_rect(center=(adaptw(287.5, self.width), adapth(25, self.height))))
         
-        
+        self.screen.blit(
+            get_number_font(40, self.height).render(f"{self.engine.prestige}", True, RED_OCHRE),
+            get_number_font(40, self.height).render(f"{self.engine.prestige}", True, RED_OCHRE).get_rect(center=(adaptw(905, self.width), adapth(935, self.height))),
+        )
         
         if self.engine.is_blue_cable_cut:
             self.blue_cable_button.render(self.screen, w=self.width, h=self.height)
@@ -780,6 +801,8 @@ class PaintStrategy:
 
         self.clicker_button.render(self.screen, w=self.width, h=self.height)
     
+    
+
         
     def display_info_box(self):
         """
@@ -943,3 +966,111 @@ class PaintStrategy:
             timer_text_surface = get_clock_font(30, self.height).render(f"{timer_text}", True, CLOCK_GREEN)
             self.screen.blit(timer_text_surface,(adaptw(1328.5, self.width), adapth(132.5, self.height)))
 
+
+    def display_tunings(self):
+    
+        bar_height = adapth(8, self.height)
+        bar_spacing = adaptw(2.5, self.width)
+        bar_x = adaptw(70, self.width)
+        bar_y_start = adapth(70, self.height)
+        
+        current_time = time.time()*5
+        bar_widths = [
+            (current_time*3 % 7.5) * 10,  # Example dynamic width for bar 1
+            (current_time*4 % 7.5) * 10,  # Example dynamic width for bar 2
+            (current_time*2 % 7.5) * 10,  # Example dynamic width for bar 3
+            (current_time % 7.5) * 10   # Example dynamic width for bar 4
+        ]
+        for i in range(4):
+            bar_y = bar_y_start + i * (bar_height + bar_spacing)
+            bar_width = bar_widths[i]
+            bar_color = YELLOW_GREEN
+
+            pg.draw.rect(self.screen, bar_color, (bar_x, bar_y, bar_width, bar_height), border_radius=40)
+            
+            
+            
+            
+            
+        bar_x = adaptw(632.5, self.width)
+        bar_y_start = adapth(75, self.height)
+        
+        current_time = time.time()*5
+        bar_widths = [
+            (current_time*4.5 % 7.5) * 10,
+            (current_time*1.7 % 7.5) * 10,
+            (current_time*0.7 % 7.5) * 10,
+            (current_time*3.5 % 7.5) * 10
+        ]
+        for i in range(4):
+            bar_y = bar_y_start + i * (bar_height + bar_spacing)
+            bar_width = bar_widths[i]
+            bar_color = LIGHT_CYAN
+
+            pg.draw.rect(self.screen, bar_color, (bar_x, bar_y, bar_width, bar_height), border_radius=40)
+            
+            
+            
+        bar_spacing = adaptw(5, self.width)
+        bar_width = adapth(12.5, self.height)
+        bar_y = adapth(800, self.height)
+        bar_x_start = adaptw(705, self.width)
+        
+        current_time = time.time()*5
+        bar_heights = [
+            (current_time*1.9 % 7.5) * 10,
+            (current_time*2.4 % 7.5) * 10,
+            (current_time*3.7 % 7.5) * 10,
+            (current_time*2.15 % 7.5) * 10
+        ]
+        for i in range(4):
+            bar_x = bar_x_start + i * (bar_width + bar_spacing)
+            bar_height = -bar_heights[i]
+            bar_color = RED_OCHRE
+
+            pg.draw.rect(self.screen, bar_color, (bar_x, bar_y, bar_width, bar_height), border_radius=40)
+            
+            
+            
+        point_radius = 10
+        point_spacing = 30
+        point_y = adapth(185, self.height)
+        point_x_start = adaptw(442.5, self.width)
+
+        blink_alpha_values = [
+            130,
+            500,
+            350
+        ]
+
+        for i in range(3):
+            blink_alpha_value = blink_alpha_values[i]
+            blink_alpha = int((pg.time.get_ticks() % blink_alpha_value) / blink_alpha_value * 255)
+            
+            point_x = point_x_start + i * point_spacing
+            point_surface = pg.Surface((point_radius * 2, point_radius * 2), pg.SRCALPHA)
+            pg.draw.circle(point_surface, YELLOW_GREEN + (blink_alpha,), (point_radius, point_radius), point_radius)
+            self.screen.blit(point_surface, (point_x - point_radius, point_y - point_radius))
+            
+            
+            
+            
+        point_y = adapth(790, self.height)
+        point_x_start = adaptw(1040, self.width)
+
+        blink_alpha_values = [
+            240,
+            420,
+            160
+        ]
+
+        for i in range(3):
+            blink_alpha_value = blink_alpha_values[i]
+            blink_alpha = int((pg.time.get_ticks() % blink_alpha_value) / blink_alpha_value * 255)
+            
+            point_x = point_x_start + i * point_spacing
+            point_surface = pg.Surface((point_radius * 2, point_radius * 2), pg.SRCALPHA)
+            pg.draw.circle(point_surface, RED_OCHRE + (blink_alpha,), (point_radius, point_radius), point_radius)
+            self.screen.blit(point_surface, (point_x - point_radius, point_y - point_radius))
+            
+            

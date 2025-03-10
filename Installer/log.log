@@ -1,0 +1,678 @@
+﻿2025-03-10 17:31:57.801   Log opened. (Time zone: UTC+01:00)
+2025-03-10 17:31:57.801   Setup version: Inno Setup version 6.4.1
+2025-03-10 17:31:57.801   Original Setup EXE: C:\Users\samyt\Documents\TimeClicker\Installer\TimeClickerInstaller.exe
+2025-03-10 17:31:57.801   Setup command line: /SL5="$F0A52,32338304,844800,C:\Users\samyt\Documents\TimeClicker\Installer\TimeClickerInstaller.exe" /SPAWNWND=$150A5A /NOTIFYWND=$100BFA /LOG=C:\Users\samyt\Documents\TimeClicker\Installer\log.log
+2025-03-10 17:31:57.801   Compatibility mode: Yes (DetectorsAppHealth Installer)
+2025-03-10 17:31:57.801   Windows version: 10.0.26100
+2025-03-10 17:31:57.801   Windows architecture: x64 (64-bit)
+2025-03-10 17:31:57.801   Machine types supported by system: x86 x64
+2025-03-10 17:31:57.801   User privileges: Administrative
+2025-03-10 17:31:57.802   Administrative install mode: Yes
+2025-03-10 17:31:57.802   Install mode root key: HKEY_LOCAL_MACHINE
+2025-03-10 17:31:57.802   64-bit install mode: No
+2025-03-10 17:31:57.803   Created protected temporary directory: C:\Users\samyt\AppData\Local\Temp\is-31AQG.tmp
+2025-03-10 17:32:02.515   Found 19 files to register with RestartManager.
+2025-03-10 17:32:02.515   Calling RestartManager's RmGetList.
+2025-03-10 17:32:02.961   RmGetList finished successfully.
+2025-03-10 17:32:02.961   RestartManager found no applications using one of our files.
+2025-03-10 17:32:02.988   Starting the installation process.
+2025-03-10 17:32:03.000   Directory for uninstall files: C:\Users\samyt\AppData\Roaming\TimeClicker
+2025-03-10 17:32:03.009   Will append to existing uninstall log: C:\Users\samyt\AppData\Roaming\TimeClicker\unins000.dat
+2025-03-10 17:32:03.014   -- File entry --
+2025-03-10 17:32:03.014   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\unins000.exe
+2025-03-10 17:32:03.016   Time stamp of our file: 2025-03-10 17:31:57.589
+2025-03-10 17:32:03.017   Dest file exists.
+2025-03-10 17:32:03.017   Time stamp of existing file: 2025-03-10 17:29:05.316
+2025-03-10 17:32:03.017   Version of our file: 51.1052.0.0
+2025-03-10 17:32:03.089   Version of existing file: 51.1052.0.0
+2025-03-10 17:32:03.089   Installing the file.
+2025-03-10 17:32:03.099   Leaving temporary file in place for now.
+2025-03-10 17:32:03.101   -- File entry --
+2025-03-10 17:32:03.102   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\buildings.py
+2025-03-10 17:32:03.102   Time stamp of our file: 2025-02-28 17:49:36.000
+2025-03-10 17:32:03.102   Dest file exists.
+2025-03-10 17:32:03.102   Time stamp of existing file: 2025-02-28 17:49:36.000
+2025-03-10 17:32:03.102   Version of our file: (none)
+2025-03-10 17:32:03.103   Version of existing file: (none)
+2025-03-10 17:32:03.103   Installing the file.
+2025-03-10 17:32:03.104   Successfully installed the file.
+2025-03-10 17:32:03.105   -- File entry --
+2025-03-10 17:32:03.106   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\Buttons.py
+2025-03-10 17:32:03.106   Time stamp of our file: 2025-03-08 13:48:18.000
+2025-03-10 17:32:03.106   Dest file exists.
+2025-03-10 17:32:03.106   Time stamp of existing file: 2025-03-08 13:48:18.000
+2025-03-10 17:32:03.106   Version of our file: (none)
+2025-03-10 17:32:03.115   Version of existing file: (none)
+2025-03-10 17:32:03.115   Installing the file.
+2025-03-10 17:32:03.117   Successfully installed the file.
+2025-03-10 17:32:03.117   -- File entry --
+2025-03-10 17:32:03.118   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\data.py
+2025-03-10 17:32:03.118   Time stamp of our file: 2025-03-10 13:39:24.000
+2025-03-10 17:32:03.118   Dest file exists.
+2025-03-10 17:32:03.118   Time stamp of existing file: 2025-03-10 13:39:24.000
+2025-03-10 17:32:03.118   Version of our file: (none)
+2025-03-10 17:32:03.119   Version of existing file: (none)
+2025-03-10 17:32:03.119   Installing the file.
+2025-03-10 17:32:03.120   Successfully installed the file.
+2025-03-10 17:32:03.122   -- File entry --
+2025-03-10 17:32:03.123   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\freetype.dll
+2025-03-10 17:32:03.123   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.123   Dest file exists.
+2025-03-10 17:32:03.123   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.123   Version of our file: 2.11.1.0
+2025-03-10 17:32:03.124   Version of existing file: 2.11.1.0
+2025-03-10 17:32:03.124   Same version. Skipping.
+2025-03-10 17:32:03.125   -- File entry --
+2025-03-10 17:32:03.127   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\libcrypto-3.dll
+2025-03-10 17:32:03.127   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.127   Dest file exists.
+2025-03-10 17:32:03.127   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.127   Version of our file: 3.0.15.0
+2025-03-10 17:32:03.129   Version of existing file: 3.0.15.0
+2025-03-10 17:32:03.129   Same version. Skipping.
+2025-03-10 17:32:03.129   -- File entry --
+2025-03-10 17:32:03.129   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\libffi-8.dll
+2025-03-10 17:32:03.131   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.131   Dest file exists.
+2025-03-10 17:32:03.131   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.131   Version of our file: (none)
+2025-03-10 17:32:03.131   Version of existing file: (none)
+2025-03-10 17:32:03.131   Installing the file.
+2025-03-10 17:32:03.228   Successfully installed the file.
+2025-03-10 17:32:03.229   -- File entry --
+2025-03-10 17:32:03.230   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\libpng16-16.dll
+2025-03-10 17:32:03.230   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.230   Dest file exists.
+2025-03-10 17:32:03.231   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.231   Version of our file: (none)
+2025-03-10 17:32:03.231   Version of existing file: (none)
+2025-03-10 17:32:03.231   Installing the file.
+2025-03-10 17:32:03.239   Successfully installed the file.
+2025-03-10 17:32:03.239   -- File entry --
+2025-03-10 17:32:03.241   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\libssl-3.dll
+2025-03-10 17:32:03.242   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.242   Dest file exists.
+2025-03-10 17:32:03.242   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.242   Version of our file: 3.0.15.0
+2025-03-10 17:32:03.242   Version of existing file: 3.0.15.0
+2025-03-10 17:32:03.242   Same version. Skipping.
+2025-03-10 17:32:03.244   -- File entry --
+2025-03-10 17:32:03.245   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\Logger.py
+2025-03-10 17:32:03.245   Time stamp of our file: 2025-03-08 16:20:26.000
+2025-03-10 17:32:03.245   Dest file exists.
+2025-03-10 17:32:03.245   Time stamp of existing file: 2025-03-08 16:20:26.000
+2025-03-10 17:32:03.245   Version of our file: (none)
+2025-03-10 17:32:03.246   Version of existing file: (none)
+2025-03-10 17:32:03.246   Installing the file.
+2025-03-10 17:32:03.258   Successfully installed the file.
+2025-03-10 17:32:03.260   -- File entry --
+2025-03-10 17:32:03.262   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\portmidi.dll
+2025-03-10 17:32:03.262   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.262   Dest file exists.
+2025-03-10 17:32:03.262   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.262   Version of our file: (none)
+2025-03-10 17:32:03.262   Version of existing file: (none)
+2025-03-10 17:32:03.262   Installing the file.
+2025-03-10 17:32:03.265   Successfully installed the file.
+2025-03-10 17:32:03.265   -- File entry --
+2025-03-10 17:32:03.266   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pyexpat.pyd
+2025-03-10 17:32:03.266   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.266   Dest file exists.
+2025-03-10 17:32:03.267   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:03.267   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:03.267   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:03.267   Same version. Skipping.
+2025-03-10 17:32:03.267   -- File entry --
+2025-03-10 17:32:03.268   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\python313.dll
+2025-03-10 17:32:03.268   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.268   Dest file exists.
+2025-03-10 17:32:03.269   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.269   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:03.270   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:03.270   Same version. Skipping.
+2025-03-10 17:32:03.271   -- File entry --
+2025-03-10 17:32:03.272   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\sdl2.dll
+2025-03-10 17:32:03.272   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.272   Dest file exists.
+2025-03-10 17:32:03.272   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.272   Version of our file: 2.28.4.0
+2025-03-10 17:32:03.272   Version of existing file: 2.28.4.0
+2025-03-10 17:32:03.272   Same version. Skipping.
+2025-03-10 17:32:03.273   -- File entry --
+2025-03-10 17:32:03.274   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\sdl2_image.dll
+2025-03-10 17:32:03.275   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.275   Dest file exists.
+2025-03-10 17:32:03.275   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.275   Version of our file: 2.0.5.0
+2025-03-10 17:32:03.275   Version of existing file: 2.0.5.0
+2025-03-10 17:32:03.275   Same version. Skipping.
+2025-03-10 17:32:03.276   -- File entry --
+2025-03-10 17:32:03.277   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\sdl2_mixer.dll
+2025-03-10 17:32:03.277   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.277   Dest file exists.
+2025-03-10 17:32:03.277   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.277   Version of our file: 2.6.2.0
+2025-03-10 17:32:03.278   Version of existing file: 2.6.2.0
+2025-03-10 17:32:03.278   Same version. Skipping.
+2025-03-10 17:32:03.278   -- File entry --
+2025-03-10 17:32:03.279   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\sdl2_ttf.dll
+2025-03-10 17:32:03.279   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.279   Dest file exists.
+2025-03-10 17:32:03.279   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.279   Version of our file: 2.20.1.0
+2025-03-10 17:32:03.281   Version of existing file: 2.20.1.0
+2025-03-10 17:32:03.281   Same version. Skipping.
+2025-03-10 17:32:03.281   -- File entry --
+2025-03-10 17:32:03.282   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\select.pyd
+2025-03-10 17:32:03.282   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.282   Dest file exists.
+2025-03-10 17:32:03.282   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.282   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:03.282   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:03.282   Same version. Skipping.
+2025-03-10 17:32:03.283   -- File entry --
+2025-03-10 17:32:03.283   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\tcl86t.dll
+2025-03-10 17:32:03.283   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:03.283   Dest file exists.
+2025-03-10 17:32:03.283   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:03.284   Version of our file: 8.6.2.15
+2025-03-10 17:32:03.284   Version of existing file: 8.6.2.15
+2025-03-10 17:32:03.284   Same version. Skipping.
+2025-03-10 17:32:03.285   -- File entry --
+2025-03-10 17:32:03.286   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\Time Clicker.exe
+2025-03-10 17:32:03.286   Time stamp of our file: 2025-03-10 16:42:44.000
+2025-03-10 17:32:03.286   Dest file exists.
+2025-03-10 17:32:03.286   Time stamp of existing file: 2025-03-10 16:42:44.000
+2025-03-10 17:32:03.286   Version of our file: (none)
+2025-03-10 17:32:03.288   Version of existing file: (none)
+2025-03-10 17:32:03.288   Installing the file.
+2025-03-10 17:32:04.452   Successfully installed the file.
+2025-03-10 17:32:04.453   -- File entry --
+2025-03-10 17:32:04.454   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\Time Clicker.pdb
+2025-03-10 17:32:04.454   Time stamp of our file: 2025-03-10 16:42:36.000
+2025-03-10 17:32:04.454   Dest file exists.
+2025-03-10 17:32:04.454   Time stamp of existing file: 2025-03-10 16:42:36.000
+2025-03-10 17:32:04.454   Version of our file: (none)
+2025-03-10 17:32:04.464   Version of existing file: (none)
+2025-03-10 17:32:04.465   Installing the file.
+2025-03-10 17:32:05.832   Successfully installed the file.
+2025-03-10 17:32:05.834   -- File entry --
+2025-03-10 17:32:05.835   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\tk86t.dll
+2025-03-10 17:32:05.835   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.835   Dest file exists.
+2025-03-10 17:32:05.835   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:05.835   Version of our file: 8.6.2.15
+2025-03-10 17:32:05.836   Version of existing file: 8.6.2.15
+2025-03-10 17:32:05.836   Same version. Skipping.
+2025-03-10 17:32:05.837   -- File entry --
+2025-03-10 17:32:05.838   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\unicodedata.pyd
+2025-03-10 17:32:05.838   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.838   Dest file exists.
+2025-03-10 17:32:05.838   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:05.838   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.839   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.839   Same version. Skipping.
+2025-03-10 17:32:05.839   -- File entry --
+2025-03-10 17:32:05.840   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\utils.py
+2025-03-10 17:32:05.840   Time stamp of our file: 2025-03-10 15:19:08.000
+2025-03-10 17:32:05.840   Dest file exists.
+2025-03-10 17:32:05.841   Time stamp of existing file: 2025-03-10 15:19:08.000
+2025-03-10 17:32:05.841   Version of our file: (none)
+2025-03-10 17:32:05.852   Version of existing file: (none)
+2025-03-10 17:32:05.852   Installing the file.
+2025-03-10 17:32:05.906   Successfully installed the file.
+2025-03-10 17:32:05.906   -- File entry --
+2025-03-10 17:32:05.907   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\vcruntime140.dll
+2025-03-10 17:32:05.907   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.907   Dest file exists.
+2025-03-10 17:32:05.907   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:05.907   Version of our file: 14.42.34226.3
+2025-03-10 17:32:05.909   Version of existing file: 14.42.34226.3
+2025-03-10 17:32:05.909   Same version. Skipping.
+2025-03-10 17:32:05.912   -- File entry --
+2025-03-10 17:32:05.912   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\vcruntime140_1.dll
+2025-03-10 17:32:05.913   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.913   Dest file exists.
+2025-03-10 17:32:05.913   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:05.913   Version of our file: 14.42.34226.3
+2025-03-10 17:32:05.914   Version of existing file: 14.42.34226.3
+2025-03-10 17:32:05.914   Same version. Skipping.
+2025-03-10 17:32:05.915   -- File entry --
+2025-03-10 17:32:05.918   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\zlib1.dll
+2025-03-10 17:32:05.918   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.918   Dest file exists.
+2025-03-10 17:32:05.918   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:05.918   Version of our file: 1.3.1.0
+2025-03-10 17:32:05.919   Version of existing file: 1.3.1.0
+2025-03-10 17:32:05.919   Same version. Skipping.
+2025-03-10 17:32:05.920   -- File entry --
+2025-03-10 17:32:05.921   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_bz2.pyd
+2025-03-10 17:32:05.921   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.921   Dest file exists.
+2025-03-10 17:32:05.921   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.921   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.921   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.921   Same version. Skipping.
+2025-03-10 17:32:05.922   -- File entry --
+2025-03-10 17:32:05.923   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_ctypes.pyd
+2025-03-10 17:32:05.923   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.923   Dest file exists.
+2025-03-10 17:32:05.923   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.923   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.924   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.924   Same version. Skipping.
+2025-03-10 17:32:05.924   -- File entry --
+2025-03-10 17:32:05.926   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_decimal.pyd
+2025-03-10 17:32:05.927   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.927   Dest file exists.
+2025-03-10 17:32:05.927   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.927   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.927   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.927   Same version. Skipping.
+2025-03-10 17:32:05.928   -- File entry --
+2025-03-10 17:32:05.929   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_elementtree.pyd
+2025-03-10 17:32:05.929   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.929   Dest file exists.
+2025-03-10 17:32:05.929   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.929   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.931   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.931   Same version. Skipping.
+2025-03-10 17:32:05.931   -- File entry --
+2025-03-10 17:32:05.932   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_hashlib.pyd
+2025-03-10 17:32:05.932   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.932   Dest file exists.
+2025-03-10 17:32:05.932   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.932   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.933   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.933   Same version. Skipping.
+2025-03-10 17:32:05.933   -- File entry --
+2025-03-10 17:32:05.935   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_lzma.pyd
+2025-03-10 17:32:05.935   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.935   Dest file exists.
+2025-03-10 17:32:05.935   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.935   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.935   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.935   Same version. Skipping.
+2025-03-10 17:32:05.935   -- File entry --
+2025-03-10 17:32:05.935   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_multiprocessing.pyd
+2025-03-10 17:32:05.935   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.935   Dest file exists.
+2025-03-10 17:32:05.937   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.937   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.937   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.937   Same version. Skipping.
+2025-03-10 17:32:05.937   -- File entry --
+2025-03-10 17:32:05.938   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_queue.pyd
+2025-03-10 17:32:05.938   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.938   Dest file exists.
+2025-03-10 17:32:05.938   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.938   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.938   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.938   Same version. Skipping.
+2025-03-10 17:32:05.939   -- File entry --
+2025-03-10 17:32:05.940   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_socket.pyd
+2025-03-10 17:32:05.940   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.940   Dest file exists.
+2025-03-10 17:32:05.940   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.940   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.940   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.940   Same version. Skipping.
+2025-03-10 17:32:05.942   -- File entry --
+2025-03-10 17:32:05.943   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_ssl.pyd
+2025-03-10 17:32:05.944   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.944   Dest file exists.
+2025-03-10 17:32:05.944   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.944   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.944   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.944   Same version. Skipping.
+2025-03-10 17:32:05.948   -- File entry --
+2025-03-10 17:32:05.949   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_tkinter.pyd
+2025-03-10 17:32:05.949   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.949   Dest file exists.
+2025-03-10 17:32:05.949   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.949   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.949   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.949   Same version. Skipping.
+2025-03-10 17:32:05.949   -- File entry --
+2025-03-10 17:32:05.951   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\_wmi.pyd
+2025-03-10 17:32:05.951   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.951   Dest file exists.
+2025-03-10 17:32:05.951   Time stamp of existing file: 2025-03-08 15:21:32.000
+2025-03-10 17:32:05.951   Version of our file: 3.13.2150.1013
+2025-03-10 17:32:05.951   Version of existing file: 3.13.2150.1013
+2025-03-10 17:32:05.951   Same version. Skipping.
+2025-03-10 17:32:05.952   -- File entry --
+2025-03-10 17:32:05.952   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\jaraco\text\Lorem ipsum.txt
+2025-03-10 17:32:05.952   Time stamp of our file: 2025-03-08 14:39:56.000
+2025-03-10 17:32:05.952   Dest file exists.
+2025-03-10 17:32:05.952   Time stamp of existing file: 2025-03-08 14:39:56.000
+2025-03-10 17:32:05.952   Version of our file: (none)
+2025-03-10 17:32:05.953   Version of existing file: (none)
+2025-03-10 17:32:05.953   Installing the file.
+2025-03-10 17:32:05.987   Successfully installed the file.
+2025-03-10 17:32:05.987   -- File entry --
+2025-03-10 17:32:05.988   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\fft\_pocketfft_umath.pyd
+2025-03-10 17:32:05.988   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.988   Dest file exists.
+2025-03-10 17:32:05.988   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:05.988   Version of our file: (none)
+2025-03-10 17:32:06.009   Version of existing file: (none)
+2025-03-10 17:32:06.009   Installing the file.
+2025-03-10 17:32:06.019   Successfully installed the file.
+2025-03-10 17:32:06.019   -- File entry --
+2025-03-10 17:32:06.020   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\linalg\_umath_linalg.pyd
+2025-03-10 17:32:06.020   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.020   Dest file exists.
+2025-03-10 17:32:06.020   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.020   Version of our file: (none)
+2025-03-10 17:32:06.040   Version of existing file: (none)
+2025-03-10 17:32:06.041   Installing the file.
+2025-03-10 17:32:06.045   Successfully installed the file.
+2025-03-10 17:32:06.045   -- File entry --
+2025-03-10 17:32:06.046   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\random\bit_generator.pyd
+2025-03-10 17:32:06.047   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.047   Dest file exists.
+2025-03-10 17:32:06.047   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.047   Version of our file: (none)
+2025-03-10 17:32:06.085   Version of existing file: (none)
+2025-03-10 17:32:06.085   Installing the file.
+2025-03-10 17:32:06.091   Successfully installed the file.
+2025-03-10 17:32:06.093   -- File entry --
+2025-03-10 17:32:06.095   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\random\mtrand.pyd
+2025-03-10 17:32:06.096   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.096   Dest file exists.
+2025-03-10 17:32:06.096   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.096   Version of our file: (none)
+2025-03-10 17:32:06.116   Version of existing file: (none)
+2025-03-10 17:32:06.116   Installing the file.
+2025-03-10 17:32:06.132   Successfully installed the file.
+2025-03-10 17:32:06.133   -- File entry --
+2025-03-10 17:32:06.134   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\random\_bounded_integers.pyd
+2025-03-10 17:32:06.134   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.134   Dest file exists.
+2025-03-10 17:32:06.134   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.134   Version of our file: (none)
+2025-03-10 17:32:06.154   Version of existing file: (none)
+2025-03-10 17:32:06.154   Installing the file.
+2025-03-10 17:32:06.162   Successfully installed the file.
+2025-03-10 17:32:06.163   -- File entry --
+2025-03-10 17:32:06.164   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\random\_common.pyd
+2025-03-10 17:32:06.164   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.164   Dest file exists.
+2025-03-10 17:32:06.164   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.164   Version of our file: (none)
+2025-03-10 17:32:06.182   Version of existing file: (none)
+2025-03-10 17:32:06.182   Installing the file.
+2025-03-10 17:32:06.187   Successfully installed the file.
+2025-03-10 17:32:06.188   -- File entry --
+2025-03-10 17:32:06.190   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\random\_generator.pyd
+2025-03-10 17:32:06.190   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.190   Dest file exists.
+2025-03-10 17:32:06.190   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.190   Version of our file: (none)
+2025-03-10 17:32:06.209   Version of existing file: (none)
+2025-03-10 17:32:06.210   Installing the file.
+2025-03-10 17:32:06.228   Successfully installed the file.
+2025-03-10 17:32:06.229   -- File entry --
+2025-03-10 17:32:06.231   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\random\_mt19937.pyd
+2025-03-10 17:32:06.231   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.231   Dest file exists.
+2025-03-10 17:32:06.231   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.231   Version of our file: (none)
+2025-03-10 17:32:06.251   Version of existing file: (none)
+2025-03-10 17:32:06.251   Installing the file.
+2025-03-10 17:32:06.256   Successfully installed the file.
+2025-03-10 17:32:06.257   -- File entry --
+2025-03-10 17:32:06.258   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\random\_pcg64.pyd
+2025-03-10 17:32:06.258   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.258   Dest file exists.
+2025-03-10 17:32:06.258   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.258   Version of our file: (none)
+2025-03-10 17:32:06.276   Version of existing file: (none)
+2025-03-10 17:32:06.276   Installing the file.
+2025-03-10 17:32:06.281   Successfully installed the file.
+2025-03-10 17:32:06.282   -- File entry --
+2025-03-10 17:32:06.282   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\random\_philox.pyd
+2025-03-10 17:32:06.282   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.282   Dest file exists.
+2025-03-10 17:32:06.282   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.283   Version of our file: (none)
+2025-03-10 17:32:06.302   Version of existing file: (none)
+2025-03-10 17:32:06.302   Installing the file.
+2025-03-10 17:32:06.306   Successfully installed the file.
+2025-03-10 17:32:06.306   -- File entry --
+2025-03-10 17:32:06.308   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\random\_sfc64.pyd
+2025-03-10 17:32:06.308   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.308   Dest file exists.
+2025-03-10 17:32:06.308   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.308   Version of our file: (none)
+2025-03-10 17:32:06.327   Version of existing file: (none)
+2025-03-10 17:32:06.327   Installing the file.
+2025-03-10 17:32:06.329   Successfully installed the file.
+2025-03-10 17:32:06.329   -- File entry --
+2025-03-10 17:32:06.331   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\_core\_multiarray_tests.pyd
+2025-03-10 17:32:06.332   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.332   Dest file exists.
+2025-03-10 17:32:06.332   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.332   Version of our file: (none)
+2025-03-10 17:32:06.350   Version of existing file: (none)
+2025-03-10 17:32:06.351   Installing the file.
+2025-03-10 17:32:06.353   Successfully installed the file.
+2025-03-10 17:32:06.354   -- File entry --
+2025-03-10 17:32:06.355   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy\_core\_multiarray_umath.pyd
+2025-03-10 17:32:06.356   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.356   Dest file exists.
+2025-03-10 17:32:06.356   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.356   Version of our file: (none)
+2025-03-10 17:32:06.377   Version of existing file: (none)
+2025-03-10 17:32:06.377   Installing the file.
+2025-03-10 17:32:06.484   Successfully installed the file.
+2025-03-10 17:32:06.484   -- File entry --
+2025-03-10 17:32:06.485   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy.libs\libscipy_openblas64_-43e11ff0749b8cbe0a615c9cf6737e0e.dll
+2025-03-10 17:32:06.485   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.485   Dest file exists.
+2025-03-10 17:32:06.485   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.485   Version of our file: (none)
+2025-03-10 17:32:06.486   Version of existing file: (none)
+2025-03-10 17:32:06.486   Installing the file.
+2025-03-10 17:32:06.888   Successfully installed the file.
+2025-03-10 17:32:06.889   -- File entry --
+2025-03-10 17:32:06.891   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\numpy.libs\msvcp140-263139962577ecda4cd9469ca360a746.dll
+2025-03-10 17:32:06.891   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.891   Dest file exists.
+2025-03-10 17:32:06.891   Time stamp of existing file: 2025-03-08 15:21:34.000
+2025-03-10 17:32:06.891   Version of our file: 14.40.33810.0
+2025-03-10 17:32:06.893   Version of existing file: 14.40.33810.0
+2025-03-10 17:32:06.893   Same version. Skipping.
+2025-03-10 17:32:06.894   -- File entry --
+2025-03-10 17:32:06.895   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\base.pyd
+2025-03-10 17:32:06.895   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.895   Dest file exists.
+2025-03-10 17:32:06.896   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.896   Version of our file: (none)
+2025-03-10 17:32:06.917   Version of existing file: (none)
+2025-03-10 17:32:06.917   Installing the file.
+2025-03-10 17:32:06.928   Successfully installed the file.
+2025-03-10 17:32:06.928   -- File entry --
+2025-03-10 17:32:06.929   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\bufferproxy.pyd
+2025-03-10 17:32:06.929   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.929   Dest file exists.
+2025-03-10 17:32:06.930   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.930   Version of our file: (none)
+2025-03-10 17:32:06.949   Version of existing file: (none)
+2025-03-10 17:32:06.949   Installing the file.
+2025-03-10 17:32:06.951   Successfully installed the file.
+2025-03-10 17:32:06.951   -- File entry --
+2025-03-10 17:32:06.952   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\color.pyd
+2025-03-10 17:32:06.953   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.953   Dest file exists.
+2025-03-10 17:32:06.953   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.953   Version of our file: (none)
+2025-03-10 17:32:06.973   Version of existing file: (none)
+2025-03-10 17:32:06.973   Installing the file.
+2025-03-10 17:32:06.977   Successfully installed the file.
+2025-03-10 17:32:06.977   -- File entry --
+2025-03-10 17:32:06.979   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\constants.pyd
+2025-03-10 17:32:06.979   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.979   Dest file exists.
+2025-03-10 17:32:06.979   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:06.979   Version of our file: (none)
+2025-03-10 17:32:06.999   Version of existing file: (none)
+2025-03-10 17:32:06.999   Installing the file.
+2025-03-10 17:32:07.001   Successfully installed the file.
+2025-03-10 17:32:07.001   -- File entry --
+2025-03-10 17:32:07.002   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\display.pyd
+2025-03-10 17:32:07.003   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.003   Dest file exists.
+2025-03-10 17:32:07.003   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.003   Version of our file: (none)
+2025-03-10 17:32:07.027   Version of existing file: (none)
+2025-03-10 17:32:07.027   Installing the file.
+2025-03-10 17:32:07.030   Successfully installed the file.
+2025-03-10 17:32:07.030   -- File entry --
+2025-03-10 17:32:07.031   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\draw.pyd
+2025-03-10 17:32:07.031   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.032   Dest file exists.
+2025-03-10 17:32:07.032   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.032   Version of our file: (none)
+2025-03-10 17:32:07.052   Version of existing file: (none)
+2025-03-10 17:32:07.052   Installing the file.
+2025-03-10 17:32:07.054   Successfully installed the file.
+2025-03-10 17:32:07.055   -- File entry --
+2025-03-10 17:32:07.057   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\event.pyd
+2025-03-10 17:32:07.057   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.057   Dest file exists.
+2025-03-10 17:32:07.057   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.057   Version of our file: (none)
+2025-03-10 17:32:07.078   Version of existing file: (none)
+2025-03-10 17:32:07.078   Installing the file.
+2025-03-10 17:32:07.080   Successfully installed the file.
+2025-03-10 17:32:07.080   -- File entry --
+2025-03-10 17:32:07.081   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\font.pyd
+2025-03-10 17:32:07.081   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.081   Dest file exists.
+2025-03-10 17:32:07.082   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.082   Version of our file: (none)
+2025-03-10 17:32:07.102   Version of existing file: (none)
+2025-03-10 17:32:07.102   Installing the file.
+2025-03-10 17:32:07.103   Successfully installed the file.
+2025-03-10 17:32:07.104   -- File entry --
+2025-03-10 17:32:07.105   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\freesansbold.ttf
+2025-03-10 17:32:07.105   Time stamp of our file: 2025-03-08 15:07:20.000
+2025-03-10 17:32:07.105   Dest file exists.
+2025-03-10 17:32:07.105   Time stamp of existing file: 2025-03-08 15:07:20.000
+2025-03-10 17:32:07.105   Version of our file: (none)
+2025-03-10 17:32:07.112   Version of existing file: (none)
+2025-03-10 17:32:07.112   Installing the file.
+2025-03-10 17:32:07.118   Successfully installed the file.
+2025-03-10 17:32:07.119   -- File entry --
+2025-03-10 17:32:07.120   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\gfxdraw.pyd
+2025-03-10 17:32:07.120   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.120   Dest file exists.
+2025-03-10 17:32:07.120   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.120   Version of our file: (none)
+2025-03-10 17:32:07.141   Version of existing file: (none)
+2025-03-10 17:32:07.141   Installing the file.
+2025-03-10 17:32:07.144   Successfully installed the file.
+2025-03-10 17:32:07.145   -- File entry --
+2025-03-10 17:32:07.147   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\image.pyd
+2025-03-10 17:32:07.147   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.147   Dest file exists.
+2025-03-10 17:32:07.147   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.147   Version of our file: (none)
+2025-03-10 17:32:07.166   Version of existing file: (none)
+2025-03-10 17:32:07.166   Installing the file.
+2025-03-10 17:32:07.168   Successfully installed the file.
+2025-03-10 17:32:07.169   -- File entry --
+2025-03-10 17:32:07.170   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\imageext.pyd
+2025-03-10 17:32:07.170   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.170   Dest file exists.
+2025-03-10 17:32:07.170   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.170   Version of our file: (none)
+2025-03-10 17:32:07.191   Version of existing file: (none)
+2025-03-10 17:32:07.191   Installing the file.
+2025-03-10 17:32:07.193   Successfully installed the file.
+2025-03-10 17:32:07.193   -- File entry --
+2025-03-10 17:32:07.196   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\joystick.pyd
+2025-03-10 17:32:07.196   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.196   Dest file exists.
+2025-03-10 17:32:07.196   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.196   Version of our file: (none)
+2025-03-10 17:32:07.215   Version of existing file: (none)
+2025-03-10 17:32:07.215   Installing the file.
+2025-03-10 17:32:07.218   Successfully installed the file.
+2025-03-10 17:32:07.218   -- File entry --
+2025-03-10 17:32:07.219   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\key.pyd
+2025-03-10 17:32:07.219   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.219   Dest file exists.
+2025-03-10 17:32:07.219   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.219   Version of our file: (none)
+2025-03-10 17:32:07.238   Version of existing file: (none)
+2025-03-10 17:32:07.238   Installing the file.
+2025-03-10 17:32:07.239   Successfully installed the file.
+2025-03-10 17:32:07.240   -- File entry --
+2025-03-10 17:32:07.242   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\mask.pyd
+2025-03-10 17:32:07.242   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.242   Dest file exists.
+2025-03-10 17:32:07.242   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.242   Version of our file: (none)
+2025-03-10 17:32:07.260   Version of existing file: (none)
+2025-03-10 17:32:07.260   Installing the file.
+2025-03-10 17:32:07.263   Successfully installed the file.
+2025-03-10 17:32:07.263   -- File entry --
+2025-03-10 17:32:07.267   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\math.pyd
+2025-03-10 17:32:07.267   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.267   Dest file exists.
+2025-03-10 17:32:07.267   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.267   Version of our file: (none)
+2025-03-10 17:32:07.270   Version of existing file: (none)
+2025-03-10 17:32:07.270   Installing the file.
+2025-03-10 17:32:07.272   Successfully installed the file.
+2025-03-10 17:32:07.274   -- File entry --
+2025-03-10 17:32:07.275   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\mixer.pyd
+2025-03-10 17:32:07.276   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.276   Dest file exists.
+2025-03-10 17:32:07.276   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.276   Version of our file: (none)
+2025-03-10 17:32:07.294   Version of existing file: (none)
+2025-03-10 17:32:07.294   Installing the file.
+2025-03-10 17:32:07.299   Successfully installed the file.
+2025-03-10 17:32:07.300   -- File entry --
+2025-03-10 17:32:07.300   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\mixer_music.pyd
+2025-03-10 17:32:07.302   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.302   Dest file exists.
+2025-03-10 17:32:07.302   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.302   Version of our file: (none)
+2025-03-10 17:32:07.321   Version of existing file: (none)
+2025-03-10 17:32:07.321   Installing the file.
+2025-03-10 17:32:07.323   Successfully installed the file.
+2025-03-10 17:32:07.324   -- File entry --
+2025-03-10 17:32:07.325   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\mouse.pyd
+2025-03-10 17:32:07.325   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.325   Dest file exists.
+2025-03-10 17:32:07.325   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.325   Version of our file: (none)
+2025-03-10 17:32:07.344   Version of existing file: (none)
+2025-03-10 17:32:07.344   Installing the file.
+2025-03-10 17:32:07.346   Successfully installed the file.
+2025-03-10 17:32:07.347   -- File entry --
+2025-03-10 17:32:07.349   Dest filename: C:\Users\samyt\AppData\Roaming\TimeClicker\pygame\newbuffer.pyd
+2025-03-10 17:32:07.349   Time stamp of our file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.349   Dest file exists.
+2025-03-10 17:32:07.349   Time stamp of existing file: 2025-03-10 16:43:18.000
+2025-03-10 17:32:07.349   Version of our file: (none)
+2025-03-10 17:32:07.370   Version of existing file: (none)
+2025-03-10 17:32:07.370   Installing the file.
+2025-03-10 17:32:07.372   Message box (Yes/No):
+                          Setup is not complete. If you exit now, the program will not be installed.
+                          
+                          You may run Setup again at another time to complete the installation.
+                          
+                          Exit Setup?
+2025-03-10 17:32:11.028   User chose Yes.
+2025-03-10 17:32:11.031   User canceled the installation process.
+2025-03-10 17:32:11.032   Rolling back changes.
+2025-03-10 17:32:11.043   Starting the uninstallation process.
+2025-03-10 17:32:11.043   Uninstallation process succeeded.
+2025-03-10 17:32:12.548   Deinitializing Setup.
+2025-03-10 17:32:12.607   Log closed.

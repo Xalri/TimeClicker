@@ -1,0 +1,3 @@
+'''
+nuitka --standalone --windows-console-mode=attach --windows-icon-from-ico="C:/Users/samyt/Documents/TimeClicker/src/icon.ico"  --include-data-files="C:/Users/samyt/Documents/TimeClicker/engine/utils.py=utils.py"  --include-data-files="C:/Users/samyt/Documents/TimeClicker/other/Logger.py=Logger.py"  --include-data-files="C:/Users/samyt/Documents/TimeClicker/data/data.py=data.py"  --include-data-files="C:/Users/samyt/Documents/TimeClicker/engine/Buttons.py=Buttons.py"  --include-data-files="C:/Users/samyt/Documents/TimeClicker/data/buildings.py=buildings.py"  --include-data-dir="C:/Users/samyt/Documents/TimeClicker/src=src"  --output-filename="Time Clicker.exe" --include-package="engine"  --debug "C:/Users/samyt/Documents/TimeClicker/main.py"
+'''
