@@ -33,10 +33,10 @@ Time Clicker is a clicker where you gain Time Units in order to advance the Time
 - **Mouse Click on Cables**: Interact with blue and red cables for temporary boosts or challenges.
 ## How to Start
 
-To start the game, run the executable file:
+To start the game, run the executable installer:
 
 ```sh
-./TimeClicker.exe
+./TimeClickerInstaller.exe
 ```
 ## Bug History  
 
