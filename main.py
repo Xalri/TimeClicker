@@ -39,26 +39,18 @@ def main():
         engine = Engine()
         paintstrategy = PaintStrategy(engine, engine.screen, engine.src_dir)
 
-        engine.LOGGER.INFO("Engine created")
+
         engine.load_data()
-        engine.LOGGER.INFO("Data loaded")
+
         engine.give_timeUnits_from_afk()
-        engine.LOGGER.INFO("Time units given from afk")
 
         while engine.running:
-            engine.LOGGER.INFO("Game loop started")
             engine.clock.tick_busy_loop(engine.framerate)
             
-            engine.LOGGER.INFO("Updating game state")
             engine.update()
             
-            engine.LOGGER.INFO("Checking for events")
             engine.check_era()
-            
-            try:
-                engine.LOGGER.DEBUG("Checking for cables")
-            except Exception as e:
-                print(f"Error after the last log: {e}")
+
             engine.check_cables()
             
             engine.check_era()
