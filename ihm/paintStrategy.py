@@ -83,13 +83,13 @@ class PaintStrategy:
         
         if self.engine.timeline < 0:
             timeline = "Null"
-            size = 124
+            size = 100
         elif self.engine.timeline >= 2500:
             timeline = "Out Of Time"
-            size = 62
+            size = 50
         else:
             timeline = format_time_no_convertion(self.engine.timeline)
-            size = 124
+            size = 100
         self.timeline_text: pg.Surface = get_timeline_font(size, height).render(f"{timeline}", True, YELLOW_GREEN)
         
         self.blue_cable_image: pg.surface = load_image(f"{self.src_dir}/img/blue_cable_on.png", width, height)
@@ -783,15 +783,15 @@ class PaintStrategy:
             ),
         )
 
-        self.screen.blit(self.timeline_text, self.timeline_text.get_rect(center=(adaptw(295, self.width), adapth(147.5, self.height))))
+        self.screen.blit(self.timeline_text, self.timeline_text.get_rect(center=(adaptw(335, self.width), adapth(135, self.height))))
         
         
         
-        self.screen.blit(self.era_text, self.era_text.get_rect(center=(adaptw(287.5, self.width), adapth(25, self.height))))
+        self.screen.blit(self.era_text, self.era_text.get_rect(center=(adaptw(905, self.width), adapth(935, self.height))))
         
         self.screen.blit(
-            get_number_font(40, self.height).render(f"{self.engine.prestige}", True, RED_OCHRE),
-            get_number_font(40, self.height).render(f"{self.engine.prestige}", True, RED_OCHRE).get_rect(center=(adaptw(905, self.width), adapth(935, self.height))),
+            get_number_font(40, self.height).render(f"{self.engine.prestige}x TimeBack", True, RED_OCHRE),
+            get_number_font(40, self.height).render(f"{self.engine.prestige}x TimeBack", True, RED_OCHRE).get_rect(center=(adaptw(225, self.width), adapth(182.5, self.height))),
         )
         
         if self.engine.is_blue_cable_cut:
