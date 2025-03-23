@@ -226,7 +226,7 @@ def save_data(
     now = datetime.now().strftime(" %Y-%m-%d %H:%M:%S")
     if last_saved_time == "None": last_saved_time = now
     
-    if max_timeUnits == 0:
+    if max_timeUnits < timeUnits:
         max_timeUnits = timeUnits
 
     print(f"Saving data to: {os.path.join(appdata_path, 'data')}")

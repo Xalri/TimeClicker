@@ -368,23 +368,7 @@ class Engine:
             )
 
             if not build_amount is None:
-
-                max_bought_level = next(
-                    (
-                        u["level"]
-                        for u in self.bought_upgrades["long_list"]
-                        if u["name"] == upgrade["name"]
-                    ),
-                    0,
-                )
-
                 if build_amount >= treshold[0]:
-
-                    if max_bought_level == 0:
-                        if not upgrade in self.available_upgrades:
-                            self.available_upgrades.append(upgrade)
-
-                    elif max_bought_level != 0:
                         if not upgrade in self.available_upgrades:
                             self.available_upgrades.append(upgrade)
                             
